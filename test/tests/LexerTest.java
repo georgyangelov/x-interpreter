@@ -51,6 +51,14 @@ class LexerTest {
     }
 
     @Test
+    void testAllowsUnderscoreInNames() throws IOException, Lexer.LexerException {
+        assertEquals(
+            "(Name '_this_is_aValidName') (EOF 'EOF')",
+            lex(" _this_is_aValidName ")
+        );
+    }
+
+    @Test
     void testExceptionOnUnknownToken() {
         assertThrows(Lexer.LexerException.class, () -> {
            lex("test %");

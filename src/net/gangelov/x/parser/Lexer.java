@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Lexer {
     public class LexerException extends Exception {
-        public LexerException(String fileName, int line, int column, int c) {
+        public LexerException(String fileName, int line, int column, String c) {
             super("Unknown token '" + c + "' at " + fileName + ":" + line + ":" + column);
         }
     }
@@ -67,7 +67,7 @@ public class Lexer {
             while (inEscapeSequence || c != '"') {
                 if (inEscapeSequence) {
                     inEscapeSequence = false;
-                    str.appendCodePoint(escapeSequence(next()));
+                    str.appendCodePoint(EscapeSequences.fromSequenceChar(next()));
                 } else if (c == '\\') {
                     inEscapeSequence = true;
                     next();
@@ -83,7 +83,7 @@ public class Lexer {
             return t;
         }
 
-        if (Character.isLetter(c)) {
+        if (Character.isLetter(c) || c == '_') {
             StringBuilder str = new StringBuilder();
             str.appendCodePoint(next());
 
@@ -117,17 +117,7 @@ public class Lexer {
             return t;
         }
 
-        throw new LexerException(fileName, line, column, c);
-    }
-
-    private int escapeSequence(int c) {
-        if (c == 'n') {
-            return '\n';
-        } else if (c == 't') {
-            return '\t';
-        }
-
-        return c;
+        throw new LexerException(fileName, line, column, Character.toString((char) c));
     }
 
     private int next() throws IOException {
