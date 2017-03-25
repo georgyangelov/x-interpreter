@@ -1,7 +1,9 @@
 package tests;
 
-import net.gangelov.x.Lexer;
+import net.gangelov.x.parser.Lexer;
 import net.gangelov.x.debug.LexerInspector;
+import net.gangelov.x.parser.Token;
+import net.gangelov.x.parser.TokenType;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayInputStream;
@@ -78,11 +80,11 @@ class LexerTest {
     }
 
     private String lex(String str) throws IOException, Lexer.LexerException {
-        List<Lexer.Token> tokens = new ArrayList<>();
+        List<Token> tokens = new ArrayList<>();
         Lexer lexer = lexerForString(str);
-        Lexer.Token t = lexer.nextToken();
+        Token t = lexer.nextToken();
 
-        while (t.type != Lexer.TokenType.EOF) {
+        while (t.type != TokenType.EOF) {
             tokens.add(t);
             t = lexer.nextToken();
         }

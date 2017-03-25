@@ -1,4 +1,4 @@
-package net.gangelov.x;
+package net.gangelov.x.parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,48 +7,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class Lexer {
-    public enum TokenType {
-        EOF,
-        Newline, // \n
-
-        OpenParen, // (
-        CloseParen, // )
-
-        OpenBracket, // [
-        CloseBracket, // ]
-
-        OpenBrace, // {
-        CloseBrace, // }
-
-        Comma, // ,
-        Dot, // .
-        Colon, // :
-
-        Name,
-
-        Number,
-        String,
-
-        If,
-        Else,
-        Elsif,
-        Do,
-        End
-    }
-
-    public class Token {
-        public int line, column;
-        public TokenType type;
-        public String str = "";
-
-        protected Token set(TokenType type, String str) {
-            this.type = type;
-            this.str = str;
-
-            return this;
-        }
-    }
-
     public class LexerException extends Exception {
         public LexerException(String fileName, int line, int column, int c) {
             super("Unknown token '" + c + "' at " + fileName + ":" + line + ":" + column);
