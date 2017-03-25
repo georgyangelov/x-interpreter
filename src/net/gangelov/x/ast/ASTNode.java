@@ -1,4 +1,5 @@
 package net.gangelov.x.ast;
 
-public class ASTNode {
+public abstract class ASTNode {
+    abstract public <T> void visit(Visitor<T> visitor);
 }

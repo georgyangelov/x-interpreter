@@ -5,6 +5,7 @@ import net.gangelov.x.debug.LexerInspector;
 import net.gangelov.x.parser.Token;
 import net.gangelov.x.parser.TokenType;
 import org.junit.jupiter.api.*;
+import tests.support.ParserSupport;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -81,15 +82,9 @@ class LexerTest {
         );
     }
 
-    private Lexer lexerForString(String str) {
-        InputStream input = new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8));
-
-        return new Lexer("test.x", input);
-    }
-
     private String lex(String str) throws IOException, Lexer.LexerException {
         List<Token> tokens = new ArrayList<>();
-        Lexer lexer = lexerForString(str);
+        Lexer lexer = ParserSupport.lexerForString(str);
         Token t = lexer.nextToken();
 
         while (t.type != TokenType.EOF) {

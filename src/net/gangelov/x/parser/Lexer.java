@@ -22,6 +22,10 @@ public class Lexer {
         this.in = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     public Token nextToken() throws IOException, LexerException {
         if (c == -2) {
             next();
