@@ -113,6 +113,12 @@ public class Lexer {
                 case "end":
                     t.type = TokenType.End;
                     break;
+                case "while":
+                    t.type = TokenType.While;
+                    break;
+                case "def":
+                    t.type = TokenType.Def;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;

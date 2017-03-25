@@ -29,9 +29,16 @@ class LexerTest {
     void testSimpleTokens() throws IOException, Lexer.LexerException {
         assertEquals(
             "(OpenParen '(') (CloseParen ')') (OpenBracket '[') (CloseBracket ']') (Comma ',') " +
-                "(Dot '.') (Colon ':') (Number '12345') (String 'test') (Do 'do') (Newline '\n') (End 'end') (Name 'doend') " +
-                "(EOF 'EOF')",
-            lex("()[],.:12345\"test\"do \n end         doend")
+                "(Dot '.') (Colon ':') (Number '12345') (String 'test') (Newline '\n') (Name 'doend') (EOF 'EOF')",
+            lex("()[],.:12345\"test\"\ndoend")
+        );
+    }
+
+    @Test
+    void testKeywords() throws IOException, Lexer.LexerException {
+        assertEquals(
+            "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') (While 'while') (Def 'def') (EOF 'EOF')",
+            lex("do end if elsif else while def")
         );
     }
 
@@ -64,14 +71,6 @@ class LexerTest {
         assertThrows(Lexer.LexerException.class, () -> {
            lex("test %");
         });
-    }
-
-    @Test
-    void testIfElseElsif() throws IOException, Lexer.LexerException {
-        assertEquals(
-            "(If 'if') (Else 'else') (Elsif 'elsif') (End 'end') (EOF 'EOF')",
-            lex("if else elsif end ")
-        );
     }
 
     @Test

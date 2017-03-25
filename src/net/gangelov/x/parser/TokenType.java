@@ -26,5 +26,7 @@ public enum TokenType {
     Else,
     Elsif,
     Do,
+    While,
+    Def,
     End
 }
