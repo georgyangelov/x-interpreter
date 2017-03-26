@@ -48,6 +48,14 @@ class LexerTest {
     }
 
     @Test
+    void testCallsOnLiterals() throws IOException, Lexer.LexerException {
+        assertEquals("(Number '-42') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.abs"));
+        assertEquals("(Number '42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("42.2.abs"));
+        assertEquals("(Number '-42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.2.abs"));
+        assertEquals("(String 'test') (Dot '.') (Name 'length') (Number '3') (EOF 'EOF')", lex("\"test\".length 3"));
+    }
+
+    @Test
     void testKeywords() throws IOException, Lexer.LexerException {
         assertEquals(
             "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') (While 'while') (Def 'def') (EOF 'EOF')",

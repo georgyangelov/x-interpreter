@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class Lexer {
     public class LexerException extends Exception {
-        public LexerException(String fileName, int line, int column, String c) {
+        LexerException(String fileName, int line, int column, String c) {
             super("Unknown token '" + c + "' at " + fileName + ":" + line + ":" + column);
         }
     }
@@ -202,6 +202,8 @@ public class Lexer {
     }
 
     private void putBack(int codePoint) {
-        putBackChars.push(codePoint);
+        putBackChars.push(c);
+
+        c = codePoint;
     }
 }
