@@ -15,15 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ParserTest {
     @Test
-    void testNumberLiteral() throws Exception {
+    void testNumberLiterals() throws Exception {
         assertEquals("12345", parse("12345 "));
         assertEquals("1234.5678", parse("1234.5678"));
+    }
+
+    @Test
+    void testNegativeNumberLiterals() throws Exception {
         assertEquals("-1234", parse("-1234"));
         assertEquals("-1234.5", parse("-1234.5"));
     }
 
     @Test
-    void testStringLiteral() throws Exception {
+    void testStringLiterals() throws Exception {
         assertEquals("\"Hello world!\"", parse("\"Hello world!\""));
         assertEquals("\"\\\"\\n\"", parse("\"\\\"\\n\""));
     }

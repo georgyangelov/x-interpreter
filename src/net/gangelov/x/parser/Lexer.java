@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Stack;
+import java.util.function.BinaryOperator;
 
 public class Lexer {
     public class LexerException extends Exception {
@@ -39,54 +40,46 @@ public class Lexer {
 
         skipWhitespaceAndComments();
 
-        if (c == -1) { return t.set(TokenType.EOF, "EOF"); }
+        switch (c) {
+            case -1: return t.set(TokenType.EOF, "EOF");
 
-        if (c == '\n') { next(); return t.set(TokenType.Newline,      "\n"); }
-        if (c == '(')  { next(); return t.set(TokenType.OpenParen,    "(");  }
-        if (c == ')')  { next(); return t.set(TokenType.CloseParen,   ")");  }
-        if (c == '[')  { next(); return t.set(TokenType.OpenBracket,  "[");  }
-        if (c == ']')  { next(); return t.set(TokenType.CloseBracket, "]");  }
-        if (c == '{')  { next(); return t.set(TokenType.OpenBrace,    "{");  }
-        if (c == '}')  { next(); return t.set(TokenType.CloseBrace,   "}");  }
-        if (c == ',')  { next(); return t.set(TokenType.Comma,        ",");  }
-        if (c == '.')  { next(); return t.set(TokenType.Dot,          ".");  }
-        if (c == ':')  { next(); return t.set(TokenType.Colon,        ":");  }
+            case '\n': next(); return t.set(TokenType.Newline,      "\n");
+            case '(':  next(); return t.set(TokenType.OpenParen,    "(");
+            case ')':  next(); return t.set(TokenType.CloseParen,   ")");
+            case '[':  next(); return t.set(TokenType.OpenBracket,  "[");
+            case ']':  next(); return t.set(TokenType.CloseBracket, "]");
+            case '{':  next(); return t.set(TokenType.OpenBrace,    "{");
+            case '}':  next(); return t.set(TokenType.CloseBrace,   "}");
+            case ',':  next(); return t.set(TokenType.Comma,        ",");
+            case '.':  next(); return t.set(TokenType.Dot,          ".");
+            case ':':  next(); return t.set(TokenType.Colon,        ":");
+        }
 
-        if (Character.isDigit(c) || c == '-') {
-            StringBuilder str = new StringBuilder();
+        if (c == '!') {
+            next(); // !
 
-            if (c == '-') {
+            if (c == '=') {
+                next();
+                return t.set(TokenType.BinaryOperator, "!=");
+            }
+
+            return t.set(TokenType.UnaryOperator, "!");
+        }
+
+        if (c == '=' || c == '+' || c == '-' || c == '*' || c == '/' || c == '<' || c == '>') {
+            StringBuilder str = new StringBuilder(2);
+            str.appendCodePoint(next());
+
+            if (c == '=') {
                 str.appendCodePoint(next());
-
-                skipWhitespaceAndComments();
-
-                if (!Character.isDigit(c)) {
-                    // TODO: Consider it an operator
-                    throw new LexerException(fileName, line, column, Character.toString((char) c));
-                }
+                return t.set(TokenType.BinaryOperator, str.toString());
             }
 
-            while (Character.isDigit(c)) {
-                 str.appendCodePoint(next());
-            }
+            return t.set(TokenType.BinaryOperator, str.toString());
+        }
 
-            if (c == '.') {
-                next(); // .
-
-                if (Character.isDigit(c)) {
-                    str.appendCodePoint('.');
-
-                    while (Character.isDigit(c)) {
-                        str.appendCodePoint(next());
-                    }
-                } else {
-                    putBack('.');
-                }
-            }
-
-            t.str = str.toString();
-            t.type = TokenType.Number;
-            return t;
+        if (Character.isDigit(c)) {
+            return t.set(TokenType.Number, readNumber());
         }
 
         if (c == '"') {
@@ -145,6 +138,12 @@ public class Lexer {
                 case "def":
                     t.type = TokenType.Def;
                     break;
+                case "and":
+                    t.type = TokenType.BinaryOperator;
+                    break;
+                case "or":
+                    t.type = TokenType.BinaryOperator;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;
@@ -154,6 +153,30 @@ public class Lexer {
         }
 
         throw new LexerException(fileName, line, column, Character.toString((char) c));
+    }
+
+    private String readNumber() throws IOException {
+        StringBuilder str = new StringBuilder();
+
+        while (Character.isDigit(c)) {
+            str.appendCodePoint(next());
+        }
+
+        if (c == '.') {
+            next(); // .
+
+            if (Character.isDigit(c)) {
+                str.appendCodePoint('.');
+
+                while (Character.isDigit(c)) {
+                    str.appendCodePoint(next());
+                }
+            } else {
+                putBack('.');
+            }
+        }
+
+        return str.toString();
     }
 
     private void skipWhitespaceAndComments() throws IOException {

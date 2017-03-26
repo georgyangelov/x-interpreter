@@ -41,17 +41,17 @@ class LexerTest {
     @Test
     void testNumbers() throws IOException, Lexer.LexerException {
         assertEquals("(Number '1234') (EOF 'EOF')", lex("1234"));
-        assertEquals("(Number '-1234') (EOF 'EOF')", lex("-1234"));
-        assertEquals("(Number '-1234') (EOF 'EOF')", lex("- 1234"));
+//        assertEquals("(Number '-1234') (EOF 'EOF')", lex("-1234"));
+//        assertEquals("(Number '-1234') (EOF 'EOF')", lex("- 1234"));
         assertEquals("(Number '1234.5678') (EOF 'EOF')", lex("1234.5678"));
-        assertEquals("(Number '-1234.56') (EOF 'EOF')", lex("- 1234.56"));
+//        assertEquals("(Number '-1234.56') (EOF 'EOF')", lex("- 1234.56"));
     }
 
     @Test
     void testCallsOnLiterals() throws IOException, Lexer.LexerException {
-        assertEquals("(Number '-42') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.abs"));
+//        assertEquals("(Number '-42') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.abs"));
         assertEquals("(Number '42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("42.2.abs"));
-        assertEquals("(Number '-42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.2.abs"));
+//        assertEquals("(Number '-42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("- 42.2.abs"));
         assertEquals("(String 'test') (Dot '.') (Name 'length') (Number '3') (EOF 'EOF')", lex("\"test\".length 3"));
     }
 
@@ -100,6 +100,25 @@ class LexerTest {
             "(OpenBrace '{') (CloseBrace '}') (EOF 'EOF')",
             lex("{}")
         );
+    }
+
+    @Test
+    void testUnaryOperators() throws IOException, Lexer.LexerException {
+        assertEquals("(UnaryOperator '!') (Name 'a') (EOF 'EOF')", lex("!a"));
+        assertEquals("(UnaryOperator '!') (UnaryOperator '!') (Name 'a') (EOF 'EOF')", lex("!!a"));
+    }
+
+    @Test
+    void testBinaryOperators() throws IOException, Lexer.LexerException {
+        assertEquals("(Name 'a') (BinaryOperator '==') (Name 'b') (EOF 'EOF')", lex("a== b"));
+        assertEquals("(BinaryOperator '+') (BinaryOperator '-') (EOF 'EOF')", lex("+ -"));
+        assertEquals("(BinaryOperator 'and') (BinaryOperator 'or') (EOF 'EOF')", lex("and or"));
+        assertEquals("(BinaryOperator '*') (BinaryOperator '/') (EOF 'EOF')", lex("* /"));
+        assertEquals("(BinaryOperator '<') (BinaryOperator '>') (EOF 'EOF')", lex("< >"));
+        assertEquals("(BinaryOperator '<=') (BinaryOperator '>=') (BinaryOperator '!=') (EOF 'EOF')", lex("<= >= !="));
+        assertEquals("(BinaryOperator '+=') (BinaryOperator '-=') (EOF 'EOF')", lex("+= -="));
+        assertEquals("(BinaryOperator '/=') (BinaryOperator '*=') (EOF 'EOF')", lex("/= *="));
+        assertEquals("(Name 'a') (BinaryOperator '=') (Name 'b') (EOF 'EOF')", lex("a = b"));
     }
 
     private String lex(String str) throws IOException, Lexer.LexerException {
