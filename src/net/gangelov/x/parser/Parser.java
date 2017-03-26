@@ -56,6 +56,13 @@ public class Parser {
     }
 
     private ASTNode parsePrimary() throws IOException, Lexer.LexerException, ParserException {
+        ASTNode target = parseMethodTarget();
+        ASTNode result = maybeParseMethodCall(target);
+
+        return result;
+    }
+
+    private ASTNode parseMethodTarget() throws ParserException, IOException, Lexer.LexerException {
         switch (t.type) {
             case Number:        return new NumberLiteralNode(read().str);
             case String:        return new StringLiteralNode(read().str);
@@ -73,6 +80,45 @@ public class Parser {
         }
 
         throw new ParserException(lexer.getFileName(), t);
+    }
+
+    private ASTNode maybeParseMethodCall(ASTNode target) throws IOException, Lexer.LexerException, ParserException {
+        if (target instanceof NameNode && t.type == TokenType.OpenParen) {
+            read(); // (
+
+            if (t.type == TokenType.CloseParen) {
+                read(); // )
+            } else {
+                throw new ParserException(lexer.getFileName(), t);
+            }
+
+            return new MethodCallNode(((NameNode)target).name, new NameNode("self"));
+        }
+
+        // target.call
+        if (t.type == TokenType.Dot) {
+            read(); // .
+
+            if (t.type != TokenType.Name) {
+                throw new ParserException(lexer.getFileName(), t);
+            }
+
+            Token name = read();
+
+            if (t.type == TokenType.OpenParen) {
+                read(); // (
+
+                if (t.type == TokenType.CloseParen) {
+                    read(); // )
+                } else {
+                    throw new ParserException(lexer.getFileName(), t);
+                }
+            }
+
+            return new MethodCallNode(name.str, target);
+        }
+
+        return target;
     }
 
     private int operatorPrecedence(Token op) throws ParserException {

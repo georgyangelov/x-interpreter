@@ -98,11 +98,16 @@ public class ParserTest {
     void testMethodCalls() throws Exception {
         assertEquals("method", parse("method"));
         assertEquals("(method self)", parse("method()"));
+        assertEquals("(method target)", parse("target.method"));
+        assertEquals("(method target)", parse("target.method()"));
+    }
+
+    @Test
+    void testMethodCallsWithArguments() throws Exception {
         assertEquals("(method self a b c)", parse("method(a, b, c)"));
         assertEquals("(method self a b c)", parse("method a, b, c"));
         assertEquals("(method self a b c)", parse("method a, \n\n b,\n c"));
-        assertEquals("(method target)", parse("target.method"));
-        assertEquals("(method target)", parse("target.method()"));
+
         assertEquals("(method target a b c)", parse("target.method(a, b, c)"));
         assertEquals("(method target a b c)", parse("target.method a, b, c"));
     }
