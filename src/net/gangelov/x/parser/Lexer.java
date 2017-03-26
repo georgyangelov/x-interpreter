@@ -35,9 +35,7 @@ public class Lexer {
         t.line = line;
         t.column = column;
 
-        while (Character.isWhitespace(c) && c != '\n') {
-            next();
-        }
+        skipWhitespaceAndComments();
 
         if (c == -1) { return t.set(TokenType.EOF, "EOF"); }
 
@@ -128,6 +126,32 @@ public class Lexer {
         }
 
         throw new LexerException(fileName, line, column, Character.toString((char) c));
+    }
+
+    private void skipWhitespaceAndComments() throws IOException {
+        boolean inComment = false;
+
+        while (true) {
+            if (c == -1) {
+                break;
+            }
+
+            if (inComment) {
+                if (c == '\n') {
+                    inComment = false;
+                }
+                next();
+            } else {
+                if (Character.isWhitespace(c) && c != '\n') {
+                    next();
+                } else if (c == '#') {
+                    next(); // #
+                    inComment = true;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
     private int next() throws IOException {

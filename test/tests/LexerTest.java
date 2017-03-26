@@ -19,10 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class LexerTest {
     @Test
     void testEOF() throws IOException, Lexer.LexerException {
-        assertEquals(
-            "(EOF 'EOF')",
-            lex("")
-        );
+        assertEquals("(EOF 'EOF')", lex(""));
+    }
+
+    @Test
+    void testInlineComments() throws Exception {
+        assertEquals("(EOF 'EOF')", lex("# test"));
+        assertEquals("(EOF 'EOF')", lex("# # # # # test"));
+        assertEquals("(Number '1234') (EOF 'EOF')", lex("# test \n 1234"));
     }
 
     @Test
