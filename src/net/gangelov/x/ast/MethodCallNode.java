@@ -1,6 +1,8 @@
 package net.gangelov.x.ast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MethodCallNode extends ASTNode {
@@ -13,13 +15,10 @@ public class MethodCallNode extends ASTNode {
         this.arguments = arguments;
     }
 
-    public MethodCallNode(String name, ASTNode left, ASTNode right) {
+    public MethodCallNode(String name, ASTNode... nodes) {
         super();
         this.name = name;
-
-        arguments = new ArrayList<>();
-        arguments.add(left);
-        arguments.add(right);
+        this.arguments = Arrays.asList(nodes);
     }
 
     @Override

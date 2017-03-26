@@ -57,7 +57,7 @@ public class ParserTest {
     @Test
     void testPrefixOperators() throws Exception {
         assertEquals("(! a)", parse("!a"));
-        assertEquals("(! (! a)", parse("!!a"));
+        assertEquals("(! (! a))", parse("!!a"));
     }
 
     @Test
@@ -79,7 +79,8 @@ public class ParserTest {
 
     @Test
     void testUnaryOperatorPrecedence() throws Exception {
-        assertEquals("(+ 1 (* 2 (! (name a))))", parse("1 + 2 * !a"));
+        assertEquals("(+ 1 (* 2 (! a)))", parse("1 + 2 * !a"));
+        assertEquals("(+ (! 1) (* 2 a))", parse("!1 + 2 * a"));
     }
 
     @Test

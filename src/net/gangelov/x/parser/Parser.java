@@ -56,12 +56,20 @@ public class Parser {
     }
 
     private ASTNode parsePrimary() throws IOException, Lexer.LexerException, ParserException {
-        if (t.type == TokenType.Number) {
-            return new NumberLiteralNode(read().str);
-        } else if (t.type == TokenType.String) {
-            return new StringLiteralNode(read().str);
-        } else if (t.type == TokenType.Name) {
-            return new NameNode(read().str);
+        switch (t.type) {
+            case Number:        return new NumberLiteralNode(read().str);
+            case String:        return new StringLiteralNode(read().str);
+            case Name:          return new NameNode(read().str);
+            case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
+            case OpenParen:
+                read(); // (
+                ASTNode node = parseNext();
+                if (t.type != TokenType.CloseParen) {
+                    break;
+                }
+                read(); // )
+
+                return node;
         }
 
         throw new ParserException(lexer.getFileName(), t);
@@ -75,7 +83,6 @@ public class Parser {
             case "==":case "<":case ">":case "<=":case ">=":case "!=": return 4;
             case "+":case "-": return 5;
             case "*":case "/": return 6;
-            case "!": return 7;
             default: throw new ParserException(lexer.getFileName(), op);
         }
     }
