@@ -34,15 +34,15 @@ public class ParserTest {
 
     @Test
     void testIf() throws Exception {
-        assertEquals("(if (name a) { (name b) (name c) })", parse("if a \n b c end"));
-        assertEquals("(if (name a) { (name b) (name c) } { (name d) (name e) })", parse("if a \n b c else d e end"));
+        assertEquals("(if a { b c })", parse("if a \n b c end"));
+        assertEquals("(if a { b c } { d e })", parse("if a \n b c else d e end"));
         assertEquals("(if 1 { 2 } (if 3 { 4 }))", parse("if 1\n 2\nelsif 3\n4\nend"));
         assertEquals("(if 1 { 2 } (if 3 { 4 } { 5 }))", parse("if 1\n 2\nelsif 3\n4\nelse\n5\nend"));
     }
 
     @Test
     void testWhile() throws Exception {
-        assertEquals("(while (name a) { (name b) (name c) }", parse("while a\n b c end"));
+        assertEquals("(while a { b c }", parse("while a\n b c end"));
     }
 
     @Test
@@ -51,29 +51,51 @@ public class ParserTest {
         assertEquals("(* (* (* 1 2) 3) 4)", parse("1 * 2 * 3 * 4"));
         assertEquals("(- (- (- 1 2) 3) 4)", parse("1 - 2 - 3 - 4"));
         assertEquals("(/ (/ (/ 1 2) 3) 4)", parse("1 / 2 / 3 / 4"));
-        assertEquals("(= (name a) 15)", parse("a = 15"));
+        assertEquals("(= a 15)", parse("a = 15"));
     }
 
     @Test
     void testPrefixOperators() throws Exception {
-        assertEquals("(! (name a))", parse("!a"));
-        assertEquals("(! (! (name a))", parse("!!a"));
+        assertEquals("(! a)", parse("!a"));
+        assertEquals("(! (! a)", parse("!!a"));
     }
 
     @Test
     void testOperatorPrecedence() throws Exception {
         assertEquals("(+ 1 (* 2 3))", parse("1 + 2 * 3"));
+
+        assertEquals("(== 1 (+ 2 (* 2 3)))", parse("1 == 2 + 2 * 3"));
+        assertEquals("(== 1 (+ (* 2 2) 3))", parse("1 == 2 * 2 + 3"));
+
         assertEquals("(+ (- 1 (* (/ 2 3) 4)) 5)", parse("1 - 2 / 3 * 4 + 5"));
-        assertEquals("(* (+ 1 2) 3)", parse("(1 + 2) * 3"));
-        assertEquals("(+ 1 (* 2 (! (name a))))", parse("1 + 2 * !a"));
+
         assertEquals("(= a (* 5 5))", parse("a = 5 * 5"));
+    }
+
+    @Test
+    void testParensForPrecedence() throws Exception {
+        assertEquals("(* (+ 1 2) 3)", parse("(1 + 2) * 3"));
+    }
+
+    @Test
+    void testUnaryOperatorPrecedence() throws Exception {
+        assertEquals("(+ 1 (* 2 (! (name a))))", parse("1 + 2 * !a"));
+    }
+
+    @Test
+    void testNewlinesInExpressions() throws Exception {
         assertEquals("(= a (* 5 5))", parse("a =\n\n 5 * 5"));
         assertEquals("(+ 1 (* 2 3))", parse("1 +\n\n 2 \n\n * \n\n 3"));
     }
 
     @Test
+    void testNames() throws Exception {
+        assertEquals("test test_two test3", parse("test test_two test3"));
+    }
+
+    @Test
     void testMethodCalls() throws Exception {
-        assertEquals("(name method)", parse("method"));
+        assertEquals("method", parse("method"));
         assertEquals("(method self)", parse("method()"));
         assertEquals("(method self a b c)", parse("method(a, b, c)"));
         assertEquals("(method self a b c)", parse("method a, b, c"));
@@ -91,8 +113,8 @@ public class ParserTest {
 
     @Test
     void testMethodDefinitions() throws Exception {
-        assertEquals("(def (name method) Int [] { (name a) (name b) })", parse("def method:Int\na b\n end"));
-        assertEquals("(def (name method) Int [(argument a Int) (argument b String)] { (name a) (name b) })", parse("def method(a:Int, b:String):Int\na b\n end"));
+        assertEquals("(def method Int [] { a b })", parse("def method:Int\na b\n end"));
+        assertEquals("(def method Int [(argument a Int) (argument b String)] { a b })", parse("def method(a:Int, b:String):Int\na b\n end"));
     }
 
     @Test

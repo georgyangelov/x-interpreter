@@ -6,7 +6,7 @@ public class NumberLiteralNode extends LiteralNode {
     }
 
     @Override
-    public <T> void visit(Visitor<T> visitor) {
+    public void visit(Visitor visitor) {
         visitor.visit(this);
     }
 }

@@ -1,8 +1,6 @@
 package net.gangelov.x.parser;
 
-import net.gangelov.x.ast.ASTNode;
-import net.gangelov.x.ast.NumberLiteralNode;
-import net.gangelov.x.ast.StringLiteralNode;
+import net.gangelov.x.ast.*;
 
 import java.io.IOException;
 
@@ -15,6 +13,7 @@ public class Parser {
 
     private Lexer lexer;
     private Token t = null;
+    private boolean newline = false;
 
     public Parser(Lexer lexer) {
         this.lexer = lexer;
@@ -33,23 +32,64 @@ public class Parser {
             read();
         }
 
+        return parseExpression(0);
+    }
+
+    private ASTNode parseExpression(int minPrecedence) throws ParserException, IOException, Lexer.LexerException {
+        ASTNode left = parsePrimary();
+
+        while (true) {
+            if (t.type != TokenType.BinaryOperator) {
+                return left;
+            }
+
+            int opPrecedence = operatorPrecedence(t);
+            if (opPrecedence < minPrecedence) {
+                return left;
+            }
+
+            Token op = read();
+            ASTNode right = parseExpression(opPrecedence + 1);
+
+            left = new MethodCallNode(op.str, left, right);
+        }
+    }
+
+    private ASTNode parsePrimary() throws IOException, Lexer.LexerException, ParserException {
         if (t.type == TokenType.Number) {
-            return readNumberLiteral();
+            return new NumberLiteralNode(read().str);
         } else if (t.type == TokenType.String) {
             return new StringLiteralNode(read().str);
+        } else if (t.type == TokenType.Name) {
+            return new NameNode(read().str);
         }
 
         throw new ParserException(lexer.getFileName(), t);
     }
 
-    private ASTNode readNumberLiteral() throws IOException, Lexer.LexerException {
-        return new NumberLiteralNode(read().str);
+    private int operatorPrecedence(Token op) throws ParserException {
+        switch (op.str) {
+            case "=": return 1;
+            case "or": return 2;
+            case "and": return 3;
+            case "==":case "<":case ">":case "<=":case ">=":case "!=": return 4;
+            case "+":case "-": return 5;
+            case "*":case "/": return 6;
+            case "!": return 7;
+            default: throw new ParserException(lexer.getFileName(), op);
+        }
     }
 
     private Token read() throws IOException, Lexer.LexerException {
         Token old = t;
 
+        newline = false;
+
         t = lexer.nextToken();
+        while (t.type == TokenType.Newline) {
+            newline = true;
+            t = lexer.nextToken();
+        }
 
         return old;
     }

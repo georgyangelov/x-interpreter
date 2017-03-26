@@ -1,12 +1,9 @@
 package net.gangelov.x.debug;
 
-import net.gangelov.x.ast.ASTNode;
-import net.gangelov.x.ast.NumberLiteralNode;
-import net.gangelov.x.ast.StringLiteralNode;
-import net.gangelov.x.ast.Visitor;
+import net.gangelov.x.ast.*;
 import net.gangelov.x.parser.EscapeSequences;
 
-public class ASTInspector extends Visitor<Void> {
+public class ASTInspector extends Visitor {
     public static String inspect(ASTNode node) {
         ASTInspector inspector = new ASTInspector();
         node.visit(inspector);
@@ -21,16 +18,35 @@ public class ASTInspector extends Visitor<Void> {
     }
 
     @Override
-    public Void visit(NumberLiteralNode node) {
+    public void visit(NumberLiteralNode node) {
         str.append(node.str);
 
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(StringLiteralNode node) {
+    public void visit(StringLiteralNode node) {
         str.append("\"").append(EscapeSequences.convertToSequences(node.str)).append("\"");
 
-        return super.visit(node);
+        super.visit(node);
+    }
+
+    @Override
+    public void visit(NameNode node) {
+        str.append(node.name);
+
+        super.visit(node);
+    }
+
+    @Override
+    public void visit(MethodCallNode node) {
+        str.append("(").append(node.name);
+
+        for (ASTNode arg : node.arguments) {
+            str.append(" ");
+            arg.visit(this);
+        }
+
+        str.append(")");
     }
 }

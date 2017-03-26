@@ -1,15 +1,13 @@
 package net.gangelov.x.ast;
 
-public class Visitor<T> {
-    protected T defaultReturnValue() {
-        return null;
-    }
+public class Visitor {
+    public void visit(NumberLiteralNode node) {}
+    public void visit(StringLiteralNode node) {}
+    public void visit(NameNode node) {}
 
-    public T visit(NumberLiteralNode node) {
-        return defaultReturnValue();
-    }
-
-    public T visit(StringLiteralNode node) {
-        return defaultReturnValue();
+    public void visit(MethodCallNode node) {
+        for (ASTNode n : node.arguments) {
+            n.visit(this);
+        }
     }
 }
