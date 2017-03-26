@@ -18,6 +18,8 @@ public class ParserTest {
     void testNumberLiteral() throws Exception {
         assertEquals("12345", parse("12345 "));
         assertEquals("1234.5678", parse("1234.5678"));
+        assertEquals("-1234", parse("-1234"));
+        assertEquals("-1234.5", parse("-1234.5"));
     }
 
     @Test
@@ -68,14 +70,19 @@ public class ParserTest {
     @Test
     void testMethodCalls() throws Exception {
         assertEquals("(name method)", parse("method"));
-        assertEquals("(self.method)", parse("method()"));
-        assertEquals("(self.method a b c)", parse("method(a, b, c)"));
-        assertEquals("(self.method a b c)", parse("method a, b, c"));
-        assertEquals("(self.method a b c)", parse("method a, \n\n b,\n c"));
-        assertEquals("(target.method)", parse("target.method"));
-        assertEquals("(target.method)", parse("target.method()"));
-        assertEquals("(target.method a b c)", parse("target.method(a, b, c)"));
-        assertEquals("(target.method a b c)", parse("target.method a, b, c"));
+        assertEquals("(method self)", parse("method()"));
+        assertEquals("(method self a b c)", parse("method(a, b, c)"));
+        assertEquals("(method self a b c)", parse("method a, b, c"));
+        assertEquals("(method self a b c)", parse("method a, \n\n b,\n c"));
+        assertEquals("(method target)", parse("target.method"));
+        assertEquals("(method target)", parse("target.method()"));
+        assertEquals("(method target a b c)", parse("target.method(a, b, c)"));
+        assertEquals("(method target a b c)", parse("target.method a, b, c"));
+    }
+
+    @Test
+    void testMethodCallOnLiterals() throws Exception {
+        assertEquals("(abs 1234)", parse("1234.abs"));
     }
 
     @Test

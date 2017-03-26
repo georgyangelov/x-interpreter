@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Stack;
 
 public class Lexer {
     public class LexerException extends Exception {
@@ -16,6 +17,7 @@ public class Lexer {
     private String fileName;
     private BufferedReader in;
     private int c = -2, line = 1, column = 0;
+    private Stack<Integer> putBackChars = new Stack<>();
 
     public Lexer(String fileName, InputStream in) {
         this.fileName = fileName;
@@ -50,10 +52,36 @@ public class Lexer {
         if (c == '.')  { next(); return t.set(TokenType.Dot,          ".");  }
         if (c == ':')  { next(); return t.set(TokenType.Colon,        ":");  }
 
-        if (Character.isDigit(c)) {
+        if (Character.isDigit(c) || c == '-') {
             StringBuilder str = new StringBuilder();
+
+            if (c == '-') {
+                str.appendCodePoint(next());
+
+                skipWhitespaceAndComments();
+
+                if (!Character.isDigit(c)) {
+                    // TODO: Consider it an operator
+                    throw new LexerException(fileName, line, column, Character.toString((char) c));
+                }
+            }
+
             while (Character.isDigit(c)) {
                  str.appendCodePoint(next());
+            }
+
+            if (c == '.') {
+                next(); // .
+
+                if (Character.isDigit(c)) {
+                    str.appendCodePoint('.');
+
+                    while (Character.isDigit(c)) {
+                        str.appendCodePoint(next());
+                    }
+                } else {
+                    putBack('.');
+                }
             }
 
             t.str = str.toString();
@@ -157,7 +185,11 @@ public class Lexer {
     private int next() throws IOException {
         int old = c;
 
-        c = in.read();
+        if (putBackChars.isEmpty()) {
+            c = in.read();
+        } else {
+            c = putBackChars.pop();
+        }
 
         if (c == '\n') {
             line++;
@@ -167,5 +199,9 @@ public class Lexer {
         }
 
         return old;
+    }
+
+    private void putBack(int codePoint) {
+        putBackChars.push(codePoint);
     }
 }

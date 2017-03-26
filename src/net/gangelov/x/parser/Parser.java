@@ -34,12 +34,16 @@ public class Parser {
         }
 
         if (t.type == TokenType.Number) {
-            return new NumberLiteralNode(read().str);
+            return readNumberLiteral();
         } else if (t.type == TokenType.String) {
             return new StringLiteralNode(read().str);
         }
 
         throw new ParserException(lexer.getFileName(), t);
+    }
+
+    private ASTNode readNumberLiteral() throws IOException, Lexer.LexerException {
+        return new NumberLiteralNode(read().str);
     }
 
     private Token read() throws IOException, Lexer.LexerException {

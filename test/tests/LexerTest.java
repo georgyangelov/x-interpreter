@@ -39,6 +39,15 @@ class LexerTest {
     }
 
     @Test
+    void testNumbers() throws IOException, Lexer.LexerException {
+        assertEquals("(Number '1234') (EOF 'EOF')", lex("1234"));
+        assertEquals("(Number '-1234') (EOF 'EOF')", lex("-1234"));
+        assertEquals("(Number '-1234') (EOF 'EOF')", lex("- 1234"));
+        assertEquals("(Number '1234.5678') (EOF 'EOF')", lex("1234.5678"));
+        assertEquals("(Number '-1234.56') (EOF 'EOF')", lex("- 1234.56"));
+    }
+
+    @Test
     void testKeywords() throws IOException, Lexer.LexerException {
         assertEquals(
             "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') (While 'while') (Def 'def') (EOF 'EOF')",
