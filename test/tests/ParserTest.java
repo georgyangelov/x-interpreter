@@ -103,7 +103,7 @@ public class ParserTest {
 
     @Test
     void testNames() throws Exception {
-        assertEquals("test test_two test3", parse("test test_two test3"));
+        assertEquals("test test_two test3", parse("test \n test_two \n test3"));
     }
 
     @Test
@@ -116,12 +116,42 @@ public class ParserTest {
 
     @Test
     void testMethodCallsWithArguments() throws Exception {
+        assertEquals("(method self a)", parse("method(a)"));
+        assertEquals("(method self a)", parse("method a"));
+
         assertEquals("(method self a b c)", parse("method(a, b, c)"));
         assertEquals("(method self a b c)", parse("method a, b, c"));
+
         assertEquals("(method self a b c)", parse("method a, \n\n b,\n c"));
+
+        assertEquals("(method one a b c) (d two)", parse("one.method a, \n\n b,\n c\n two.d"));
+
+        assertEquals("(method target a)", parse("target.method(a)"));
+        assertEquals("(method target a)", parse("target.method a"));
 
         assertEquals("(method target a b c)", parse("target.method(a, b, c)"));
         assertEquals("(method target a b c)", parse("target.method a, b, c"));
+    }
+
+    @Test
+    void testArgumentAssociativity() throws Exception {
+        assertEquals("(one self (two self a b))", parse("one two a, b"));
+        assertEquals("(one self (two self a) b)", parse("one two(a), b"));
+        assertEquals("(one self (two self a b))", parse("one(two a, b)"));
+        assertEquals("(one self (two self a b) c d)", parse("one two(a, b), c, d"));
+
+        assertEquals("(method self a b c) d", parse("method a, \n\n b,\n c\n d"));
+        assertEquals("(method self a b c) d", parse("method(a, \n\n b,\n c\n) d"));
+        assertEquals("(method self a b (c self (d self (e self f))))", parse("method a, \n\n b,\n c d e f"));
+    }
+
+    @Test
+    void testMethodCallPriority() throws Exception {
+        assertEquals("(one self (+ a b))", parse("one a + b"));
+        assertEquals("(+ (one self a) b)", parse("one(a) + b"));
+
+        assertEquals("(one self a (+ b c))", parse("one a, b + c"));
+        assertEquals("(+ (one self a b) c)", parse("one(a, b) + c"));
     }
 
     @Test

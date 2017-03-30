@@ -3,6 +3,8 @@ package net.gangelov.x.parser;
 import net.gangelov.x.ast.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Parser {
     public class ParserException extends Exception {
@@ -101,18 +103,6 @@ public class Parser {
     }
 
     private ASTNode maybeParseMethodCall(ASTNode target) throws IOException, Lexer.LexerException, ParserException {
-        if (target instanceof NameNode && t.type == TokenType.OpenParen) {
-            read(); // (
-
-            if (t.type == TokenType.CloseParen) {
-                read(); // )
-            } else {
-                throw new ParserException(lexer.getFileName(), t);
-            }
-
-            return new MethodCallNode(((NameNode)target).name, new NameNode("self"));
-        }
-
         // target.call
         if (t.type == TokenType.Dot) {
             read(); // .
@@ -123,20 +113,60 @@ public class Parser {
 
             Token name = read();
 
-            if (t.type == TokenType.OpenParen) {
-                read(); // (
+            List<ASTNode> arguments = parseArguments();
 
-                if (t.type == TokenType.CloseParen) {
-                    read(); // )
-                } else {
-                    throw new ParserException(lexer.getFileName(), t);
-                }
-            }
+            return new MethodCallNode(name.str, target, arguments);
+        }
 
-            return new MethodCallNode(name.str, target);
+        // target a
+        if (target instanceof NameNode && !newline && t.type != TokenType.EOF && t.type != TokenType.BinaryOperator && t.type != TokenType.Comma && t.type != TokenType.CloseParen) {
+            List<ASTNode> arguments = parseArguments();
+
+            return new MethodCallNode(((NameNode)target).name, new NameNode("self"), arguments);
         }
 
         return target;
+    }
+
+    private List<ASTNode> parseArguments() throws ParserException, IOException, Lexer.LexerException {
+        List<ASTNode> arguments = new ArrayList<>();
+        boolean withParens = false;
+
+        if (t.type == TokenType.OpenParen) {
+            read(); // (
+            withParens = true;
+        }
+
+        if (!withParens && (newline || t.type == TokenType.EOF)) {
+            return arguments;
+        }
+
+        if (withParens && t.type == TokenType.CloseParen) {
+            read(); // )
+            return arguments;
+        }
+
+        while (true) {
+            arguments.add(parseNext());
+
+            if (t.type != TokenType.Comma) {
+                break;
+            }
+
+            read(); // ,
+        }
+
+        if (withParens) {
+            if (t.type != TokenType.CloseParen) {
+                throw new ParserException(lexer.getFileName(), t);
+            }
+
+            read(); // )
+        } else if (!newline && t.type != TokenType.EOF && t.type != TokenType.CloseParen) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        return arguments;
     }
 
     private int operatorPrecedence(Token op) throws ParserException {

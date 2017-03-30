@@ -21,6 +21,14 @@ public class MethodCallNode extends ASTNode {
         this.arguments = Arrays.asList(nodes);
     }
 
+    public MethodCallNode(String name, ASTNode target, List<ASTNode> arguments) {
+        super();
+        this.name = name;
+        this.arguments = new ArrayList<>();
+        this.arguments.add(target);
+        this.arguments.addAll(arguments);
+    }
+
     @Override
     public void visit(Visitor visitor) {
         visitor.visit(this);
