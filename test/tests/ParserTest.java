@@ -27,6 +27,13 @@ public class ParserTest {
     }
 
     @Test
+    void testNegatingExpressions() throws Exception {
+        assertEquals("(- test)", parse("-test"));
+        assertEquals("(+ -5 5)", parse("-   5 + 5"));
+        assertEquals("(- (+ 5 5))", parse("-   (5 + 5)"));
+    }
+
+    @Test
     void testStringLiterals() throws Exception {
         assertEquals("\"Hello world!\"", parse("\"Hello world!\""));
         assertEquals("\"\\\"\\n\"", parse("\"\\\"\\n\""));
@@ -86,7 +93,12 @@ public class ParserTest {
     @Test
     void testNewlinesInExpressions() throws Exception {
         assertEquals("(= a (* 5 5))", parse("a =\n\n 5 * 5"));
-        assertEquals("(+ 1 (* 2 3))", parse("1 +\n\n 2 \n\n * \n\n 3"));
+
+        assertEquals("(- (+ 1 2) 5)", parse("1 + 2 - 5"));
+        assertEquals("(+ 1 2) -5", parse("1 + 2 \n - 5"));
+
+        assertEquals("(+ 1 (* 2 3))", parse("1 +\n\n 2 * \n\n 3"));
+        assertThrows(Parser.ParserException.class, () -> parse("1 +\n\n 2 \n * \n\n 3"));
     }
 
     @Test

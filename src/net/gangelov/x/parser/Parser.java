@@ -39,6 +39,10 @@ public class Parser {
         ASTNode left = parsePrimary();
 
         while (true) {
+            if (newline) {
+                return left;
+            }
+
             if (t.type != TokenType.BinaryOperator) {
                 return left;
             }
@@ -56,10 +60,24 @@ public class Parser {
     }
 
     private ASTNode parsePrimary() throws IOException, Lexer.LexerException, ParserException {
-        ASTNode target = parseMethodTarget();
-        ASTNode result = maybeParseMethodCall(target);
+        if (t.type == TokenType.BinaryOperator && t.str.equals("-")) {
+            read(); // -
 
-        return result;
+            ASTNode expression = parsePrimary();
+
+            if (expression instanceof NumberLiteralNode) {
+                NumberLiteralNode number = (NumberLiteralNode)expression;
+                number.str = "-" + number.str;
+
+                return number;
+            } else {
+                return new MethodCallNode("-", expression);
+            }
+        }
+
+        ASTNode target = parseMethodTarget();
+
+        return maybeParseMethodCall(target);
     }
 
     private ASTNode parseMethodTarget() throws ParserException, IOException, Lexer.LexerException {
