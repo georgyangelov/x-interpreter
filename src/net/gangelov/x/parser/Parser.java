@@ -119,7 +119,7 @@ public class Parser {
         }
 
         // target a
-        if (target instanceof NameNode && !newline && t.type != TokenType.EOF && t.type != TokenType.BinaryOperator && t.type != TokenType.Comma && t.type != TokenType.CloseParen) {
+        if (target instanceof NameNode && !currentExpressionMayEnd()) {
             List<ASTNode> arguments = parseArguments();
 
             return new MethodCallNode(((NameNode)target).name, new NameNode("self"), arguments);
@@ -162,7 +162,7 @@ public class Parser {
             }
 
             read(); // )
-        } else if (!newline && t.type != TokenType.EOF && t.type != TokenType.CloseParen) {
+        } else if (!currentExpressionMayEnd()) {
             throw new ParserException(lexer.getFileName(), t);
         }
 
@@ -179,6 +179,14 @@ public class Parser {
             case "*":case "/": return 6;
             default: throw new ParserException(lexer.getFileName(), op);
         }
+    }
+
+    private boolean currentExpressionMayEnd() {
+        return newline ||
+               t.type == TokenType.EOF ||
+               t.type == TokenType.BinaryOperator ||
+               t.type == TokenType.Comma ||
+               t.type == TokenType.CloseParen;
     }
 
     private Token read() throws IOException, Lexer.LexerException {

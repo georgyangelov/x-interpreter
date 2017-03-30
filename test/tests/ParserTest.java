@@ -155,6 +155,12 @@ public class ParserTest {
     }
 
     @Test
+    void testMethodCallLineCompleteness() throws Exception {
+        assertThrows(Parser.ParserException.class, () -> parse("call 1234 b"));
+        assertThrows(Parser.ParserException.class, () -> parse("call \"test\" b"));
+    }
+
+    @Test
     void testMethodCallOnLiterals() throws Exception {
         assertEquals("(abs 1234)", parse("1234.abs"));
     }
