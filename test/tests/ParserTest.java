@@ -73,6 +73,11 @@ public class ParserTest {
 
         assertEquals("(== 1 (+ 2 (* 2 3)))", parse("1 == 2 + 2 * 3"));
         assertEquals("(== 1 (+ (* 2 2) 3))", parse("1 == 2 * 2 + 3"));
+        assertEquals("(!= 1 (+ (* 2 2) 3))", parse("1 != 2 * 2 + 3"));
+        assertEquals("(<= 1 (+ (* 2 2) 3))", parse("1 <= 2 * 2 + 3"));
+        assertEquals("(>= 1 (+ (* 2 2) 3))", parse("1 >= 2 * 2 + 3"));
+        assertEquals("(< 1 (+ (* 2 2) 3))", parse("1 < 2 * 2 + 3"));
+        assertEquals("(> 1 (+ (* 2 2) 3))", parse("1 > 2 * 2 + 3"));
 
         assertEquals("(+ (- 1 (* (/ 2 3) 4)) 5)", parse("1 - 2 / 3 * 4 + 5"));
 
