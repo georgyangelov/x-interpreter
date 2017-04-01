@@ -77,4 +77,15 @@ public class ASTInspector extends Visitor {
 
         str.append(" }");
     }
+
+    @Override
+    public void visit(WhileNode node) {
+        str.append("(while ");
+        node.condition.visit(this);
+
+        str.append(" ");
+        node.body.visit(this);
+
+        str.append(")");
+    }
 }

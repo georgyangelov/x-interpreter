@@ -56,7 +56,9 @@ public class ParserTest {
 
     @Test
     void testWhile() throws Exception {
-        assertEquals("(while a { b c }", parse("while a\n b\n c end"));
+        assertEquals("(while a { b c })", parse("while a\n b\n c end"));
+        assertEquals("(while a { (b self c) })", parse("while a\n b c end"));
+        assertEquals("(while a { (c b) })", parse("while a\n b.c end"));
     }
 
     @Test

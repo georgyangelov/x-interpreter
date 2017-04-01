@@ -22,4 +22,9 @@ public class Visitor {
             n.visit(this);
         }
     }
+
+    public void visit(WhileNode node) {
+        node.condition.visit(this);
+        node.body.visit(this);
+    }
 }

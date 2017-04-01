@@ -89,6 +89,7 @@ public class Parser {
             case Name:          return new NameNode(read().str);
             case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
             case If:            return parseIf();
+            case While:         return parseWhile();
             case OpenParen:
                 read(); // (
                 ASTNode node = parseNext();
@@ -101,6 +102,26 @@ public class Parser {
         }
 
         throw new ParserException(lexer.getFileName(), t);
+    }
+
+    private WhileNode parseWhile() throws IOException, Lexer.LexerException, ParserException {
+        read(); // while
+
+        ASTNode condition = parseNext();
+
+        if (!newline) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        BlockNode body = parseBlock();
+
+        if (t.type != TokenType.End) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // end
+
+        return new WhileNode(condition, body);
     }
 
     private BranchNode parseIf() throws IOException, Lexer.LexerException, ParserException {
