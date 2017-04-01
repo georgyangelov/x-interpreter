@@ -104,7 +104,7 @@ public class Parser {
     }
 
     private BranchNode parseIf() throws IOException, Lexer.LexerException, ParserException {
-        read(); // if
+        read(); // `if` or `elsif`
 
         ASTNode condition = parseNext();
 
@@ -118,13 +118,21 @@ public class Parser {
         if (t.type == TokenType.Else) {
             read(); // else
             false_branch = parseBlock();
-        }
 
-        if (t.type != TokenType.End) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
+            if (t.type != TokenType.End) {
+                throw new ParserException(lexer.getFileName(), t);
+            }
 
-        read(); // end
+            read(); // end
+        } else if (t.type == TokenType.Elsif) {
+            false_branch.nodes.add(parseIf());
+        } else {
+            if (t.type != TokenType.End) {
+                throw new ParserException(lexer.getFileName(), t);
+            }
+
+            read(); // end
+        }
 
         return new BranchNode(condition, true_branch, false_branch);
     }
