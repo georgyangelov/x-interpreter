@@ -49,4 +49,32 @@ public class ASTInspector extends Visitor {
 
         str.append(")");
     }
+
+    @Override
+    public void visit(BranchNode node) {
+        str.append("(if ");
+        node.condition.visit(this);
+
+        str.append(" ");
+        node.true_branch.visit(this);
+
+        if (!node.false_branch.isEmpty()) {
+            str.append(" ");
+            node.false_branch.visit(this);
+        }
+
+        str.append(")");
+    }
+
+    @Override
+    public void visit(BlockNode node) {
+        str.append("{");
+
+        for (ASTNode n : node.nodes) {
+            str.append(" ");
+            n.visit(this);
+        }
+
+        str.append(" }");
+    }
 }

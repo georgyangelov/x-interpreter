@@ -40,16 +40,23 @@ public class ParserTest {
     }
 
     @Test
-    void testIf() throws Exception {
-        assertEquals("(if a { b c })", parse("if a \n b c end"));
-        assertEquals("(if a { b c } { d e })", parse("if a \n b c else d e end"));
-        assertEquals("(if 1 { 2 } (if 3 { 4 }))", parse("if 1\n 2\nelsif 3\n4\nend"));
-        assertEquals("(if 1 { 2 } (if 3 { 4 } { 5 }))", parse("if 1\n 2\nelsif 3\n4\nelse\n5\nend"));
+    void testSimpleIfs() throws Exception {
+        assertEquals("(if a { (b self c) })", parse("if a \n b c end"));
+        assertEquals("(if a { b c })", parse("if a \n b\n c end"));
+        assertEquals("(if a { b } { d })", parse("if a \n b else d end"));
+        assertEquals("(if a { b c } { d e })", parse("if a \n b \n c else d \n e end"));
+        assertEquals("(if a { (test b) })", parse("if a \n b.test end"));
+    }
+
+    @Test
+    void testElseIf() throws Exception {
+        assertEquals("(if 1 { 2 } { (if 3 { 4 }) })", parse("if 1\n 2\nelsif 3\n4\nend"));
+        assertEquals("(if 1 { 2 } { (if 3 { 4 } { 5 }) })", parse("if 1\n 2\nelsif 3\n4\nelse\n5\nend"));
     }
 
     @Test
     void testWhile() throws Exception {
-        assertEquals("(while a { b c }", parse("while a\n b c end"));
+        assertEquals("(while a { b c }", parse("while a\n b\n c end"));
     }
 
     @Test
@@ -173,7 +180,8 @@ public class ParserTest {
     @Test
     void testMethodDefinitions() throws Exception {
         assertEquals("(def method Int [] { a b })", parse("def method:Int\na b\n end"));
-        assertEquals("(def method Int [(argument a Int) (argument b String)] { a b })", parse("def method(a:Int, b:String):Int\na b\n end"));
+        assertEquals("(def method Int [(argument a Int) (argument b String)] { a b })",
+                parse("def method(a:Int, b:String):Int\na b\n end"));
     }
 
     @Test

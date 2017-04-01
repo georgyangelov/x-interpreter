@@ -88,6 +88,7 @@ public class Parser {
             case String:        return new StringLiteralNode(read().str);
             case Name:          return new NameNode(read().str);
             case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
+            case If:            return parseIf();
             case OpenParen:
                 read(); // (
                 ASTNode node = parseNext();
@@ -100,6 +101,42 @@ public class Parser {
         }
 
         throw new ParserException(lexer.getFileName(), t);
+    }
+
+    private BranchNode parseIf() throws IOException, Lexer.LexerException, ParserException {
+        read(); // if
+
+        ASTNode condition = parseNext();
+
+        if (!newline) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        BlockNode true_branch = parseBlock();
+        BlockNode false_branch = new BlockNode();
+
+        if (t.type == TokenType.Else) {
+            read(); // else
+            false_branch = parseBlock();
+        }
+
+        if (t.type != TokenType.End) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // end
+
+        return new BranchNode(condition, true_branch, false_branch);
+    }
+
+    private BlockNode parseBlock() throws ParserException, IOException, Lexer.LexerException {
+        List<ASTNode> nodes = new ArrayList<>();
+
+        while (!blockEnds()) {
+            nodes.add(parseNext());
+        }
+
+        return new BlockNode(nodes);
     }
 
     private ASTNode maybeParseMethodCall(ASTNode target) throws IOException, Lexer.LexerException, ParserException {
@@ -137,7 +174,7 @@ public class Parser {
             withParens = true;
         }
 
-        if (!withParens && (newline || t.type == TokenType.EOF)) {
+        if (!withParens && currentExpressionMayEnd()) {
             return arguments;
         }
 
@@ -186,7 +223,14 @@ public class Parser {
                t.type == TokenType.EOF ||
                t.type == TokenType.BinaryOperator ||
                t.type == TokenType.Comma ||
-               t.type == TokenType.CloseParen;
+               t.type == TokenType.CloseParen ||
+               blockEnds();
+    }
+
+    private boolean blockEnds() {
+        return t.type == TokenType.End ||
+               t.type == TokenType.Else ||
+               t.type == TokenType.Elsif;
     }
 
     private Token read() throws IOException, Lexer.LexerException {
