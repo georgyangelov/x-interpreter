@@ -1,30 +1,38 @@
 package net.gangelov.x.ast;
 
-public class Visitor {
-    public void visit(NumberLiteralNode node) {}
-    public void visit(StringLiteralNode node) {}
-    public void visit(NameNode node) {}
+public class Visitor extends AbstractVisitor<Void, Void> {
+    public Void visit(NumberLiteralNode node, Void context) { return null; }
+    public Void visit(StringLiteralNode node, Void context) { return null; }
+    public Void visit(NameNode node, Void context) { return null; }
 
-    public void visit(MethodCallNode node) {
+    public Void visit(MethodCallNode node, Void context) {
         for (ASTNode n : node.arguments) {
-            n.visit(this);
+            n.visit(this, context);
         }
+
+        return null;
     }
 
-    public void visit(BranchNode node) {
-        node.condition.visit(this);
-        node.true_branch.visit(this);
-        node.false_branch.visit(this);
+    public Void visit(BranchNode node, Void context) {
+        node.condition.visit(this, context);
+        node.true_branch.visit(this, context);
+        node.false_branch.visit(this, context);
+
+        return null;
     }
 
-    public void visit(BlockNode node) {
+    public Void visit(BlockNode node, Void context) {
         for (ASTNode n : node.nodes) {
-            n.visit(this);
+            n.visit(this, context);
         }
+
+        return null;
     }
 
-    public void visit(WhileNode node) {
-        node.condition.visit(this);
-        node.body.visit(this);
+    public Void visit(WhileNode node, Void context) {
+        node.condition.visit(this, context);
+        node.body.visit(this, context);
+
+        return null;
     }
 }

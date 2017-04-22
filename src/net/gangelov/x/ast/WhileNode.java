@@ -15,7 +15,7 @@ public class WhileNode extends ASTNode {
     }
 
     @Override
-    public void visit(Visitor visitor) {
-        visitor.visit(this);
+    public <T, C> T visit(AbstractVisitor<T, C> visitor, C context) {
+        return visitor.visit(this, context);
     }
 }

@@ -6,7 +6,7 @@ import net.gangelov.x.parser.EscapeSequences;
 public class ASTInspector extends Visitor {
     public static String inspect(ASTNode node) {
         ASTInspector inspector = new ASTInspector();
-        node.visit(inspector);
+        node.visit(inspector, null);
 
         return inspector.getString();
     }
@@ -18,74 +18,82 @@ public class ASTInspector extends Visitor {
     }
 
     @Override
-    public void visit(NumberLiteralNode node) {
+    public Void visit(NumberLiteralNode node, Void context) {
         str.append(node.str);
 
-        super.visit(node);
+        return null;
     }
 
     @Override
-    public void visit(StringLiteralNode node) {
+    public Void visit(StringLiteralNode node, Void context) {
         str.append("\"").append(EscapeSequences.convertToSequences(node.str)).append("\"");
 
-        super.visit(node);
+        return null;
     }
 
     @Override
-    public void visit(NameNode node) {
+    public Void visit(NameNode node, Void context) {
         str.append(node.name);
 
-        super.visit(node);
+        return null;
     }
 
     @Override
-    public void visit(MethodCallNode node) {
+    public Void visit(MethodCallNode node, Void context) {
         str.append("(").append(node.name);
 
         for (ASTNode arg : node.arguments) {
             str.append(" ");
-            arg.visit(this);
+            arg.visit(this, context);
         }
 
         str.append(")");
+
+        return null;
     }
 
     @Override
-    public void visit(BranchNode node) {
+    public Void visit(BranchNode node, Void context) {
         str.append("(if ");
-        node.condition.visit(this);
+        node.condition.visit(this, context);
 
         str.append(" ");
-        node.true_branch.visit(this);
+        node.true_branch.visit(this, context);
 
         if (!node.false_branch.isEmpty()) {
             str.append(" ");
-            node.false_branch.visit(this);
+            node.false_branch.visit(this, context);
         }
 
         str.append(")");
+
+        return null;
     }
 
     @Override
-    public void visit(BlockNode node) {
+    public Void visit(BlockNode node, Void context) {
         str.append("{");
 
         for (ASTNode n : node.nodes) {
             str.append(" ");
-            n.visit(this);
+            n.visit(this, context);
         }
 
         str.append(" }");
+
+        return null;
     }
 
     @Override
-    public void visit(WhileNode node) {
+    public Void visit(WhileNode node, Void context) {
         str.append("(while ");
-        node.condition.visit(this);
+        node.condition.visit(this, context);
 
         str.append(" ");
-        node.body.visit(this);
+        node.body.visit(this, context);
 
         str.append(")");
+
+        return null;
     }
 }
