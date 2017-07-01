@@ -32,15 +32,16 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 .map(argument -> argument.visit(this, context))
                 .collect(Collectors.toList());
 
-        // TODO: Optimize type detection, do not do it multiple times for the same object
         String className = arguments.get(0).getClassName();
 
         // TODO: Check for null
         Class klass = context.getClass(className);
 
-        // TODO: Check if method exists
         // TODO: Check method arity
         Method method = klass.getMethod(node.name);
+        if (method == null) {
+            throw new Evaluator.RuntimeError("No method " + node.name + " on class " + klass.name);
+        }
 
         return method.call(arguments);
     }

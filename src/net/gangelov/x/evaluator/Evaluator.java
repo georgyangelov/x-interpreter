@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Evaluator {
+    // TODO: Use non-runtime exception?
+    public static class RuntimeError extends RuntimeException {
+        public RuntimeError(String message) {
+            super(message);
+        }
+    }
+
     private List<ASTNode> nodes;
     private EvaluatorTransform transformer = new EvaluatorTransform();
     private EvaluatorContext context = new EvaluatorContext();

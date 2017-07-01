@@ -43,6 +43,17 @@ public class EvaluatorTest {
         assertEquals("31", eval("1 + 3 * 5 * 4 / (3 - 1)"));
     }
 
+    @Test
+    void testNoMethodError() throws Exception {
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("1.work");
+        });
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("\"Hello\" + 1");
+        });
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();
