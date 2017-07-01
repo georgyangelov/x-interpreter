@@ -1,18 +1,23 @@
 package net.gangelov.x.evaluator;
 
-import net.gangelov.x.runtime.IntegerClass;
-import net.gangelov.x.runtime.base.Method;
-import net.gangelov.x.runtime.base.Module;
-import net.gangelov.x.runtime.base.Value;
-import net.gangelov.x.runtime.interop.JavaMethod;
+import net.gangelov.x.runtime.base.Class;
+import net.gangelov.x.runtime.types.IntegerClass;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EvaluatorContext {
-    public Module global = new Module();
+    private final Map<String, Class> classes = new HashMap<>();
 
     public EvaluatorContext() {
-        global.defineConstant("Integer", new IntegerClass());
-        global.defineMethod("new_int", new JavaMethod((self, args) -> {
-            return global.getConstant(IntegerClass.class, "Integer").createInstance();
-        }));
+        defineClass(new IntegerClass());
+    }
+
+    public void defineClass(Class klass) {
+        classes.put(klass.name, klass);
+    }
+
+    public Class getClass(String name) {
+        return classes.get(name);
     }
 }

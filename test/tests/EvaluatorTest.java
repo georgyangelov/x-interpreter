@@ -4,6 +4,7 @@ import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.debug.ASTInspector;
 import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.parser.Parser;
+import net.gangelov.x.runtime.Value;
 import org.junit.jupiter.api.Test;
 import tests.support.ParserSupport;
 
@@ -31,10 +32,11 @@ public class EvaluatorTest {
 
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
-        List<ASTNode> results = new Evaluator(nodes).evaluate();
+        List<Value> results = new Evaluator(nodes).evaluate();
 
         return results.stream()
-                .map(ASTInspector::inspect)
+//                .map(ASTInspector::inspect)
+                .map(Value::inspect)
                 .collect(Collectors.joining(" "));
     }
 }
