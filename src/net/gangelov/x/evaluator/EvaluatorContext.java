@@ -2,6 +2,7 @@ package net.gangelov.x.evaluator;
 
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.types.IntegerClass;
+import net.gangelov.x.runtime.types.StringClass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class EvaluatorContext {
 
     public EvaluatorContext() {
         defineClass(new IntegerClass());
+        defineClass(new StringClass());
     }
 
     public void defineClass(Class klass) {

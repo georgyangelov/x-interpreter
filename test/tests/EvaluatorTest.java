@@ -30,6 +30,12 @@ public class EvaluatorTest {
         assertEquals("15", eval("5 * 3"));
     }
 
+    @Test
+    void testSimpleStringMethods() throws Exception {
+        assertEquals("5", eval("\"Hello\".length"));
+        assertEquals("\"Hello world!\"", eval("\"Hello \".concat \"world!\""));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();
