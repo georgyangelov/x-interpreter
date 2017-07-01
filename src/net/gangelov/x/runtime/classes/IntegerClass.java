@@ -11,25 +11,32 @@ public class IntegerClass extends Class {
     public IntegerClass() {
         super("Integer");
 
-        defineMethod(new Method("+", (List<Value> args) -> {
+        defineMethod(new Method("+", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
             return new IntegerValue(a + b);
         }));
 
-        defineMethod(new Method("-", (List<Value> args) -> {
+        defineMethod(new Method("-", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
             return new IntegerValue(a - b);
         }));
 
-        defineMethod(new Method("*", (List<Value> args) -> {
+        defineMethod(new Method("*", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
             return new IntegerValue(a * b);
+        }));
+
+        defineMethod(new Method("/", args -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            return new IntegerValue(a / b);
         }));
     }
 

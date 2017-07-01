@@ -36,12 +36,18 @@ public class EvaluatorTest {
         assertEquals("\"Hello world!\"", eval("\"Hello \".concat \"world!\""));
     }
 
+    @Test
+    void testNestedExpressions() throws Exception {
+        assertEquals("6", eval("\"Hello\".length + 1"));
+        assertEquals("13", eval("1 + \"Hello\".length + \" world!\".length"));
+        assertEquals("31", eval("1 + 3 * 5 * 4 / (3 - 1)"));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();
 
         return results.stream()
-//                .map(ASTInspector::inspect)
                 .map(Value::inspect)
                 .collect(Collectors.joining(" "));
     }
