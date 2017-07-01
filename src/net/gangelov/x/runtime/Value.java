@@ -7,4 +7,8 @@ public abstract class Value {
     public String inspect() {
         return "UNKNOWN";
     }
+
+    public boolean asBoolean() {
+        return true;
+    }
 }

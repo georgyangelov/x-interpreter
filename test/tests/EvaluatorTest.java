@@ -54,6 +54,15 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testIf() throws Exception {
+        assertEquals("2", eval("if 1 \n 2 end"));
+        assertEquals("42", eval("if 0 \n 1 else 42 end"));
+        assertEquals("nil", eval("if 0 \n 1 end"));
+        assertEquals("2", eval("if 0 \n 1 elsif 1 \n 2 end"));
+        assertEquals("3", eval("if 0 \n 1 elsif 0 \n 2 else 3 end"));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();

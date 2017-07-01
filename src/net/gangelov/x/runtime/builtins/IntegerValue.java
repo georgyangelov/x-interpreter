@@ -23,4 +23,9 @@ public class IntegerValue extends Value {
     public String inspect() {
         return Integer.toString(value);
     }
+
+    @Override
+    public boolean asBoolean() {
+        return value != 0;
+    }
 }

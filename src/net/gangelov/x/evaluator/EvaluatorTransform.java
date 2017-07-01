@@ -5,6 +5,7 @@ import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.IntegerValue;
+import net.gangelov.x.runtime.builtins.NilValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
 import java.util.List;
@@ -49,21 +50,25 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     @Override
     public Value visit(BranchNode node, EvaluatorContext context) {
         Value condition = node.condition.visit(this, context);
-        BlockNode true_branch = (BlockNode)node.true_branch.visit(this, context);
-        BlockNode false_branch = (BlockNode)node.false_branch.visit(this, context);
 
-//        return new BranchNode(condition, true_branch, false_branch);
-        return null;
+        if (condition.asBoolean()) {
+            return node.true_branch.visit(this, context);
+        } else {
+            return node.false_branch.visit(this, context);
+        }
     }
 
     @Override
-    public BlockNode visit(BlockNode node, EvaluatorContext context) {
+    public Value visit(BlockNode node, EvaluatorContext context) {
         List<Value> nodes = node.nodes.stream()
                 .map(n -> n.visit(this, context))
                 .collect(Collectors.toList());
 
-//        return new BlockNode(nodes);
-        return null;
+        if (nodes.size() > 0) {
+            return nodes.get(nodes.size() - 1);
+        } else {
+            return NilValue.instance;
+        }
     }
 
     @Override
