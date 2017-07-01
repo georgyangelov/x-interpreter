@@ -4,21 +4,21 @@ import net.gangelov.x.ast.*;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
+import net.gangelov.x.runtime.builtins.IntegerValue;
+import net.gangelov.x.runtime.builtins.StringValue;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext> {
-    private TypeDetector typeDetector = new TypeDetector();
-
     @Override
     public Value visit(NumberLiteralNode node, EvaluatorContext context) {
-        return node;
+        return new IntegerValue(node);
     }
 
     @Override
     public Value visit(StringLiteralNode node, EvaluatorContext context) {
-        return node;
+        return new StringValue(node);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 .collect(Collectors.toList());
 
         // TODO: Optimize type detection, do not do it multiple times for the same object
-        String className = node.arguments.get(0).visit(typeDetector, null);
+        String className = arguments.get(0).getClassName();
 
         // TODO: Check for null
         Class klass = context.getClass(className);
