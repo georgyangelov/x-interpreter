@@ -1,6 +1,5 @@
-package net.gangelov.x.runtime.types;
+package net.gangelov.x.runtime.classes;
 
-import net.gangelov.x.ast.NumberLiteralNode;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;

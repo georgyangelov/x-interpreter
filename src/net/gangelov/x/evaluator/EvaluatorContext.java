@@ -1,8 +1,8 @@
 package net.gangelov.x.evaluator;
 
 import net.gangelov.x.runtime.base.Class;
-import net.gangelov.x.runtime.types.IntegerClass;
-import net.gangelov.x.runtime.types.StringClass;
+import net.gangelov.x.runtime.classes.IntegerClass;
+import net.gangelov.x.runtime.classes.StringClass;
 
 import java.util.HashMap;
 import java.util.Map;
