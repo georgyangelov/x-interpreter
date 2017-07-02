@@ -98,11 +98,29 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(MethodDefinitionNode methodDefinitionNode, EvaluatorContext context) {
-        return null;
+        Method method = new Method(methodDefinitionNode.name, args -> {
+            List<MethodArgumentNode> formalArgs = methodDefinitionNode.arguments;
+            EvaluatorContext callContext = context.scope();
+
+            callContext.defineLocal("self", args.get(0));
+
+            // TODO: Check arity
+            // TODO: Check types
+            for (int i = 0; i < formalArgs.size(); i++) {
+                callContext.defineLocal(formalArgs.get(i).name, args.get(i + 1));
+            }
+
+            return methodDefinitionNode.body.visit(this, callContext);
+        });
+
+        Class selfClass = context.getClass(context.getLocal("self").getClassName());
+        selfClass.defineMethod(method);
+
+        return new StringValue(methodDefinitionNode.name);
     }
 
     @Override
     public Value visit(MethodArgumentNode methodDefinitionNode, EvaluatorContext context) {
-        return null;
+        throw new RuntimeException("This should not be called");
     }
 }
