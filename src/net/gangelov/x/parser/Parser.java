@@ -115,37 +115,28 @@ public class Parser {
                 return node;
         }
 
-        throw new ParserException(lexer.getFileName(), t);
+        parseError();
+        
+        return null;
     }
 
     private MethodDefinitionNode parseDef() throws IOException, Lexer.LexerException, ParserException {
         read(); // def
 
-        if (t.type != TokenType.Name) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Name) parseError();
         String name = read().str;
 
         List<MethodArgumentNode> arguments = parseMethodArguments();
 
-        if (t.type != TokenType.Colon) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Colon) parseError();
         read(); // :
 
-        if (t.type != TokenType.Name) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Name) parseError();
         String returnType = read().str;
+
         BlockNode body = parseBlock();
 
-        if (t.type != TokenType.End) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.End) parseError();
         read(); // end
 
         return new MethodDefinitionNode(name, returnType, arguments, body);
@@ -171,10 +162,7 @@ public class Parser {
             read(); // ,
         }
 
-        if (t.type != TokenType.CloseParen) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.CloseParen) parseError();
         read(); // )
 
         return arguments;
@@ -182,22 +170,13 @@ public class Parser {
 
     private MethodArgumentNode parseMethodArgument()
             throws IOException, Lexer.LexerException, ParserException {
-        if (t.type != TokenType.Name) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Name) parseError();
         String name = read().str;
 
-        if (t.type != TokenType.Colon) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Colon) parseError();
         read(); // :
 
-        if (t.type != TokenType.Name) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.Name) parseError();
         String type = read().str;
 
         return new MethodArgumentNode(name, type);
@@ -208,16 +187,11 @@ public class Parser {
 
         ASTNode condition = parseNext();
 
-        if (!newline) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
+        if (!newline) parseError();
 
         BlockNode body = parseBlock();
 
-        if (t.type != TokenType.End) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
-
+        if (t.type != TokenType.End) parseError();
         read(); // end
 
         return new WhileNode(condition, body);
@@ -228,9 +202,7 @@ public class Parser {
 
         ASTNode condition = parseNext();
 
-        if (!newline) {
-            throw new ParserException(lexer.getFileName(), t);
-        }
+        if (!newline) parseError();
 
         BlockNode true_branch = parseBlock();
         BlockNode false_branch = new BlockNode();
@@ -239,18 +211,12 @@ public class Parser {
             read(); // else
             false_branch = parseBlock();
 
-            if (t.type != TokenType.End) {
-                throw new ParserException(lexer.getFileName(), t);
-            }
-
+            if (t.type != TokenType.End) parseError();
             read(); // end
         } else if (t.type == TokenType.Elsif) {
             false_branch.nodes.add(parseIf());
         } else {
-            if (t.type != TokenType.End) {
-                throw new ParserException(lexer.getFileName(), t);
-            }
-
+            if (t.type != TokenType.End) parseError();
             read(); // end
         }
 
@@ -273,10 +239,7 @@ public class Parser {
         if (t.type == TokenType.Dot) {
             read(); // .
 
-            if (t.type != TokenType.Name) {
-                throw new ParserException(lexer.getFileName(), t);
-            }
-
+            if (t.type != TokenType.Name) parseError();
             Token name = read();
 
             List<ASTNode> arguments = parseArguments();
@@ -323,13 +286,10 @@ public class Parser {
         }
 
         if (withParens) {
-            if (t.type != TokenType.CloseParen) {
-                throw new ParserException(lexer.getFileName(), t);
-            }
-
+            if (t.type != TokenType.CloseParen) parseError();
             read(); // )
         } else if (!currentExpressionMayEnd()) {
-            throw new ParserException(lexer.getFileName(), t);
+            parseError();
         }
 
         return arguments;
@@ -374,5 +334,9 @@ public class Parser {
         }
 
         return old;
+    }
+
+    private void parseError() throws ParserException {
+        throw new ParserException(lexer.getFileName(), t);
     }
 }
