@@ -24,7 +24,23 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(NameNode node, EvaluatorContext context) {
-        return node;
+        Value value = context.getLocal(node.name);
+
+        if (value == null) {
+            // Maybe this is a method call without arguments?
+            return new MethodCallNode(node.name, new NameNode("self")).visit(this, context);
+        }
+
+        return value;
+    }
+
+    @Override
+    public Value visit(AssignmentNode node, EvaluatorContext context) {
+        Value value = node.value.visit(this, context);
+
+        context.defineLocal(node.name, value);
+
+        return value;
     }
 
     @Override

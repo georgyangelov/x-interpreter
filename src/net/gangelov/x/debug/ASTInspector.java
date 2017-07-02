@@ -39,6 +39,17 @@ public class ASTInspector extends Visitor {
     }
 
     @Override
+    public Void visit(AssignmentNode node, Void context) {
+        str.append("(= ").append(node.name).append(" ");
+
+        node.value.visit(this, context);
+
+        str.append(")");
+
+        return null;
+    }
+
+    @Override
     public Void visit(MethodCallNode node, Void context) {
         str.append("(").append(node.name);
 

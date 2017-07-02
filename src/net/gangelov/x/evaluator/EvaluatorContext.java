@@ -1,5 +1,6 @@
 package net.gangelov.x.evaluator;
 
+import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.classes.IntegerClass;
 import net.gangelov.x.runtime.classes.StringClass;
@@ -8,11 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EvaluatorContext {
+    private final EvaluatorContext parent;
+
     private final Map<String, Class> classes = new HashMap<>();
+    private final Map<String, Value> locals = new HashMap<>();
 
     public EvaluatorContext() {
-        defineClass(new IntegerClass());
-        defineClass(new StringClass());
+        parent = null;
+    }
+
+    public EvaluatorContext(EvaluatorContext parent) {
+        this.parent = parent;
+    }
+
+    public EvaluatorContext scope() {
+        return new EvaluatorContext(this);
     }
 
     public void defineClass(Class klass) {
@@ -20,6 +31,26 @@ public class EvaluatorContext {
     }
 
     public Class getClass(String name) {
-        return classes.get(name);
+        Class klass = classes.get(name);
+
+        if (klass == null && parent != null) {
+            klass = parent.getClass(name);
+        }
+
+        return klass;
+    }
+
+    public void defineLocal(String name, Value value) {
+        locals.put(name, value);
+    }
+
+    public Value getLocal(String name) {
+        Value value = locals.get(name);
+
+        if (value == null && parent != null) {
+            value = parent.getLocal(name);
+        }
+
+        return value;
     }
 }

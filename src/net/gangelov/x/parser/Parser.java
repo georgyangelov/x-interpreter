@@ -57,7 +57,15 @@ public class Parser {
             Token op = read();
             ASTNode right = parseExpression(opPrecedence + 1);
 
-            left = new MethodCallNode(op.str, left, right);
+            if (op.str.equals("=")) {
+                if (!(left instanceof NameNode)) {
+                    throw new ParserException("Assignment must have name as left-hand expression", op);
+                }
+
+                left = new AssignmentNode(((NameNode)left).name, right);
+            } else {
+                left = new MethodCallNode(op.str, left, right);
+            }
         }
     }
 

@@ -67,7 +67,15 @@ public class ParserTest {
         assertEquals("(* (* (* 1 2) 3) 4)", parse("1 * 2 * 3 * 4"));
         assertEquals("(- (- (- 1 2) 3) 4)", parse("1 - 2 - 3 - 4"));
         assertEquals("(/ (/ (/ 1 2) 3) 4)", parse("1 / 2 / 3 / 4"));
+    }
+
+    @Test
+    void testAssignment() throws Exception {
         assertEquals("(= a 15)", parse("a = 15"));
+        assertEquals("(= a (* 5 5))", parse("a = 5 * 5"));
+
+        assertThrows(Parser.ParserException.class, () -> parse("3 = 5"));
+        assertThrows(Parser.ParserException.class, () -> parse("a + b = 5"));
     }
 
     @Test
@@ -89,8 +97,6 @@ public class ParserTest {
         assertEquals("(> 1 (+ (* 2 2) 3))", parse("1 > 2 * 2 + 3"));
 
         assertEquals("(+ (- 1 (* (/ 2 3) 4)) 5)", parse("1 - 2 / 3 * 4 + 5"));
-
-        assertEquals("(= a (* 5 5))", parse("a = 5 * 5"));
     }
 
     @Test

@@ -63,12 +63,31 @@ public class EvaluatorTest {
         assertEquals("3", eval("if 0 \n 1 elsif 0 \n 2 else 3 end"));
     }
 
+    @Test
+    void testAssignment() throws Exception {
+        assertEquals("5", eval("a = 5"));
+        assertEquals("6", eval("a = 5 \n a + 1"));
+        assertEquals("7", eval("a = 5 \n a = a + 1 \n a + 1"));
+    }
+
+    @Test
+    void testGlobalMethods() throws Exception {
+        assertEquals("42", eval("global.the_answer"));
+        assertEquals("42", eval("self.the_answer"));
+        assertEquals("42", eval("the_answer"));
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("hey");
+        });
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();
 
         return results.stream()
+                .reduce((first, second) -> second)
                 .map(Value::inspect)
-                .collect(Collectors.joining(" "));
+                .get();
     }
 }

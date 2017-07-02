@@ -2,6 +2,10 @@ package net.gangelov.x.evaluator;
 
 import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.builtins.GlobalValue;
+import net.gangelov.x.runtime.classes.GlobalClass;
+import net.gangelov.x.runtime.classes.IntegerClass;
+import net.gangelov.x.runtime.classes.StringClass;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,18 @@ public class Evaluator {
 
     public Evaluator(List<ASTNode> nodes) {
         this.nodes = nodes;
+
+        defineBuiltins();
+    }
+
+    private void defineBuiltins() {
+        context.defineClass(new IntegerClass());
+        context.defineClass(new StringClass());
+        context.defineClass(new GlobalClass());
+
+        Value global = GlobalValue.instance;
+        context.defineLocal("self", global);
+        context.defineLocal("global", global);
     }
 
     public List<Value> evaluate() {
