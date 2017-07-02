@@ -9,7 +9,11 @@ import java.util.List;
 public class Parser {
     public class ParserException extends Exception {
         ParserException(String fileName, Token token) {
-            super("Unknown token '" + token.type.name() + "' at " + fileName + ":" + token.line + ":" + token.column);
+            super(
+                    "Unknown token '" +
+                    token.type.name() +
+                    "' at " + fileName + ":" + token.line + ":" + token.column
+            );
         }
     }
 
@@ -37,7 +41,8 @@ public class Parser {
         return parseExpression(0);
     }
 
-    private ASTNode parseExpression(int minPrecedence) throws ParserException, IOException, Lexer.LexerException {
+    private ASTNode parseExpression(int minPrecedence)
+            throws ParserException, IOException, Lexer.LexerException {
         ASTNode left = parsePrimary();
 
         while (true) {
@@ -98,6 +103,7 @@ public class Parser {
             case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
             case If:            return parseIf();
             case While:         return parseWhile();
+            case Def:           return parseDef();
             case OpenParen:
                 read(); // (
                 ASTNode node = parseNext();
@@ -110,6 +116,91 @@ public class Parser {
         }
 
         throw new ParserException(lexer.getFileName(), t);
+    }
+
+    private MethodDefinitionNode parseDef() throws IOException, Lexer.LexerException, ParserException {
+        read(); // def
+
+        if (t.type != TokenType.Name) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        String name = read().str;
+
+        List<MethodArgumentNode> arguments = parseMethodArguments();
+
+        if (t.type != TokenType.Colon) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // :
+
+        if (t.type != TokenType.Name) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        String returnType = read().str;
+        BlockNode body = parseBlock();
+
+        if (t.type != TokenType.End) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // end
+
+        return new MethodDefinitionNode(name, returnType, arguments, body);
+    }
+
+    private List<MethodArgumentNode> parseMethodArguments()
+            throws IOException, Lexer.LexerException, ParserException {
+        List<MethodArgumentNode> arguments = new ArrayList<>();
+
+        if (t.type != TokenType.OpenParen) {
+            return arguments;
+        }
+
+        read(); // (
+
+        while (true) {
+            arguments.add(parseMethodArgument());
+
+            if (t.type != TokenType.Comma) {
+                break;
+            }
+
+            read(); // ,
+        }
+
+        if (t.type != TokenType.CloseParen) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // )
+
+        return arguments;
+    }
+
+    private MethodArgumentNode parseMethodArgument()
+            throws IOException, Lexer.LexerException, ParserException {
+        if (t.type != TokenType.Name) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        String name = read().str;
+
+        if (t.type != TokenType.Colon) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        read(); // :
+
+        if (t.type != TokenType.Name) {
+            throw new ParserException(lexer.getFileName(), t);
+        }
+
+        String type = read().str;
+
+        return new MethodArgumentNode(name, type);
     }
 
     private WhileNode parseWhile() throws IOException, Lexer.LexerException, ParserException {
@@ -176,7 +267,8 @@ public class Parser {
         return new BlockNode(nodes);
     }
 
-    private ASTNode maybeParseMethodCall(ASTNode target) throws IOException, Lexer.LexerException, ParserException {
+    private ASTNode maybeParseMethodCall(ASTNode target)
+            throws IOException, Lexer.LexerException, ParserException {
         // target.call
         if (t.type == TokenType.Dot) {
             read(); // .

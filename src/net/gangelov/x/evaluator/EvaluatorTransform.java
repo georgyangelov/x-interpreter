@@ -95,4 +95,14 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 //        return new WhileNode(condition, body);
         return null;
     }
+
+    @Override
+    public Value visit(MethodDefinitionNode methodDefinitionNode, EvaluatorContext context) {
+        return null;
+    }
+
+    @Override
+    public Value visit(MethodArgumentNode methodDefinitionNode, EvaluatorContext context) {
+        return null;
+    }
 }
