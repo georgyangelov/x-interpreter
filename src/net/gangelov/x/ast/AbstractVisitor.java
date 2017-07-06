@@ -1,5 +1,7 @@
 package net.gangelov.x.ast;
 
+import net.gangelov.x.ast.nodes.*;
+
 public abstract class AbstractVisitor<T, C> {
     abstract public T visit(NumberLiteralNode node, C context);
     abstract public T visit(StringLiteralNode node, C context);

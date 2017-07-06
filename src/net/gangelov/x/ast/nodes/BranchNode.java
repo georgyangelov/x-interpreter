@@ -1,6 +1,8 @@
-package net.gangelov.x.ast;
+package net.gangelov.x.ast.nodes;
 
 import com.sun.istack.internal.NotNull;
+import net.gangelov.x.ast.ASTNode;
+import net.gangelov.x.ast.AbstractVisitor;
 
 public class BranchNode extends ASTNode {
     @NotNull

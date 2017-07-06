@@ -1,6 +1,7 @@
 package net.gangelov.x.debug;
 
 import net.gangelov.x.ast.*;
+import net.gangelov.x.ast.nodes.*;
 import net.gangelov.x.parser.EscapeSequences;
 
 public class ASTInspector extends Visitor {

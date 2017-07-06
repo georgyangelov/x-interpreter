@@ -1,4 +1,6 @@
-package net.gangelov.x.ast;
+package net.gangelov.x.ast.nodes;
+
+import net.gangelov.x.ast.ASTNode;
 
 public abstract class LiteralNode extends ASTNode {
     public String str;

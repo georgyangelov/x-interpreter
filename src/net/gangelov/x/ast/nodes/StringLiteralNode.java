@@ -1,4 +1,6 @@
-package net.gangelov.x.ast;
+package net.gangelov.x.ast.nodes;
+
+import net.gangelov.x.ast.AbstractVisitor;
 
 public class StringLiteralNode extends LiteralNode {
     public StringLiteralNode(String str) {

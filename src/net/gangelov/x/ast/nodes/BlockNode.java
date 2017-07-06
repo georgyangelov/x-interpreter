@@ -1,4 +1,7 @@
-package net.gangelov.x.ast;
+package net.gangelov.x.ast.nodes;
+
+import net.gangelov.x.ast.ASTNode;
+import net.gangelov.x.ast.AbstractVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
