@@ -3,7 +3,7 @@ package net.gangelov.x.runtime.classes;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
-import net.gangelov.x.runtime.builtins.IntegerValue;
+import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class StringClass extends Class {
         defineMethod(new Method("length", (List<Value> args) -> {
             String self = getString(args.get(0));
 
-            return new IntegerValue(self.length());
+            return new IntValue(self.length());
         }));
 
         defineMethod(new Method("concat", (List<Value> args) -> {

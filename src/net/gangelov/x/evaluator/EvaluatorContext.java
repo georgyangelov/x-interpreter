@@ -2,8 +2,6 @@ package net.gangelov.x.evaluator;
 
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
-import net.gangelov.x.runtime.classes.IntegerClass;
-import net.gangelov.x.runtime.classes.StringClass;
 
 import java.util.HashMap;
 import java.util.Map;

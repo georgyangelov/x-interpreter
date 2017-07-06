@@ -1,22 +1,22 @@
 package net.gangelov.x.runtime.builtins;
 
-import net.gangelov.x.ast.NumberLiteralNode;
+import net.gangelov.x.ast.nodes.NumberLiteralNode;
 import net.gangelov.x.runtime.Value;
 
-public class IntegerValue extends Value {
+public class IntValue extends Value {
     public final int value;
 
-    public IntegerValue(int value) {
+    public IntValue(int value) {
         this.value = value;
     }
 
-    public IntegerValue(NumberLiteralNode node) {
+    public IntValue(NumberLiteralNode node) {
         this.value = Integer.parseInt(node.str);
     }
 
     @Override
     public String getClassName() {
-        return "Integer";
+        return "Int";
     }
 
     @Override

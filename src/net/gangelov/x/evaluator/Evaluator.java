@@ -4,7 +4,7 @@ import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.builtins.GlobalValue;
 import net.gangelov.x.runtime.classes.GlobalClass;
-import net.gangelov.x.runtime.classes.IntegerClass;
+import net.gangelov.x.runtime.classes.IntClass;
 import net.gangelov.x.runtime.classes.StringClass;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class Evaluator {
     }
 
     private void defineBuiltins() {
-        context.defineClass(new IntegerClass());
+        context.defineClass(new IntClass());
         context.defineClass(new StringClass());
         context.defineClass(new GlobalClass());
 

@@ -1,10 +1,11 @@
 package net.gangelov.x.evaluator;
 
 import net.gangelov.x.ast.*;
+import net.gangelov.x.ast.nodes.*;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
-import net.gangelov.x.runtime.builtins.IntegerValue;
+import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.NilValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext> {
     @Override
     public Value visit(NumberLiteralNode node, EvaluatorContext context) {
-        return new IntegerValue(node);
+        return new IntValue(node);
     }
 
     @Override
