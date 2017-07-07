@@ -4,6 +4,7 @@ import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.typeresolver.TypeGraphBuilder;
 import net.gangelov.x.typeresolver.Resolver;
 import net.gangelov.x.typeresolver.TypeError;
+import net.gangelov.x.types.TypeEnvironment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import tests.support.ParserSupport;
@@ -46,13 +47,38 @@ public class ResolverTest {
         });
     }
 
+//    @Test
+//    void testMethodResolve() throws Exception {
+//        assertEquals("Int", resolve("a = 1 + 2\n a"));
+//        assertEquals("Int", resolve("a = 1\n b = 2\n c = a + b\n c"));
+//        assertEquals("String", resolve("a = \"test\"\n b = a.concat(\"1\")\n b"));
+//        assertEquals("Int", resolve("a = \"test\".length\n a"));
+//    }
+
+//    @Test
+//    void testUnknownNames() throws Exception {
+//        assertTypeError("The type of a cannot be inferred", () -> {
+//            resolve("a");
+//        });
+//
+//        assertTypeError("The type of a cannot be inferred", () -> {
+//            resolve("b = 1 + a\n 42");
+//        });
+//
+//        assertTypeError("The type of a cannot be inferred", () -> {
+//            resolve("b = 1 + 2\n a");
+//        });
+//    }
+
     private String resolve(String code) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(code);
-        TypeGraphBuilder graphBuilder = new TypeGraphBuilder();
+
+        TypeEnvironment types = new TypeEnvironment();
+        TypeGraphBuilder graphBuilder = new TypeGraphBuilder(types);
 
         nodes.forEach(node -> node.visit(graphBuilder, null));
 
-        Resolver resolver = new Resolver(graphBuilder);
+        Resolver resolver = new Resolver(graphBuilder, types);
 
         resolver.resolve();
 

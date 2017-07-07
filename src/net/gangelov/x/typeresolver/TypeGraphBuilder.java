@@ -6,8 +6,7 @@ import net.gangelov.x.ast.nodes.NameNode;
 import net.gangelov.x.ast.nodes.NumberLiteralNode;
 import net.gangelov.x.ast.nodes.StringLiteralNode;
 import net.gangelov.x.ast.Visitor;
-import net.gangelov.x.graph.Graph;
-import net.gangelov.x.types.Type;
+import net.gangelov.x.types.TypeEnvironment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +15,13 @@ public class TypeGraphBuilder extends Visitor {
     private TypeGraph graph = new TypeGraph();
     private Map<ASTNode, TypeGraph.Node> ASTMap = new HashMap<>();
 
-    // TODO: Move these somewhere else
-    private static final Type Int = new Type("Int");
-    private static final Type String = new Type("String");
-
     // TODO: Move somewhere else
     private final Map<String, TypeGraph.Node> nameMap = new HashMap<>();
 
-    public TypeGraphBuilder() {
+    private final TypeEnvironment types;
+
+    public TypeGraphBuilder(TypeEnvironment types) {
+        this.types = types;
     }
 
     public TypeGraph getGraph() {
@@ -39,13 +37,15 @@ public class TypeGraphBuilder extends Visitor {
     }
 
     public Void visit(NumberLiteralNode node, Void context) {
-        ASTMap.put(node, graph.addNode(Int));
+        // TODO: Do not get this every time
+        ASTMap.put(node, graph.addNode(types.getType("Int")));
 
         return null;
     }
 
     public Void visit(StringLiteralNode node, Void context) {
-        ASTMap.put(node, graph.addNode(String));
+        // TODO: Do not get this every time
+        ASTMap.put(node, graph.addNode(types.getType("String")));
 
         return null;
     }
