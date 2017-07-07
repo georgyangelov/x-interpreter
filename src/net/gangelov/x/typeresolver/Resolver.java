@@ -19,7 +19,6 @@ public class Resolver {
 
     public void resolve() throws TypeError {
         Queue<TypeGraph.Node> queue = new ArrayDeque<>();
-        Set<TypeGraph.Node> visited = new HashSet<>();
 
         typeGraph.nodes.stream()
                 .filter(node -> node.data != null)
@@ -31,14 +30,14 @@ public class Resolver {
                 TypeGraph.Node neighbour = edge.to;
 
                 if (neighbour.data != null && neighbour.data != node.data) {
-                    throw new TypeError("Incompatible types " + node.data.name + " and " + neighbour.data.name);
+                    throw new TypeError(
+                            "Type " + node.data.name + " cannot be assigned to " + neighbour.data.name
+                    );
                 }
 
-                neighbour.data = node.data;
-
-                if (!visited.contains(neighbour)) {
+                if (neighbour.data != node.data) {
+                    neighbour.data = node.data;
                     queue.add(neighbour);
-                    visited.add(neighbour);
                 }
             }
         }

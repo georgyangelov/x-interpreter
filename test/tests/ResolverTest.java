@@ -35,16 +35,16 @@ public class ResolverTest {
         assertEquals("Int", resolve("a = 1\n a = a\n a"));
     }
 
-//    @Test
-//    void testArgumentCountValidation() {
-//        assertTypeError("Method `concat` requires 1 argument", () -> {
-//            check("\"hello\".concat");
-//        });
-//
-//        assertTypeError("Method `concat` requires 1 argument", () -> {
-//            check("\"hello\".concat \"a\", \"b\"");
-//        });
-//    }
+    @Test
+    void testConflictingTypes() throws Exception {
+        assertTypeError("Type String cannot be assigned to Int", () -> {
+            resolve("a = 1\n a = \"test\"");
+        });
+
+        assertTypeError("Type Int cannot be assigned to String", () -> {
+            resolve("a = \"test\"\n a = 42");
+        });
+    }
 
     private String resolve(String code) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(code);
