@@ -21,6 +21,8 @@ public class EvaluatorTest {
         assertEquals("-42", eval("-42"));
 //        assertEquals("-4.2", eval("-4.2"));
         assertEquals("\"test\"", eval("\"test\""));
+        assertEquals("true", eval("true"));
+        assertEquals("false", eval("false"));
     }
 
     @Test
@@ -28,6 +30,20 @@ public class EvaluatorTest {
         assertEquals("5", eval("2 + 3"));
         assertEquals("3", eval("5 - 2"));
         assertEquals("15", eval("5 * 3"));
+    }
+
+    @Test
+    void testBooleans() throws Exception {
+        assertEquals("true", eval("!false"));
+        assertEquals("false", eval("!true"));
+
+        assertEquals("true", eval("true == true"));
+        assertEquals("true", eval("false == false"));
+        assertEquals("false", eval("true == false"));
+
+        assertEquals("false", eval("true != true"));
+        assertEquals("false", eval("false != false"));
+        assertEquals("true", eval("true != false"));
     }
 
     @Test

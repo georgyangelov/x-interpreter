@@ -5,6 +5,7 @@ import net.gangelov.x.ast.nodes.*;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
+import net.gangelov.x.runtime.builtins.BoolValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.NilValue;
 import net.gangelov.x.runtime.builtins.StringValue;
@@ -14,13 +15,19 @@ import java.util.stream.Collectors;
 
 public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext> {
     @Override
-    public Value visit(NumberLiteralNode node, EvaluatorContext context) {
-        return new IntValue(node);
-    }
+    public Value visit(LiteralNode node, EvaluatorContext context) {
+        switch (node.type) {
+            case Nil:
+                return NilValue.instance;
+            case Bool:
+                return BoolValue.from(node.str.equals("true"));
+            case Int:
+                return new IntValue(node);
+            case String:
+                return new StringValue(node);
+        }
 
-    @Override
-    public Value visit(StringLiteralNode node, EvaluatorContext context) {
-        return new StringValue(node);
+        return null;
     }
 
     @Override
@@ -52,8 +59,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
         String className = arguments.get(0).getClassName();
 
-        // TODO: Check for null
         Class klass = context.getClass(className);
+        if (klass == null) {
+            throw new Evaluator.RuntimeError("No class " + className);
+        }
 
         // TODO: Check method arity
         Method method = klass.getMethod(node.name);

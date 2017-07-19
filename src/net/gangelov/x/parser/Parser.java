@@ -81,8 +81,8 @@ public class Parser {
 
             ASTNode expression = parsePrimary();
 
-            if (expression instanceof NumberLiteralNode) {
-                NumberLiteralNode number = (NumberLiteralNode)expression;
+            if (expression instanceof LiteralNode && ((LiteralNode) expression).type == LiteralNode.Type.Int) {
+                LiteralNode number = (LiteralNode)expression;
                 number.str = "-" + number.str;
 
                 return number;
@@ -98,8 +98,10 @@ public class Parser {
 
     private ASTNode parseMethodTarget() throws ParserException, IOException, Lexer.LexerException {
         switch (t.type) {
-            case Number:        return new NumberLiteralNode(read().str);
-            case String:        return new StringLiteralNode(read().str);
+            case Nil:           return new LiteralNode(LiteralNode.Type.Nil, read().str);
+            case Bool:          return new LiteralNode(LiteralNode.Type.Bool, read().str);
+            case Number:        return new LiteralNode(LiteralNode.Type.Int, read().str);
+            case String:        return new LiteralNode(LiteralNode.Type.String, read().str);
             case Name:          return new NameNode(read().str);
             case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
             case If:            return parseIf();

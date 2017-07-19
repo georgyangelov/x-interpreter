@@ -19,15 +19,14 @@ public class ASTInspector extends Visitor {
     }
 
     @Override
-    public Void visit(NumberLiteralNode node, Void context) {
-        str.append(node.str);
-
-        return null;
-    }
-
-    @Override
-    public Void visit(StringLiteralNode node, Void context) {
-        str.append("\"").append(EscapeSequences.convertToSequences(node.str)).append("\"");
+    public Void visit(LiteralNode node, Void context) {
+        switch (node.type) {
+            case String:
+                str.append("\"").append(EscapeSequences.convertToSequences(node.str)).append("\"");
+                break;
+            default:
+                str.append(node.str);
+        }
 
         return null;
     }

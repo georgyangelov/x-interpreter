@@ -144,6 +144,12 @@ public class Lexer {
                 case "or":
                     t.type = TokenType.BinaryOperator;
                     break;
+                case "nil":
+                    t.type = TokenType.Nil;
+                    break;
+                case "true": case "false":
+                    t.type = TokenType.Bool;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;

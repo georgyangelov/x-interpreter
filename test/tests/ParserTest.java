@@ -27,6 +27,17 @@ public class ParserTest {
     }
 
     @Test
+    void testConstantObjectLiterals() throws Exception {
+        assertEquals("true", parse("true"));
+        assertEquals("false", parse("false"));
+        assertEquals("nil", parse("nil"));
+
+        assertThrows(Parser.ParserException.class, () -> parse("true = 5"));
+        assertThrows(Parser.ParserException.class, () -> parse("false = 5"));
+        assertThrows(Parser.ParserException.class, () -> parse("nil = 5"));
+    }
+
+    @Test
     void testNegatingExpressions() throws Exception {
         assertEquals("(- test)", parse("-test"));
         assertEquals("(+ -5 5)", parse("-   5 + 5"));

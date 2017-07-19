@@ -3,6 +3,7 @@ package net.gangelov.x.runtime.classes;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
+import net.gangelov.x.runtime.builtins.BoolValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.NilValue;
 
@@ -42,55 +43,35 @@ public class IntClass extends Class {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            if (a == b) {
-                return new IntValue(a);
-            } else {
-                return NilValue.instance;
-            }
+            return BoolValue.from(a == b);
         }));
 
         defineMethod(new Method(">", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            if (a > b) {
-                return new IntValue(a);
-            } else {
-                return NilValue.instance;
-            }
+            return BoolValue.from(a > b);
         }));
 
         defineMethod(new Method("<", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            if (a < b) {
-                return new IntValue(a);
-            } else {
-                return NilValue.instance;
-            }
+            return BoolValue.from(a < b);
         }));
 
         defineMethod(new Method("<=", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            if (a <= b) {
-                return new IntValue(a);
-            } else {
-                return NilValue.instance;
-            }
+            return BoolValue.from(a <= b);
         }));
 
         defineMethod(new Method(">=", args -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            if (a >= b) {
-                return new IntValue(a);
-            } else {
-                return NilValue.instance;
-            }
+            return BoolValue.from(a >= b);
         }));
     }
 

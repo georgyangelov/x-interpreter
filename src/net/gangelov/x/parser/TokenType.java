@@ -22,8 +22,10 @@ public enum TokenType {
 
     Name,
 
+    Nil,
     Number,
     String,
+    Bool,
 
     If,
     Else,

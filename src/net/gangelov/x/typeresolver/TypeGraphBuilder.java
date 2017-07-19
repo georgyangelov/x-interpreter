@@ -2,9 +2,8 @@ package net.gangelov.x.typeresolver;
 
 import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.ast.nodes.AssignmentNode;
+import net.gangelov.x.ast.nodes.LiteralNode;
 import net.gangelov.x.ast.nodes.NameNode;
-import net.gangelov.x.ast.nodes.NumberLiteralNode;
-import net.gangelov.x.ast.nodes.StringLiteralNode;
 import net.gangelov.x.ast.Visitor;
 import net.gangelov.x.types.TypeEnvironment;
 
@@ -36,16 +35,21 @@ public class TypeGraphBuilder extends Visitor {
         return nameMap;
     }
 
-    public Void visit(NumberLiteralNode node, Void context) {
-        // TODO: Do not get this every time
-        ASTMap.put(node, graph.addNode(types.getType("Int")));
-
-        return null;
-    }
-
-    public Void visit(StringLiteralNode node, Void context) {
-        // TODO: Do not get this every time
-        ASTMap.put(node, graph.addNode(types.getType("String")));
+    public Void visit(LiteralNode node, Void context) {
+        switch (node.type) {
+            case Nil:
+                ASTMap.put(node, graph.addNode(types.getType("Nil")));
+                break;
+            case Int:
+                ASTMap.put(node, graph.addNode(types.getType("Int")));
+                break;
+            case Bool:
+                ASTMap.put(node, graph.addNode(types.getType("Bool")));
+                break;
+            case String:
+                ASTMap.put(node, graph.addNode(types.getType("String")));
+                break;
+        }
 
         return null;
     }

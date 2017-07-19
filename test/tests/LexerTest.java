@@ -45,6 +45,13 @@ class LexerTest {
     }
 
     @Test
+    void testLiterals() throws IOException, Lexer.LexerException {
+        assertEquals("(Nil 'nil') (EOF 'EOF')", lex("nil"));
+        assertEquals("(Bool 'true') (EOF 'EOF')", lex("true"));
+        assertEquals("(Bool 'false') (EOF 'EOF')", lex("false"));
+    }
+
+    @Test
     void testCallsOnLiterals() throws IOException, Lexer.LexerException {
         assertEquals("(Number '42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("42.2.abs"));
         assertEquals("(String 'test') (Dot '.') (Name 'length') (Number '3') (EOF 'EOF')", lex("\"test\".length 3"));
@@ -80,6 +87,18 @@ class LexerTest {
             "(Name '_this_is_aValidName') (EOF 'EOF')",
             lex(" _this_is_aValidName ")
         );
+    }
+
+    @Test
+    void testSpecialSymbolsInNames() throws IOException, Lexer.LexerException {
+        assertEquals(
+            "(Name 'valid_name?') (Name 'valid_name!') (EOF 'EOF')",
+            lex("valid_name? valid_name!")
+        );
+
+        assertThrows(Lexer.LexerException.class, () -> {
+            lex("invalid_nam!e invalid_n?ame");
+        });
     }
 
     @Test

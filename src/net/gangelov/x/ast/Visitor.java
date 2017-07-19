@@ -3,8 +3,7 @@ package net.gangelov.x.ast;
 import net.gangelov.x.ast.nodes.*;
 
 public class Visitor extends AbstractVisitor<Void, Void> {
-    public Void visit(NumberLiteralNode node, Void context) { return null; }
-    public Void visit(StringLiteralNode node, Void context) { return null; }
+    public Void visit(LiteralNode node, Void context) { return null; }
     public Void visit(NameNode node, Void context) { return null; }
 
     @Override

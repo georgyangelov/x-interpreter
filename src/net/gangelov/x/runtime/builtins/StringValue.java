@@ -1,6 +1,6 @@
 package net.gangelov.x.runtime.builtins;
 
-import net.gangelov.x.ast.nodes.StringLiteralNode;
+import net.gangelov.x.ast.nodes.LiteralNode;
 import net.gangelov.x.runtime.Value;
 
 public class StringValue extends Value {
@@ -10,7 +10,7 @@ public class StringValue extends Value {
         this.value = value;
     }
 
-    public StringValue(StringLiteralNode node) {
+    public StringValue(LiteralNode node) {
         this.value = node.str;
     }
 
