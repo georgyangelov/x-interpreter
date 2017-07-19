@@ -93,7 +93,11 @@ public class Parser {
 
         ASTNode target = parseMethodTarget();
 
-        return maybeParseMethodCall(target);
+        do {
+            target = maybeParseMethodCall(target);
+        } while (t.type == TokenType.Dot);
+
+        return target;
     }
 
     private ASTNode parseMethodTarget() throws ParserException, IOException, Lexer.LexerException {
@@ -320,6 +324,7 @@ public class Parser {
                t.type == TokenType.BinaryOperator ||
                t.type == TokenType.Comma ||
                t.type == TokenType.CloseParen ||
+               t.type == TokenType.Dot ||
                blockEnds();
     }
 

@@ -147,6 +147,15 @@ public class ParserTest {
     }
 
     @Test
+    void testMethodChaining() throws Exception {
+        assertEquals("(c (b a))", parse("a.b.c"));
+        assertEquals("(d (c (b a)) e)", parse("a.b.c.d e"));
+        assertEquals("(c (b a 1))", parse("a.b(1).c"));
+        assertEquals("(c (b a 1) 2 3)", parse("a.b(1).c 2, 3"));
+        assertEquals("(c (b a 1) (d 2) (d self 3 4))", parse("a.b(1).c 2.d, d(3, 4)"));
+    }
+
+    @Test
     void testMethodCallsWithArguments() throws Exception {
         assertEquals("(method self a)", parse("method(a)"));
         assertEquals("(method self a)", parse("method a"));

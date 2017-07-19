@@ -147,7 +147,6 @@ public class EvaluatorTest {
     @Test
     void testClassesAsObjects() throws Exception {
         assertEquals("\"Hello world!\"", eval("String.hello"));
-//        assertEquals("Class", eval("String.class.name"));
     }
 
     private String eval(String program) throws Exception {
