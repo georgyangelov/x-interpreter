@@ -90,11 +90,13 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(WhileNode node, EvaluatorContext context) {
-        Value condition = node.condition.visit(this, context);
-        BlockNode body = (BlockNode)node.body.visit(this, context);
+        Value lastValue = NilValue.instance;
 
-//        return new WhileNode(condition, body);
-        return null;
+        while (node.condition.visit(this, context).asBoolean()) {
+            lastValue = node.body.visit(this, context.scope());
+        }
+
+        return lastValue;
     }
 
     @Override

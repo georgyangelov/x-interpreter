@@ -59,6 +59,7 @@ public class ParserTest {
         assertEquals("(while a { b c })", parse("while a\n b\n c end"));
         assertEquals("(while a { (b self c) })", parse("while a\n b c end"));
         assertEquals("(while a { (c b) })", parse("while a\n b.c end"));
+        assertEquals("(while (< a 1) { b })", parse("while a < 1\n b end"));
     }
 
     @Test

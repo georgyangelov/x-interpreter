@@ -109,6 +109,25 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testWhile() throws Exception {
+        assertEquals("120", eval(
+                "def factorial(n)\n" +
+                "  i = n\n" +
+                "  result = 1" +
+
+                "  while i > 0\n" +
+                "    result = result * i\n" +
+                "    i = i - 1\n" +
+                "  end\n" +
+
+                "  result\n" +
+                "end\n" +
+
+                "factorial(5)"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();

@@ -48,6 +48,50 @@ public class IntClass extends Class {
                 return NilValue.instance;
             }
         }));
+
+        defineMethod(new Method(">", args -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            if (a > b) {
+                return new IntValue(a);
+            } else {
+                return NilValue.instance;
+            }
+        }));
+
+        defineMethod(new Method("<", args -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            if (a < b) {
+                return new IntValue(a);
+            } else {
+                return NilValue.instance;
+            }
+        }));
+
+        defineMethod(new Method("<=", args -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            if (a <= b) {
+                return new IntValue(a);
+            } else {
+                return NilValue.instance;
+            }
+        }));
+
+        defineMethod(new Method(">=", args -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            if (a >= b) {
+                return new IntValue(a);
+            } else {
+                return NilValue.instance;
+            }
+        }));
     }
 
     private int getInt(Value value) {

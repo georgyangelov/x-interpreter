@@ -39,7 +39,18 @@ public class EvaluatorContext {
     }
 
     public void defineLocal(String name, Value value) {
-        locals.put(name, value);
+        if (!setIfDefined(name, value)) {
+            locals.put(name, value);
+        }
+    }
+
+    private boolean setIfDefined(String name, Value value) {
+        if (locals.containsKey(name)) {
+            locals.put(name, value);
+            return true;
+        }
+
+        return parent != null && parent.setIfDefined(name, value);
     }
 
     public Value getLocal(String name) {
