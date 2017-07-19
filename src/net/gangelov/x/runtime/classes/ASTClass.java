@@ -12,10 +12,10 @@ public class ASTClass extends Class {
     public ASTClass() {
         super("AST");
 
-        defineMethod(new Method("inspect", (List<Value> args) -> {
+        defineMethod(new Method("inspect", (runtime, args) -> {
             ASTNode self = (ASTNode)args.get(0);
 
-            return new StringValue(self.inspect());
+            return runtime.from(self.inspect());
         }));
     }
 }

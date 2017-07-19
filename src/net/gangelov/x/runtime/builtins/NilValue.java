@@ -1,17 +1,20 @@
 package net.gangelov.x.runtime.builtins;
 
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.base.Class;
 
 public class NilValue extends Value {
-    public static final NilValue instance = new NilValue();
+    private final Class klass;
 
-    protected NilValue() {
+    public NilValue(Class klass) {
         super();
+
+        this.klass = klass;
     }
 
     @Override
-    public String getClassName() {
-        return "Nil";
+    public Class getXClass() {
+        return klass;
     }
 
     @Override

@@ -9,24 +9,24 @@ public class BoolClass extends Class {
     public BoolClass() {
         super("Bool");
 
-        defineMethod(new Method("!", args -> {
+        defineMethod(new Method("!", (runtime, args) -> {
             boolean a = getBool(args.get(0));
 
-            return BoolValue.from(!a);
+            return runtime.from(!a);
         }));
 
-        defineMethod(new Method("==", args -> {
+        defineMethod(new Method("==", (runtime, args) -> {
             boolean a = getBool(args.get(0));
             boolean b = getBool(args.get(1));
 
-            return BoolValue.from(a == b);
+            return runtime.from(a == b);
         }));
 
-        defineMethod(new Method("!=", args -> {
+        defineMethod(new Method("!=", (runtime, args) -> {
             boolean a = getBool(args.get(0));
             boolean b = getBool(args.get(1));
 
-            return BoolValue.from(a != b);
+            return runtime.from(a != b);
         }));
     }
 

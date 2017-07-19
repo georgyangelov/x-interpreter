@@ -2,6 +2,7 @@ package net.gangelov.x.evaluator;
 
 import net.gangelov.x.ast.*;
 import net.gangelov.x.ast.nodes.*;
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -14,17 +15,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext> {
+    private final Runtime runtime;
+
+    public EvaluatorTransform(Runtime runtime) {
+        this.runtime = runtime;
+    }
+
     @Override
     public Value visit(LiteralNode node, EvaluatorContext context) {
         switch (node.type) {
             case Nil:
-                return NilValue.instance;
+                return runtime.NIL;
             case Bool:
-                return BoolValue.from(node.str.equals("true"));
+                return runtime.from(node.str.equals("true"));
             case Int:
-                return new IntValue(node);
+                return runtime.from(Integer.parseInt(node.str));
             case String:
-                return new StringValue(node);
+                return runtime.from(node.str);
         }
 
         return null;
@@ -35,6 +42,12 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         Value value = context.getLocal(node.name);
 
         if (value == null) {
+            Class klass = runtime.getClass(node.name);
+
+            if (klass != null) {
+                return klass;
+            }
+
             // Maybe this is a method call without arguments?
             return new MethodCallNode(node.name, new NameNode("self")).visit(this, context);
         }
@@ -57,12 +70,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 .map(argument -> argument.visit(this, context))
                 .collect(Collectors.toList());
 
-        String className = arguments.get(0).getClassName();
-
-        Class klass = context.getClass(className);
-        if (klass == null) {
-            throw new Evaluator.RuntimeError("No class " + className);
-        }
+        Class klass = arguments.get(0).getXClass();
 
         // TODO: Check method arity
         Method method = klass.getMethod(node.name);
@@ -70,7 +78,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             throw new Evaluator.RuntimeError("No method " + node.name + " on class " + klass.name);
         }
 
-        return method.call(arguments);
+        return method.call(runtime, arguments);
     }
 
     @Override
@@ -93,13 +101,13 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         if (nodes.size() > 0) {
             return nodes.get(nodes.size() - 1);
         } else {
-            return NilValue.instance;
+            return runtime.NIL;
         }
     }
 
     @Override
     public Value visit(WhileNode node, EvaluatorContext context) {
-        Value lastValue = NilValue.instance;
+        Value lastValue = runtime.NIL;
 
         while (node.condition.visit(this, context).asBoolean()) {
             lastValue = node.body.visit(this, context.scope());
@@ -110,7 +118,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(MethodDefinitionNode methodDefinitionNode, EvaluatorContext context) {
-        Method method = new Method(methodDefinitionNode.name, args -> {
+        Method method = new Method(methodDefinitionNode.name, (runtime, args) -> {
             List<MethodArgumentNode> formalArgs = methodDefinitionNode.arguments;
             EvaluatorContext callContext = context.scope();
 
@@ -125,10 +133,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             return methodDefinitionNode.body.visit(this, callContext);
         });
 
-        Class selfClass = context.getClass(context.getLocal("self").getClassName());
+        Class selfClass = context.getLocal("self").getXClass();
         selfClass.defineMethod(method);
 
-        return new StringValue(methodDefinitionNode.name);
+        return runtime.from(methodDefinitionNode.name);
     }
 
     @Override

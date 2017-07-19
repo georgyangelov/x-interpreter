@@ -1,8 +1,9 @@
 package net.gangelov.x.runtime;
 
+import net.gangelov.x.runtime.base.Class;
+
 public abstract class Value {
-    // TODO: Return class instance?
-    abstract public String getClassName();
+    abstract public Class getXClass();
 
     public String inspect() {
         return "UNKNOWN";

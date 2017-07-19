@@ -8,6 +8,6 @@ public class GlobalClass extends Class {
     public GlobalClass() {
         super("Global");
 
-        defineMethod(new Method("the_answer", args -> new IntValue(42)));
+        defineMethod(new Method("the_answer", (runtime, args) -> runtime.from(42)));
     }
 }

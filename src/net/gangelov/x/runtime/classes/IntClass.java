@@ -5,73 +5,72 @@ import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.BoolValue;
 import net.gangelov.x.runtime.builtins.IntValue;
-import net.gangelov.x.runtime.builtins.NilValue;
 
 public class IntClass extends Class {
     public IntClass() {
         super("Int");
 
-        defineMethod(new Method("+", args -> {
+        defineMethod(new Method("+", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return new IntValue(a + b);
+            return runtime.from(a + b);
         }));
 
-        defineMethod(new Method("-", args -> {
+        defineMethod(new Method("-", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return new IntValue(a - b);
+            return runtime.from(a - b);
         }));
 
-        defineMethod(new Method("*", args -> {
+        defineMethod(new Method("*", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return new IntValue(a * b);
+            return runtime.from(a * b);
         }));
 
-        defineMethod(new Method("/", args -> {
+        defineMethod(new Method("/", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return new IntValue(a / b);
+            return runtime.from(a / b);
         }));
 
-        defineMethod(new Method("==", args -> {
+        defineMethod(new Method("==", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return BoolValue.from(a == b);
+            return runtime.from(a == b);
         }));
 
-        defineMethod(new Method(">", args -> {
+        defineMethod(new Method(">", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return BoolValue.from(a > b);
+            return runtime.from(a > b);
         }));
 
-        defineMethod(new Method("<", args -> {
+        defineMethod(new Method("<", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return BoolValue.from(a < b);
+            return runtime.from(a < b);
         }));
 
-        defineMethod(new Method("<=", args -> {
+        defineMethod(new Method("<=", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return BoolValue.from(a <= b);
+            return runtime.from(a <= b);
         }));
 
-        defineMethod(new Method(">=", args -> {
+        defineMethod(new Method(">=", (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return BoolValue.from(a >= b);
+            return runtime.from(a >= b);
         }));
     }
 

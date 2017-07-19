@@ -1,22 +1,20 @@
 package net.gangelov.x.runtime.builtins;
 
-import net.gangelov.x.ast.nodes.LiteralNode;
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.base.Class;
 
 public class StringValue extends Value {
     public final String value;
+    private final Class klass;
 
-    public StringValue(String value) {
+    public StringValue(Class klass, String value) {
+        this.klass = klass;
         this.value = value;
     }
 
-    public StringValue(LiteralNode node) {
-        this.value = node.str;
-    }
-
     @Override
-    public String getClassName() {
-        return "String";
+    public Class getXClass() {
+        return klass;
     }
 
     @Override

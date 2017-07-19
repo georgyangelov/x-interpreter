@@ -1,17 +1,20 @@
 package net.gangelov.x.runtime.builtins;
 
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.base.Class;
 
 public class GlobalValue extends Value {
-    public static final GlobalValue instance = new GlobalValue();
+    private final Class klass;
 
-    protected GlobalValue() {
+    public GlobalValue(Class klass) {
         super();
+
+        this.klass = klass;
     }
 
     @Override
-    public String getClassName() {
-        return "Global";
+    public Class getXClass() {
+        return klass;
     }
 
     @Override

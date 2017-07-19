@@ -2,21 +2,20 @@ package net.gangelov.x.runtime.builtins;
 
 import net.gangelov.x.ast.nodes.LiteralNode;
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.base.Class;
 
 public class IntValue extends Value {
     public final int value;
+    private final Class klass;
 
-    public IntValue(int value) {
+    public IntValue(Class klass, int value) {
+        this.klass = klass;
         this.value = value;
     }
 
-    public IntValue(LiteralNode node) {
-        this.value = Integer.parseInt(node.str);
-    }
-
     @Override
-    public String getClassName() {
-        return "Int";
+    public Class getXClass() {
+        return klass;
     }
 
     @Override

@@ -1,24 +1,20 @@
 package net.gangelov.x.runtime.builtins;
 
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.base.Class;
 
 public class BoolValue extends Value {
-    public static final BoolValue TRUE = new BoolValue(true);
-    public static final BoolValue FALSE = new BoolValue(false);
-
-    public static BoolValue from(boolean value) {
-        return value ? TRUE : FALSE;
-    }
-
+    private final Class klass;
     public final boolean value;
 
-    private BoolValue(boolean value) {
+    public BoolValue(Class klass, boolean value) {
         this.value = value;
+        this.klass = klass;
     }
 
     @Override
-    public String getClassName() {
-        return "Bool";
+    public Class getXClass() {
+        return klass;
     }
 
     @Override

@@ -9,7 +9,6 @@ import java.util.Map;
 public class EvaluatorContext {
     private final EvaluatorContext parent;
 
-    private final Map<String, Class> classes = new HashMap<>();
     private final Map<String, Value> locals = new HashMap<>();
 
     public EvaluatorContext() {
@@ -22,20 +21,6 @@ public class EvaluatorContext {
 
     public EvaluatorContext scope() {
         return new EvaluatorContext(this);
-    }
-
-    public void defineClass(Class klass) {
-        classes.put(klass.name, klass);
-    }
-
-    public Class getClass(String name) {
-        Class klass = classes.get(name);
-
-        if (klass == null && parent != null) {
-            klass = parent.getClass(name);
-        }
-
-        return klass;
     }
 
     public void defineLocal(String name, Value value) {

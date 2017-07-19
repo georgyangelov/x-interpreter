@@ -1,12 +1,13 @@
 package net.gangelov.x.runtime.base;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 
 import java.util.List;
 
 public class Method {
     public interface JavaMethod {
-        Value call(List<Value> arguments);
+        Value call(Runtime runtime, List<Value> arguments);
     }
 
     public final String name;
@@ -17,7 +18,7 @@ public class Method {
         this.implementation = implementation;
     }
 
-    public Value call(List<Value> arguments) {
-        return this.implementation.call(arguments);
+    public Value call(Runtime runtime, List<Value> arguments) {
+        return this.implementation.call(runtime, arguments);
     }
 }

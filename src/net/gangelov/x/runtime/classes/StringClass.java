@@ -6,24 +6,24 @@ import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
-import java.util.List;
-
 public class StringClass extends Class {
     public StringClass() {
         super("String");
 
-        defineMethod(new Method("length", (List<Value> args) -> {
+        defineMethod(new Method("length", (runtime, args) -> {
             String self = getString(args.get(0));
 
-            return new IntValue(self.length());
+            return runtime.from(self.length());
         }));
 
-        defineMethod(new Method("concat", (List<Value> args) -> {
+        defineMethod(new Method("concat", (runtime, args) -> {
             String self = getString(args.get(0));
             String other = getString(args.get(1));
 
-            return new StringValue(self + other);
+            return runtime.from(self + other);
         }));
+
+        defineStaticMethod(new Method("hello", (runtime, args) -> runtime.from("Hello world!")));
     }
 
     private String getString(Value value) {
