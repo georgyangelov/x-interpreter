@@ -9,12 +9,13 @@ public class Method {
         Value call(List<Value> arguments);
     }
 
-    public final String name;
+    public final String name, returnTypeName;
     private final JavaMethod implementation;
 
-    public Method(String name, JavaMethod implementation) {
+    public Method(String name, JavaMethod implementation, String returnTypeName) {
         this.name = name;
         this.implementation = implementation;
+        this.returnTypeName = returnTypeName;
     }
 
     public Value call(List<Value> arguments) {
