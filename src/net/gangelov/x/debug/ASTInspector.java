@@ -111,9 +111,11 @@ public class ASTInspector extends Visitor {
 
     @Override
     public Void visit(MethodDefinitionNode node, Void context) {
-        str.append("(def ")
-                .append(node.name).append(":")
-                .append(node.returnType);
+        str.append("(def ").append(node.name);
+
+        if (node.returnType != null) {
+            str.append(":").append(node.returnType);
+        }
 
         str.append(" [");
         for (int i = 0; i < node.arguments.size(); i++) {
@@ -134,11 +136,13 @@ public class ASTInspector extends Visitor {
 
     @Override
     public Void visit(MethodArgumentNode node, Void context) {
-        str.append("(argument ")
-                .append(node.name)
-                .append(":")
-                .append(node.type)
-                .append(")");
+        str.append("(argument ").append(node.name);
+
+        if (node.type != null) {
+            str.append(":").append(node.type);
+        }
+
+        str.append(")");
 
         return null;
     }

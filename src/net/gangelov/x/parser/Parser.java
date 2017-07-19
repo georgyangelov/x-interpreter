@@ -129,11 +129,13 @@ public class Parser {
 
         List<MethodArgumentNode> arguments = parseMethodArguments();
 
-        if (t.type != TokenType.Colon) parseError();
-        read(); // :
+        String returnType = null;
+        if (t.type == TokenType.Colon) {
+            read(); // :
 
-        if (t.type != TokenType.Name) parseError();
-        String returnType = read().str;
+            if (t.type != TokenType.Name) parseError();
+            returnType = read().str;
+        }
 
         BlockNode body = parseBlock();
 
@@ -174,11 +176,13 @@ public class Parser {
         if (t.type != TokenType.Name) parseError();
         String name = read().str;
 
-        if (t.type != TokenType.Colon) parseError();
-        read(); // :
+        String type = null;
+        if (t.type == TokenType.Colon) {
+            read(); // :
 
-        if (t.type != TokenType.Name) parseError();
-        String type = read().str;
+            if (t.type != TokenType.Name) parseError();
+            type = read().str;
+        }
 
         return new MethodArgumentNode(name, type);
     }

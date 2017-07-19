@@ -187,13 +187,16 @@ public class ParserTest {
 
     @Test
     void testSimpleMethodDefinitions() throws Exception {
-        assertEquals("(def method:Int [] { a })", parse("def method:Int\na end"));
+        assertEquals("(def method [] { a })", parse("def method\na end"));
         assertEquals("(def method:Int [] { a b })", parse("def method:Int\na \n b end"));
         assertEquals("(def method:Int [] { (= a b) (+ a b) })", parse("def method:Int\n a = b\n a + b end"));
     }
 
     @Test
     void testMethodDefinitionsWithArguments() throws Exception {
+        assertEquals("(def method [(argument a) (argument b)] { a b })",
+                parse("def method(a, b)\na \n b\n end"));
+
         assertEquals("(def method:Int [(argument a:Int) (argument b:String)] { a b })",
                 parse("def method(a:Int, b:String):Int\na \n b\n end"));
     }
