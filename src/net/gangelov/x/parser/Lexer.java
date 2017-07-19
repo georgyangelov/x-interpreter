@@ -114,6 +114,10 @@ public class Lexer {
                 str.appendCodePoint(next());
             }
 
+            if (c == '!' || c == '?') {
+                str.appendCodePoint(next());
+            }
+
             t.str = str.toString();
 
             switch (t.str) {

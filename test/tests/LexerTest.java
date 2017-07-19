@@ -96,9 +96,10 @@ class LexerTest {
             lex("valid_name? valid_name!")
         );
 
-        assertThrows(Lexer.LexerException.class, () -> {
-            lex("invalid_nam!e invalid_n?ame");
-        });
+        assertEquals(
+            "(Name 'invalid_nam!') (Name 'e') (Name 'invalid_n?') (Name 'ame') (EOF 'EOF')",
+            lex("invalid_nam!e invalid_n?ame")
+        );
     }
 
     @Test
