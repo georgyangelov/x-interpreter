@@ -83,21 +83,21 @@ public class EvaluatorTest {
 
     @Test
     void testSimpleMethodDefinitions() throws Exception {
-        assertEquals("\"method_name\"", eval("def method_name:Int 1 end"));
-        assertEquals("\"hello\"", eval("def method_name:Int \"hello\" end method_name"));
-        assertEquals("42", eval("def give_answer:Int 42 end self.give_answer"));
+        assertEquals("\"method_name\"", eval("def method_name 1 end"));
+        assertEquals("\"hello\"", eval("def method_name \"hello\" end method_name"));
+        assertEquals("42", eval("def give_answer 42 end self.give_answer"));
     }
 
     @Test
     void testMethodDefinitionsWithArguments() throws Exception {
-        assertEquals("42", eval("def call(a:Int):Int a end call(42)"));
-        assertEquals("42", eval("def call(a:Int):Int\n if a\n 1 else 42 end end call 0"));
+        assertEquals("42", eval("def call(a) a end call(42)"));
+        assertEquals("42", eval("def call(a)\n if a\n 1 else 42 end end call 0"));
     }
 
     @Test
     void testRecursion() throws Exception {
         assertEquals("120", eval(
-                "def factorial(n:Int):Int\n" +
+                "def factorial(n)\n" +
                 "  if n == 1\n" +
                 "    1\n" +
                 "  else\n" +
