@@ -6,10 +6,7 @@ import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
-import net.gangelov.x.runtime.builtins.BoolValue;
-import net.gangelov.x.runtime.builtins.IntValue;
-import net.gangelov.x.runtime.builtins.NilValue;
-import net.gangelov.x.runtime.builtins.StringValue;
+import net.gangelov.x.runtime.builtins.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +16,15 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     public EvaluatorTransform(Runtime runtime) {
         this.runtime = runtime;
+    }
+
+    private ObjectValue getSelfInstance(EvaluatorContext context) {
+        Value self = context.getLocal("self");
+        if (!(self instanceof ObjectValue)) {
+            throw new Evaluator.RuntimeError("Cannot access instance variable on non-object");
+        }
+
+        return (ObjectValue)self;
     }
 
     @Override
@@ -39,7 +45,17 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(NameNode node, EvaluatorContext context) {
-        Value value = context.getLocal(node.name);
+        Value value;
+
+        if (node.name.startsWith("@")) {
+            value = getSelfInstance(context).getInstanceVariable(node.name);
+
+            if (value == null) {
+                throw new Evaluator.RuntimeError("Undefined instance variable " + node.name);
+            }
+        } else {
+            value = context.getLocal(node.name);
+        }
 
         if (value == null) {
             Class klass = runtime.getClass(node.name);
@@ -59,7 +75,11 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(AssignmentNode node, EvaluatorContext context) {
         Value value = node.value.visit(this, context);
 
-        context.assignLocal(node.name, value);
+        if (node.name.startsWith("@")) {
+            getSelfInstance(context).setInstanceVariable(node.name, value);
+        } else {
+            context.assignLocal(node.name, value);
+        }
 
         return value;
     }

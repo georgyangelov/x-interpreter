@@ -106,11 +106,11 @@ public class Lexer {
             return t;
         }
 
-        if (Character.isLetter(c) || c == '_') {
+        if (Character.isLetter(c) || c == '_' || c == '@') {
             StringBuilder str = new StringBuilder();
             str.appendCodePoint(next());
 
-            while (Character.isLetterOrDigit(c) || c == '_') {
+            while (Character.isLetterOrDigit(c) || c == '_' || c == '@') {
                 str.appendCodePoint(next());
             }
 

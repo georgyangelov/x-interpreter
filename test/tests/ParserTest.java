@@ -136,6 +136,7 @@ public class ParserTest {
     @Test
     void testNames() throws Exception {
         assertEquals("test test_two test3", parse("test \n test_two \n test3"));
+        assertEquals("@test @test_two @test3", parse("@test \n @test_two \n @test3"));
     }
 
     @Test

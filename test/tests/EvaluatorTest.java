@@ -166,6 +166,47 @@ public class EvaluatorTest {
     }
 
     @Test
+    void testInstanceVariables() throws Exception {
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def set(a)\n" +
+                "    @answer = a\n" +
+                "  end\n" +
+
+                "  def get\n" +
+                "    @answer\n" +
+                "  end\n" +
+                "end\n" +
+
+                "a = Answer.new\n" +
+                "a.set 42\n" +
+                "a.get"
+        ));
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("class Answer\n def give\n @answer end end\n Answer.new.give");
+        });
+    }
+
+    @Test
+    void testInitializers() throws Exception {
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def initialize(a, b)\n" +
+                "    @answer = a + b\n" +
+                "  end\n" +
+
+                "  def get\n" +
+                "    @answer\n" +
+                "  end\n" +
+                "end\n" +
+
+                "a = Answer.new 41, 1\n" +
+                "a.get"
+        ));
+    }
+
+    @Test
     void testClassRedefinition() throws Exception {
         assertThrows(Evaluator.RuntimeError.class, () -> {
            eval("class Test end\n class Test end");

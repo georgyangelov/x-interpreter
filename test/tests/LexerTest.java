@@ -95,6 +95,11 @@ class LexerTest {
     @Test
     void testSpecialSymbolsInNames() throws IOException, Lexer.LexerException {
         assertEquals(
+            "(Name '@an_instance_variable') (EOF 'EOF')",
+            lex("@an_instance_variable")
+        );
+
+        assertEquals(
             "(Name 'valid_name?') (Name 'valid_name!') (EOF 'EOF')",
             lex("valid_name? valid_name!")
         );
