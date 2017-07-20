@@ -241,6 +241,11 @@ public class ParserTest {
                 parse("class Fib\n attr_reader \"value\"\n end"));
     }
 
+    @Test
+    void testSpecialMethodNames() throws Exception {
+        assertEquals("(class a b c)", parse("a.class b, c"));
+    }
+
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {
         List<ASTNode> nodes = ParserSupport.parseAll(source);
 

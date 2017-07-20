@@ -7,8 +7,8 @@ import net.gangelov.x.runtime.builtins.BoolValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 
 public class IntClass extends Class {
-    public IntClass() {
-        super("Int");
+    public IntClass(ClassClass klass, Class objectClass) {
+        super("Int", klass, objectClass);
 
         defineMethod(new Method("+", (runtime, args) -> {
             int a = getInt(args.get(0));

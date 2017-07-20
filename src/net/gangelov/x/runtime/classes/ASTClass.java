@@ -9,8 +9,8 @@ import net.gangelov.x.runtime.builtins.StringValue;
 import java.util.List;
 
 public class ASTClass extends Class {
-    public ASTClass() {
-        super("AST");
+    public ASTClass(ClassClass klass, Class objectClass) {
+        super("AST", klass, objectClass);
 
         defineMethod(new Method("inspect", (runtime, args) -> {
             ASTNode self = (ASTNode)args.get(0);

@@ -6,8 +6,8 @@ import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.BoolValue;
 
 public class BoolClass extends Class {
-    public BoolClass() {
-        super("Bool");
+    public BoolClass(ClassClass klass, Class objectClass) {
+        super("Bool", klass, objectClass);
 
         defineMethod(new Method("!", (runtime, args) -> {
             boolean a = getBool(args.get(0));

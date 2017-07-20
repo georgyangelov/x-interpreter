@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.base;
 
+import com.sun.istack.internal.Nullable;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.builtins.ObjectValue;
 import net.gangelov.x.runtime.builtins.StringValue;
@@ -13,44 +14,26 @@ public class Class extends Value {
     public final String name;
     private Map<String, Method> methods = new HashMap<>();
 
-    private Class staticClass;
+    private final Class superClass;
+    protected Class classClass, staticClass;
 
-    public Class(String name) {
+    public Class(String name, @Nullable Class classClass, @Nullable Class superClass) {
         this.name = name;
-
-        this.defineClassMethods();
+        this.classClass = classClass;
+        this.superClass = superClass;
     }
 
     public Class getStaticClass() {
         if (this.staticClass == null) {
-            this.staticClass = new Class(name + ":static");
+            // TODO: Change this null to `superClass.getStaticClass()` but test beforehand
+            this.staticClass = new Class(name + ":static", classClass, null);
         }
 
         return this.staticClass;
     }
 
-    // TODO: Use inheritance for these
-    private void defineClassMethods() {
-        defineMethod(new Method("class", (runtime, args) ->
-                args.get(0).getXClass()));
-
-        defineMethod(new Method("new", (runtime, args) -> {
-            ObjectValue instance = runtime.createObject((Class)args.get(0));
-            Method initializer = instance.getXClass().getMethod("initialize");
-
-            if (initializer != null) {
-                List<Value> initializeArgs = new ArrayList<>();
-                initializeArgs.addAll(args);
-                initializeArgs.set(0, instance);
-
-                initializer.call(runtime, initializeArgs);
-            }
-
-            return instance;
-        }));
-
-        defineMethod(new Method("name", (runtime, args) ->
-                runtime.from(args.get(0).getXClass().name)));
+    public Class getSuperClass() {
+        return superClass;
     }
 
     public void defineMethod(Method method) {
@@ -58,15 +41,17 @@ public class Class extends Value {
     }
 
     public Method getMethod(String name) {
-        return this.methods.get(name);
+        Method method = this.methods.get(name);
+
+        if (method == null && superClass != null) {
+            return this.superClass.getMethod(name);
+        }
+
+        return method;
     }
 
     public void defineStaticMethod(Method method) {
-        if (this.staticClass == null) {
-            this.staticClass = new Class(name + ":static");
-        }
-
-        this.staticClass.defineMethod(method);
+        this.getStaticClass().defineMethod(method);
     }
 
     public Method getStaticMethod(String name) {
@@ -79,7 +64,7 @@ public class Class extends Value {
 
     @Override
     public Class getXClass() {
-        return getStaticClass();
+        return classClass;
     }
 
     @Override

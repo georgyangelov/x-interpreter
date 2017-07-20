@@ -265,7 +265,7 @@ public class Parser {
         if (t.type == TokenType.Dot) {
             read(); // .
 
-            if (t.type != TokenType.Name) parseError();
+            if (!isMethodName(t)) parseError();
             Token name = read();
 
             List<ASTNode> arguments = parseArguments();
@@ -347,6 +347,10 @@ public class Parser {
         return t.type == TokenType.End ||
                t.type == TokenType.Else ||
                t.type == TokenType.Elsif;
+    }
+
+    private boolean isMethodName(Token t) {
+        return t.type == TokenType.Name || t.type == TokenType.Class;
     }
 
     private Token read() throws IOException, Lexer.LexerException {

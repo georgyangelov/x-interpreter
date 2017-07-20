@@ -10,7 +10,9 @@ import java.util.Map;
 public class Runtime {
     public final Map<String, Class> classes = new HashMap<>();
 
-    public static final ASTClass AST_CLASS = new ASTClass();
+    public static final ClassClass CLASS = new ClassClass();
+    public static final ObjectClass OBJECT = new ObjectClass(CLASS);
+    public static final ASTClass AST_CLASS = new ASTClass(CLASS, OBJECT);
 
     public final NilValue NIL;
     public final BoolValue TRUE;
@@ -20,20 +22,19 @@ public class Runtime {
     public final Class IntClass, StringClass, GlobalClass;
 
     public Runtime() {
-        Class Class = new Class("Class");
-        Class Nil = new NilClass();
-        Class Bool = new BoolClass();
+        Class Nil = new NilClass(CLASS, OBJECT);
+        Class Bool = new BoolClass(CLASS, OBJECT);
 
-        IntClass = new IntClass();
-        StringClass = new StringClass();
-        GlobalClass = new GlobalClass();
+        IntClass = new IntClass(CLASS, OBJECT);
+        StringClass = new StringClass(CLASS, OBJECT);
+        GlobalClass = new GlobalClass(CLASS, OBJECT);
 
         NIL = new NilValue(Nil);
         TRUE = new BoolValue(Bool, true);
         FALSE = new BoolValue(Bool, false);
         GLOBAL = new GlobalValue(GlobalClass);
 
-        defineClass(Class);
+        defineClass(CLASS);
         defineClass(Nil);
         defineClass(Bool);
         defineClass(IntClass);

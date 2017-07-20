@@ -7,8 +7,8 @@ import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
 public class StringClass extends Class {
-    public StringClass() {
-        super("String");
+    public StringClass(ClassClass klass, Class objectClass) {
+        super("String", klass, objectClass);
 
         defineMethod(new Method("length", (runtime, args) -> {
             String self = getString(args.get(0));

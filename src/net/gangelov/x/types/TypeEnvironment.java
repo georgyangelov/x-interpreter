@@ -12,9 +12,9 @@ public class TypeEnvironment {
     private Map<String, Class> types = new HashMap<>();
 
     public TypeEnvironment() {
-        defineClass(new IntClass());
-        defineClass(new StringClass());
-        defineClass(new GlobalClass());
+//        defineClass(new IntClass());
+//        defineClass(new StringClass());
+//        defineClass(new GlobalClass());
     }
 
     public void defineClass(Class type) {

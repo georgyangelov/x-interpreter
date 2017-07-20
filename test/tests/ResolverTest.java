@@ -14,38 +14,38 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResolverTest {
-    @Test
-    void testConstantTypeResolve() throws Exception {
-        assertEquals("Int", resolve("42"));
-        assertEquals("String", resolve("\"hello\""));
-    }
-
-    @Test
-    void testSimpleNameResolve() throws Exception {
-        assertEquals("Int", resolve("a = 5\n a"));
-        assertEquals("String", resolve("a = \"test\"\n a"));
-    }
-
-    @Test
-    void testTypePropagation() throws Exception {
-        assertEquals("Int", resolve("a = 1\n b = a\n c = b\n c"));
-    }
-
-    @Test
-    void testCyclicPropagation() throws Exception {
-        assertEquals("Int", resolve("a = 1\n a = a\n a"));
-    }
-
-    @Test
-    void testConflictingTypes() throws Exception {
-        assertTypeError("Type String cannot be assigned to Int", () -> {
-            resolve("a = 1\n a = \"test\"");
-        });
-
-        assertTypeError("Type Int cannot be assigned to String", () -> {
-            resolve("a = \"test\"\n a = 42");
-        });
-    }
+//    @Test
+//    void testConstantTypeResolve() throws Exception {
+//        assertEquals("Int", resolve("42"));
+//        assertEquals("String", resolve("\"hello\""));
+//    }
+//
+//    @Test
+//    void testSimpleNameResolve() throws Exception {
+//        assertEquals("Int", resolve("a = 5\n a"));
+//        assertEquals("String", resolve("a = \"test\"\n a"));
+//    }
+//
+//    @Test
+//    void testTypePropagation() throws Exception {
+//        assertEquals("Int", resolve("a = 1\n b = a\n c = b\n c"));
+//    }
+//
+//    @Test
+//    void testCyclicPropagation() throws Exception {
+//        assertEquals("Int", resolve("a = 1\n a = a\n a"));
+//    }
+//
+//    @Test
+//    void testConflictingTypes() throws Exception {
+//        assertTypeError("Type String cannot be assigned to Int", () -> {
+//            resolve("a = 1\n a = \"test\"");
+//        });
+//
+//        assertTypeError("Type Int cannot be assigned to String", () -> {
+//            resolve("a = \"test\"\n a = 42");
+//        });
+//    }
 
 //    @Test
 //    void testMethodResolve() throws Exception {

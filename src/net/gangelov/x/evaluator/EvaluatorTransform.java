@@ -176,7 +176,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         // TODO: This should be a scope gate, make a new context not descending from this one
         EvaluatorContext classContext = context.scope();
 
-        Class klass = new Class(node.name);
+        Class klass = new Class(node.name, Runtime.CLASS, Runtime.OBJECT);
         runtime.defineClass(klass);
 
         classContext.defineLocal("Self", klass);
