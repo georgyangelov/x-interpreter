@@ -364,6 +364,37 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testCatchInImplicitBlocks() throws Exception {
+        assertEquals("42", eval(
+                "if 1 == 1\n" +
+                "  raise Error.new\n" +
+                "catch\n" +
+                "  42\n" +
+                "end"
+        ));
+
+        assertEquals("false", eval(
+                "i = true\n" +
+
+                "while i\n" +
+                "  raise Error.new\n" +
+                "catch\n" +
+                "  i = false\n" +
+                "end"
+        ));
+
+        assertEquals("42", eval(
+                "def test\n" +
+                "  raise Error.new\n" +
+                "catch\n" +
+                "  42\n" +
+                "end\n" +
+
+                "test"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();
