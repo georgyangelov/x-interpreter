@@ -9,6 +9,7 @@ import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext> {
@@ -114,15 +115,48 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(BlockNode node, EvaluatorContext context) {
-        List<Value> nodes = node.nodes.stream()
-                .map(n -> n.visit(this, context))
-                .collect(Collectors.toList());
+        // TODO: Set another context? What about the if blocks and defining variables there?
 
-        if (nodes.size() > 0) {
-            return nodes.get(nodes.size() - 1);
-        } else {
-            return runtime.NIL;
+        try {
+            List<Value> nodes = node.nodes.stream()
+                    .map(n -> n.visit(this, context))
+                    .collect(Collectors.toList());
+
+            if (nodes.size() > 0) {
+                return nodes.get(nodes.size() - 1);
+            } else {
+                return runtime.NIL;
+            }
+        } catch (XErrorException exception) {
+            Value error = exception.error;
+
+            Optional<CatchNode> maybeCaughtNode = node.catchNodes.stream()
+                    .filter(catchNode -> canCatchError(catchNode, error))
+                    .findFirst();
+
+            if (maybeCaughtNode.isPresent()) {
+                CatchNode caughtNode = maybeCaughtNode.get();
+                EvaluatorContext catchContext = context.scope();
+
+                if (caughtNode.name != null) {
+                    catchContext.defineLocal(caughtNode.name, error);
+                }
+
+                return caughtNode.body.visit(this, catchContext);
+            }
+
+            throw exception;
         }
+    }
+
+    private boolean canCatchError(CatchNode node, Value error) {
+        Class expectedClass = runtime.getClass(node.klass);
+        if (expectedClass == null) {
+            // TODO: Test
+            throw new Evaluator.RuntimeError("No class named " + node.klass);
+        }
+
+        return error.instanceOf(expectedClass);
     }
 
     @Override
@@ -164,7 +198,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(MethodArgumentNode methodDefinitionNode, EvaluatorContext context) {
-        throw new RuntimeException("This should not be called");
+        throw new RuntimeException("This should not be called (visit MethodArgumentNode)");
     }
 
     @Override
@@ -192,7 +226,6 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(CatchNode node, EvaluatorContext context) {
-        // TODO
-        return null;
+        throw new RuntimeException("This should not be called (visit CatchNode)");
     }
 }

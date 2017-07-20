@@ -12,4 +12,8 @@ public abstract class Value {
     public boolean asBoolean() {
         return true;
     }
+
+    public boolean instanceOf(Class klass) {
+        return getXClass().is(klass);
+    }
 }

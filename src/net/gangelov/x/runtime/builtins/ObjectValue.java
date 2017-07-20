@@ -5,8 +5,8 @@ import net.gangelov.x.runtime.base.Class;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-// TODO: Instance variables
 public class ObjectValue extends Value {
     private final Class klass;
     private final Map<String, Value> instanceVariables = new HashMap<>();
@@ -28,5 +28,17 @@ public class ObjectValue extends Value {
     @Override
     public Class getXClass() {
         return klass;
+    }
+
+    @Override
+    public String inspect() {
+        return "#<" + klass.name + " " + inspectInstanceVariables() + ">";
+    }
+
+    private String inspectInstanceVariables() {
+        // TODO: This WILL break if there are circular references
+        return this.instanceVariables.entrySet().stream()
+                .map(entry -> "@" + entry.getKey() + "=" + entry.getValue().inspect())
+                .collect(Collectors.joining(", "));
     }
 }

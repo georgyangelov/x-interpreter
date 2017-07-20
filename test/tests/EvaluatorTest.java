@@ -273,6 +273,97 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testErrors() throws Exception {
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("raise Error.new(\"Unhandled error\")");
+        });
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("do raise Error.new\n catch UnknownErrorType end");
+        });
+
+        assertEquals("nil", eval("do catch\n end"));
+        assertEquals("42", eval("do 42 catch Error\n catch e\n catch e:Error\n catch\n end"));
+        assertEquals("42", eval("do 42 catch\n end"));
+
+        assertEquals("42", eval("do raise Error.new\n catch\n 42 end"));
+        assertEquals("\"err\"", eval("do raise Error.new(\"err\")\n catch ex\n ex.message end"));
+
+        assertEquals("\"Silo jammed\"", eval(
+                "class LaunchError < Error end\n" +
+
+                "def nuke_city(city)\n" +
+                "  raise LaunchError.new(\"Silo jammed\")\n" +
+                "end\n" +
+
+                "do\n" +
+                "  nuke_city \"Sofia\"\n" +
+                "  this_is_not_a_valid_method\n" +
+                "catch error\n" +
+                "  error.message\n" +
+                "catch error:LaunchError\n" +
+                "  42\n" +
+                "end"
+        ));
+
+        assertEquals("\"Silo jammed\"", eval(
+                "class LaunchError < Error end\n" +
+                "class AbortError < Error end\n" +
+
+                "def nuke_city(city)\n" +
+                "  raise LaunchError.new(\"Silo jammed\")\n" +
+                "end\n" +
+
+                "do\n" +
+                "  nuke_city \"Sofia\"\n" +
+                "  this_is_not_a_valid_method\n" +
+                "catch AbortError\n" +
+                "  42\n" +
+                "catch error\n" +
+                "  error.message\n" +
+                "end"
+        ));
+
+        assertEquals("\"Silo jammed\"", eval(
+                "class LaunchError < Error end\n" +
+                "class AbortError < Error end\n" +
+
+                "def nuke_city(city)\n" +
+                "  raise LaunchError.new(\"Silo jammed\")\n" +
+                "end\n" +
+
+                "do\n" +
+                "  nuke_city \"Sofia\"\n" +
+                "  this_is_not_a_valid_method\n" +
+                "catch AbortError\n" +
+                "  42\n" +
+                "catch error:LaunchError\n" +
+                "  error.message\n" +
+                "end"
+        ));
+
+
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval(
+                    "class LaunchError < Error end\n" +
+                    "class AbortError < Error end\n" +
+
+                    "def nuke_city(city)\n" +
+                    "  raise LaunchError.new(\"Silo jammed\")\n" +
+                    "end\n" +
+
+                    "do\n" +
+                    "  nuke_city \"Sofia\"\n" +
+                    "  this_is_not_a_valid_method\n" +
+                    "catch AbortError\n" +
+                    "  42\n" +
+                    "end"
+            );
+        });
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();

@@ -19,7 +19,7 @@ public class Runtime {
     public final BoolValue FALSE;
     public final GlobalValue GLOBAL;
 
-    public final Class IntClass, StringClass, GlobalClass;
+    public final Class IntClass, StringClass, GlobalClass, ErrorClass;
 
     public Runtime() {
         Class Nil = new NilClass(CLASS, OBJECT);
@@ -28,6 +28,7 @@ public class Runtime {
         IntClass = new IntClass(CLASS, OBJECT);
         StringClass = new StringClass(CLASS, OBJECT);
         GlobalClass = new GlobalClass(CLASS, OBJECT);
+        ErrorClass = new ErrorClass(CLASS, OBJECT);
 
         NIL = new NilValue(Nil);
         TRUE = new BoolValue(Bool, true);
@@ -38,6 +39,7 @@ public class Runtime {
         defineClass(OBJECT);
         defineClass(Nil);
         defineClass(Bool);
+        defineClass(ErrorClass);
         defineClass(IntClass);
         defineClass(StringClass);
         defineClass(GlobalClass);

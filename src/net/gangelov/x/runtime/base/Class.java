@@ -62,6 +62,10 @@ public class Class extends Value {
         return this.staticClass.getMethod(name);
     }
 
+    public boolean is(Class klass) {
+        return this == klass || this.superClass != null && superClass.is(klass);
+    }
+
     @Override
     public Class getXClass() {
         return classClass;
