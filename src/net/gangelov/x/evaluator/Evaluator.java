@@ -31,6 +31,7 @@ public class Evaluator {
     }
 
     private void defineBuiltins() {
+        context.defineLocal("Self", runtime.GlobalClass);
         context.defineLocal("self", runtime.GLOBAL);
         context.defineLocal("global", runtime.GLOBAL);
     }

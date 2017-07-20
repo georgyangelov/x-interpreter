@@ -17,28 +17,28 @@ public class Runtime {
     public final BoolValue FALSE;
     public final GlobalValue GLOBAL;
 
-    private final Class Int, String;
+    public final Class IntClass, StringClass, GlobalClass;
 
     public Runtime() {
         Class Class = new Class("Class");
         Class Nil = new NilClass();
         Class Bool = new BoolClass();
-        Class Global = new GlobalClass();
 
-        Int = new IntClass();
-        String = new StringClass();
+        IntClass = new IntClass();
+        StringClass = new StringClass();
+        GlobalClass = new GlobalClass();
 
         NIL = new NilValue(Nil);
         TRUE = new BoolValue(Bool, true);
         FALSE = new BoolValue(Bool, false);
-        GLOBAL = new GlobalValue(Global);
+        GLOBAL = new GlobalValue(GlobalClass);
 
         defineClass(Class);
         defineClass(Nil);
         defineClass(Bool);
-        defineClass(Int);
-        defineClass(String);
-        defineClass(Global);
+        defineClass(IntClass);
+        defineClass(StringClass);
+        defineClass(GlobalClass);
         defineClass(AST_CLASS);
     }
 
@@ -48,12 +48,16 @@ public class Runtime {
 
     // TODO: Intern
     public IntValue from(int value) {
-        return new IntValue(Int, value);
+        return new IntValue(IntClass, value);
     }
 
     // TODO: Intern
     public StringValue from(String value) {
-        return new StringValue(String, value);
+        return new StringValue(StringClass, value);
+    }
+
+    public ObjectValue createObject(Class klass) {
+        return new ObjectValue(klass);
     }
 
     public void defineClass(Class klass) {

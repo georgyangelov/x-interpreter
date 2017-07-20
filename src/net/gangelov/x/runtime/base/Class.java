@@ -1,9 +1,12 @@
 package net.gangelov.x.runtime.base;
 
 import net.gangelov.x.runtime.Value;
+import net.gangelov.x.runtime.builtins.ObjectValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Class extends Value {
@@ -30,6 +33,21 @@ public class Class extends Value {
     private void defineClassMethods() {
         defineMethod(new Method("class", (runtime, args) ->
                 args.get(0).getXClass()));
+
+        defineMethod(new Method("new", (runtime, args) -> {
+            ObjectValue instance = runtime.createObject((Class)args.get(0));
+            Method initializer = instance.getXClass().getMethod("initialize");
+
+            if (initializer != null) {
+                List<Value> initializeArgs = new ArrayList<>();
+                initializeArgs.addAll(args);
+                initializeArgs.set(0, instance);
+
+                initializer.call(runtime, initializeArgs);
+            }
+
+            return instance;
+        }));
 
         defineMethod(new Method("name", (runtime, args) ->
                 runtime.from(args.get(0).getXClass().name)));

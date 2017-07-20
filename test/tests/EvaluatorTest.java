@@ -157,6 +157,15 @@ public class EvaluatorTest {
     }
 
     @Test
+    void testClassInstantiation() throws Exception {
+        assertEquals("42", eval("class Answer\n def give\n 42 end end\n Answer.new.give"));
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("class Answer\n def give\n 42 end end\n Answer.give");
+        });
+    }
+
+    @Test
     void testClassRedefinition() throws Exception {
         assertThrows(Evaluator.RuntimeError.class, () -> {
            eval("class Test end\n class Test end");

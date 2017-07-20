@@ -135,7 +135,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             return methodDefinitionNode.body.visit(this, callContext);
         });
 
-        Class selfClass = context.getLocal("self").getXClass();
+        // TODO: Validate this is a class, not some other value
+        Class selfClass = (Class)context.getLocal("Self");
         selfClass.defineMethod(method);
 
         return runtime.from(methodDefinitionNode.name);
@@ -158,6 +159,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         Class klass = new Class(node.name);
         runtime.defineClass(klass);
 
+        classContext.defineLocal("Self", klass);
         classContext.defineLocal("self", klass);
 
         return node.body.visit(this, classContext);
