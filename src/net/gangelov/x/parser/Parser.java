@@ -111,6 +111,7 @@ public class Parser {
             case If:            return parseIf();
             case While:         return parseWhile();
             case Def:           return parseDef();
+            case Class:         return parseClass();
             case OpenParen:
                 read(); // (
                 ASTNode node = parseNext();
@@ -125,6 +126,20 @@ public class Parser {
         parseError();
         
         return null;
+    }
+
+    private ClassDefinitionNode parseClass() throws IOException, Lexer.LexerException, ParserException {
+        read(); // class
+
+        if (t.type != TokenType.Name) parseError();
+        String name = read().str;
+
+        BlockNode body = parseBlock();
+
+        if (t.type != TokenType.End) parseError();
+        read(); // end
+
+        return new ClassDefinitionNode(name, body);
     }
 
     private MethodDefinitionNode parseDef() throws IOException, Lexer.LexerException, ParserException {

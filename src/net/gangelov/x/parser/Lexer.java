@@ -154,6 +154,9 @@ public class Lexer {
                 case "true": case "false":
                     t.type = TokenType.Bool;
                     break;
+                case "class":
+                    t.type = TokenType.Class;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;

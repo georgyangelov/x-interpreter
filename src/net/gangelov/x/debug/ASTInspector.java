@@ -145,4 +145,15 @@ public class ASTInspector extends Visitor {
 
         return null;
     }
+
+    @Override
+    public Void visit(ClassDefinitionNode node, Void context) {
+        str.append("(class ").append(node.name).append(" ");
+
+        node.body.visit(this, context);
+
+        str.append(")");
+
+        return null;
+    }
 }

@@ -33,5 +33,6 @@ public enum TokenType {
     Do,
     While,
     Def,
-    End
+    End,
+    Class
 }

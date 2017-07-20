@@ -56,4 +56,13 @@ public class Visitor extends AbstractVisitor<Void, Void> {
     public Void visit(MethodArgumentNode methodDefinitionNode, Void context) {
         return null;
     }
+
+    @Override
+    public Void visit(ClassDefinitionNode node, Void context) {
+        for (ASTNode n : node.body.nodes) {
+            n.visit(this, context);
+        }
+
+        return null;
+    }
 }

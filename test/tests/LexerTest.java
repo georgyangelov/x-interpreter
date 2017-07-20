@@ -33,7 +33,8 @@ class LexerTest {
     void testSimpleTokens() throws IOException, Lexer.LexerException {
         assertEquals(
             "(OpenParen '(') (CloseParen ')') (OpenBracket '[') (CloseBracket ']') (Comma ',') " +
-                "(Dot '.') (Colon ':') (Number '12345') (String 'test') (Newline '\n') (Name 'doend') (EOF 'EOF')",
+            "(Dot '.') (Colon ':') (Number '12345') (String 'test') (Newline '\n') " +
+            "(Name 'doend') (EOF 'EOF')",
             lex("()[],.:12345\"test\"\ndoend")
         );
     }
@@ -54,14 +55,16 @@ class LexerTest {
     @Test
     void testCallsOnLiterals() throws IOException, Lexer.LexerException {
         assertEquals("(Number '42.2') (Dot '.') (Name 'abs') (EOF 'EOF')", lex("42.2.abs"));
-        assertEquals("(String 'test') (Dot '.') (Name 'length') (Number '3') (EOF 'EOF')", lex("\"test\".length 3"));
+        assertEquals("(String 'test') (Dot '.') (Name 'length') (Number '3') (EOF 'EOF')",
+                lex("\"test\".length 3"));
     }
 
     @Test
     void testKeywords() throws IOException, Lexer.LexerException {
         assertEquals(
-            "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') (While 'while') (Def 'def') (EOF 'EOF')",
-            lex("do end if elsif else while def")
+            "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') " +
+            "(While 'while') (Def 'def') (Class 'class') (EOF 'EOF')",
+            lex("do end if elsif else while def class")
         );
     }
 
@@ -130,7 +133,8 @@ class LexerTest {
         assertEquals("(BinaryOperator 'and') (BinaryOperator 'or') (EOF 'EOF')", lex("and or"));
         assertEquals("(BinaryOperator '*') (BinaryOperator '/') (EOF 'EOF')", lex("* /"));
         assertEquals("(BinaryOperator '<') (BinaryOperator '>') (EOF 'EOF')", lex("< >"));
-        assertEquals("(BinaryOperator '<=') (BinaryOperator '>=') (BinaryOperator '!=') (EOF 'EOF')", lex("<= >= !="));
+        assertEquals("(BinaryOperator '<=') (BinaryOperator '>=') (BinaryOperator '!=') (EOF 'EOF')",
+                lex("<= >= !="));
         assertEquals("(BinaryOperator '+=') (BinaryOperator '-=') (EOF 'EOF')", lex("+= -="));
         assertEquals("(BinaryOperator '/=') (BinaryOperator '*=') (EOF 'EOF')", lex("/= *="));
         assertEquals("(Name 'a') (BinaryOperator '=') (Name 'b') (EOF 'EOF')", lex("a = b"));

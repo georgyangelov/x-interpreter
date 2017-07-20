@@ -228,6 +228,18 @@ public class ParserTest {
         assertThrows(Parser.ParserException.class, () -> parse("if end"));
     }
 
+    @Test
+    void testClassDefinitions() throws Exception {
+        assertEquals("(class Fib { (def fib [] { a }) (def fib2 [] { b }) })",
+                parse("class Fib\n def fib\n a end def fib2\n b end end"));
+
+        assertEquals("(class Fib { (= a (+ b 1)) })",
+                parse("class Fib\n a = b + 1 end"));
+
+        assertEquals("(class Fib { (attr_reader self \"value\") })",
+                parse("class Fib\n attr_reader \"value\"\n end"));
+    }
+
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {
         List<ASTNode> nodes = ParserSupport.parseAll(source);
 

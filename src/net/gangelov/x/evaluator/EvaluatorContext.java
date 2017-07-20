@@ -24,6 +24,10 @@ public class EvaluatorContext {
     }
 
     public void defineLocal(String name, Value value) {
+        locals.put(name, value);
+    }
+
+    public void assignLocal(String name, Value value) {
         if (!setIfDefined(name, value)) {
             locals.put(name, value);
         }

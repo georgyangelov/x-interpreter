@@ -149,6 +149,20 @@ public class EvaluatorTest {
         assertEquals("\"Hello world!\"", eval("String.hello"));
     }
 
+    @Test
+    void testClassDefinitions() throws Exception {
+        assertEquals("42", eval("class Test 42 end"));
+        assertEquals("Test", eval("class Test end Test"));
+        assertEquals("Test", eval("class Test\n def bla\n test end end Test"));
+    }
+
+    @Test
+    void testClassRedefinition() throws Exception {
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+           eval("class Test end\n class Test end");
+        });
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator(nodes).evaluate();

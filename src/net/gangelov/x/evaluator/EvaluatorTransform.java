@@ -59,7 +59,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(AssignmentNode node, EvaluatorContext context) {
         Value value = node.value.visit(this, context);
 
-        context.defineLocal(node.name, value);
+        context.assignLocal(node.name, value);
 
         return value;
     }
@@ -120,6 +120,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(MethodDefinitionNode methodDefinitionNode, EvaluatorContext context) {
         Method method = new Method(methodDefinitionNode.name, (runtime, args) -> {
             List<MethodArgumentNode> formalArgs = methodDefinitionNode.arguments;
+
+            // TODO: Should this be a scope gate?
             EvaluatorContext callContext = context.scope();
 
             callContext.defineLocal("self", args.get(0));
@@ -142,5 +144,22 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     @Override
     public Value visit(MethodArgumentNode methodDefinitionNode, EvaluatorContext context) {
         throw new RuntimeException("This should not be called");
+    }
+
+    @Override
+    public Value visit(ClassDefinitionNode node, EvaluatorContext context) {
+        if (runtime.getClass(node.name) != null) {
+            throw new Evaluator.RuntimeError("Cannot redefine class " + node.name);
+        }
+
+        // TODO: This should be a scope gate, make a new context not descending from this one
+        EvaluatorContext classContext = context.scope();
+
+        Class klass = new Class(node.name);
+        runtime.defineClass(klass);
+
+        classContext.defineLocal("self", klass);
+
+        return node.body.visit(this, classContext);
     }
 }
