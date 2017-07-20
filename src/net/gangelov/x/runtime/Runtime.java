@@ -35,6 +35,7 @@ public class Runtime {
         GLOBAL = new GlobalValue(GlobalClass);
 
         defineClass(CLASS);
+        defineClass(OBJECT);
         defineClass(Nil);
         defineClass(Bool);
         defineClass(IntClass);

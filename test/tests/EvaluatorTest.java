@@ -165,6 +165,14 @@ public class EvaluatorTest {
         assertThrows(Evaluator.RuntimeError.class, () -> {
             eval("class Answer\n def give\n 42 end end\n Answer.give");
         });
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("42.new");
+        });
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("class Answer\n def give\n 42 end end\n Answer.new.new");
+        });
     }
 
     @Test
@@ -212,6 +220,56 @@ public class EvaluatorTest {
     void testClassRedefinition() throws Exception {
         assertThrows(Evaluator.RuntimeError.class, () -> {
            eval("class Test end\n class Test end");
+        });
+    }
+
+    @Test
+    void testClassInheritance() throws Exception {
+        assertEquals("Object", eval("class A end\n A.superclass"));
+        assertEquals("nil", eval("Object.superclass"));
+
+        assertEquals("A", eval(
+                "class A\n" +
+                "  def answer\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A end\n" +
+
+                "B.superclass"
+        ));
+
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def answer\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A end\n" +
+
+                "B.new.answer"
+        ));
+
+        assertEquals("666", eval(
+                "class A\n" +
+                "  def answer\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A\n" +
+                "  def answer\n" +
+                "    666\n" +
+                "  end\n" +
+                "end\n" +
+
+                "B.new.answer"
+        ));
+
+        assertThrows(Evaluator.RuntimeError.class, () -> {
+            eval("class Test < A end");
         });
     }
 

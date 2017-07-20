@@ -242,6 +242,12 @@ public class ParserTest {
     }
 
     @Test
+    void testClassInheritanceDefinitions() throws Exception {
+        assertEquals("(class Fib:BaseFib { a })",
+                parse("class Fib < BaseFib\n a end"));
+    }
+
+    @Test
     void testSpecialMethodNames() throws Exception {
         assertEquals("(class a b c)", parse("a.class b, c"));
     }

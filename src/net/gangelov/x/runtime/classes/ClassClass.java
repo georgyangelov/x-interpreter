@@ -23,9 +23,15 @@ public class ClassClass extends Class {
                 args.get(0).getXClass()
         ));
 
-        defineMethod(new Method("superclass", (runtime, args) ->
-                args.get(0).getXClass().getSuperClass()
-        ));
+        defineMethod(new Method("superclass", (runtime, args) -> {
+            Class klass = ((Class)args.get(0)).getSuperClass();
+
+            if (klass == null) {
+                return runtime.NIL;
+            }
+
+            return klass;
+        }));
 
         defineMethod(new Method("new", (runtime, args) -> {
             ObjectValue instance = runtime.createObject((Class)args.get(0));

@@ -81,7 +81,10 @@ public class Parser {
 
             ASTNode expression = parsePrimary();
 
-            if (expression instanceof LiteralNode && ((LiteralNode) expression).type == LiteralNode.Type.Int) {
+            if (
+                    expression instanceof LiteralNode &&
+                    ((LiteralNode) expression).type == LiteralNode.Type.Int
+            ) {
                 LiteralNode number = (LiteralNode)expression;
                 number.str = "-" + number.str;
 
@@ -133,13 +136,21 @@ public class Parser {
 
         if (t.type != TokenType.Name) parseError();
         String name = read().str;
+        String superclass = "Object";
+
+        if (t.type == TokenType.BinaryOperator && t.str.equals("<")) {
+            read(); // <
+
+            if (t.type != TokenType.Name) parseError();
+            superclass = read().str;
+        }
 
         BlockNode body = parseBlock();
 
         if (t.type != TokenType.End) parseError();
         read(); // end
 
-        return new ClassDefinitionNode(name, body);
+        return new ClassDefinitionNode(name, superclass, body);
     }
 
     private MethodDefinitionNode parseDef() throws IOException, Lexer.LexerException, ParserException {

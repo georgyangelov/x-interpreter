@@ -173,10 +173,15 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             throw new Evaluator.RuntimeError("Cannot redefine class " + node.name);
         }
 
+        Class superclass = runtime.getClass(node.superclass);
+        if (superclass == null) {
+            throw new Evaluator.RuntimeError("Cannot inherit from undefined class " + node.superclass);
+        }
+
         // TODO: This should be a scope gate, make a new context not descending from this one
         EvaluatorContext classContext = context.scope();
 
-        Class klass = new Class(node.name, Runtime.CLASS, Runtime.OBJECT);
+        Class klass = new Class(node.name, Runtime.CLASS, superclass);
         runtime.defineClass(klass);
 
         classContext.defineLocal("Self", klass);

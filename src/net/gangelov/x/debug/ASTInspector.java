@@ -148,7 +148,13 @@ public class ASTInspector extends Visitor {
 
     @Override
     public Void visit(ClassDefinitionNode node, Void context) {
-        str.append("(class ").append(node.name).append(" ");
+        str.append("(class ").append(node.name);
+
+        if (!node.superclass.equals("Object")) {
+            str.append(":").append(node.superclass);
+        }
+
+        str.append(" ");
 
         node.body.visit(this, context);
 
