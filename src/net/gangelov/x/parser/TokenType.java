@@ -34,5 +34,6 @@ public enum TokenType {
     While,
     Def,
     End,
-    Class
+    Class,
+    Catch
 }

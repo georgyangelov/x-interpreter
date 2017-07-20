@@ -4,7 +4,7 @@ import net.gangelov.x.ast.*;
 import net.gangelov.x.ast.nodes.*;
 import net.gangelov.x.parser.EscapeSequences;
 
-public class ASTInspector extends Visitor {
+public class ASTInspector extends AbstractVisitor<Void, Void> {
     public static String inspect(ASTNode node) {
         ASTInspector inspector = new ASTInspector();
         node.visit(inspector, null);
@@ -90,6 +90,11 @@ public class ASTInspector extends Visitor {
             n.visit(this, context);
         }
 
+        for (CatchNode n : node.catchNodes) {
+            str.append(" ");
+            n.visit(this, context);
+        }
+
         str.append(" }");
 
         return null;
@@ -155,6 +160,23 @@ public class ASTInspector extends Visitor {
         }
 
         str.append(" ");
+
+        node.body.visit(this, context);
+
+        str.append(")");
+
+        return null;
+    }
+
+    @Override
+    public Void visit(CatchNode node, Void context) {
+        str.append("(catch ");
+
+        if (node.name != null) {
+            str.append(node.name).append(":");
+        }
+
+        str.append(node.klass).append(" ");
 
         node.body.visit(this, context);
 

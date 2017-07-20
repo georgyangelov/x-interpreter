@@ -189,4 +189,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
         return node.body.visit(this, classContext);
     }
+
+    @Override
+    public Value visit(CatchNode node, EvaluatorContext context) {
+        // TODO
+        return null;
+    }
 }

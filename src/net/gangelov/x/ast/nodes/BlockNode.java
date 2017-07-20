@@ -8,13 +8,21 @@ import java.util.List;
 
 public class BlockNode extends ASTNode {
     public final List<ASTNode> nodes;
+    public final List<CatchNode> catchNodes;
 
     public BlockNode() {
         this.nodes = new ArrayList<>();
+        this.catchNodes = new ArrayList<>();
     }
 
     public BlockNode(List<ASTNode> nodes) {
         this.nodes = nodes;
+        this.catchNodes = new ArrayList<>();
+    }
+
+    public BlockNode(List<ASTNode> nodes, List<CatchNode> catchNodes) {
+        this.nodes = nodes;
+        this.catchNodes = catchNodes;
     }
 
     public boolean isEmpty() {

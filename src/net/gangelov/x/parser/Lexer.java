@@ -157,6 +157,9 @@ public class Lexer {
                 case "class":
                     t.type = TokenType.Class;
                     break;
+                case "catch":
+                    t.type = TokenType.Catch;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;

@@ -252,6 +252,26 @@ public class ParserTest {
         assertEquals("(class a b c)", parse("a.class b, c"));
     }
 
+    @Test
+    void testStandaloneBlocks() throws Exception {
+        assertEquals("{ a b }", parse("do a\n b end"));
+    }
+
+    @Test
+    void testCatches() throws Exception {
+        assertEquals("{ a b (catch Error { b }) }",
+                parse("do a\n b catch Error\n b end"));
+
+        assertEquals("{ a (catch A { b }) (catch Error { c }) }",
+                parse("do a catch A\n b\n catch Error\n c end"));
+
+        assertEquals("{ a (catch A { b }) (catch Error { c }) }",
+                parse("do a catch A\n b\n catch\n c end"));
+
+        assertEquals("{ a (catch ex:A { b }) (catch ex2:Error { c }) }",
+                parse("do a catch ex:A\n b\n catch ex2\n c end"));
+    }
+
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {
         List<ASTNode> nodes = ParserSupport.parseAll(source);
 

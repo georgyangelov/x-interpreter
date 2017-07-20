@@ -63,8 +63,8 @@ class LexerTest {
     void testKeywords() throws IOException, Lexer.LexerException {
         assertEquals(
             "(Do 'do') (End 'end') (If 'if') (Elsif 'elsif') (Else 'else') " +
-            "(While 'while') (Def 'def') (Class 'class') (EOF 'EOF')",
-            lex("do end if elsif else while def class")
+            "(While 'while') (Def 'def') (Class 'class') (Catch 'catch') (EOF 'EOF')",
+            lex("do end if elsif else while def class catch")
         );
     }
 

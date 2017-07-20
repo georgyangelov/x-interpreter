@@ -115,12 +115,12 @@ public class Parser {
             case While:         return parseWhile();
             case Def:           return parseDef();
             case Class:         return parseClass();
+            case Do:            return parseStandaloneBlock();
+
             case OpenParen:
                 read(); // (
                 ASTNode node = parseNext();
-                if (t.type != TokenType.CloseParen) {
-                    break;
-                }
+                if (t.type != TokenType.CloseParen) parseError();
                 read(); // )
 
                 return node;
@@ -129,6 +129,17 @@ public class Parser {
         parseError();
         
         return null;
+    }
+
+    private BlockNode parseStandaloneBlock() throws IOException, Lexer.LexerException, ParserException {
+        read(); // do
+
+        BlockNode block = parseBlock();
+
+        if (t.type != TokenType.End) parseError();
+        read(); // end
+
+        return block;
     }
 
     private ClassDefinitionNode parseClass() throws IOException, Lexer.LexerException, ParserException {
@@ -261,13 +272,50 @@ public class Parser {
     }
 
     private BlockNode parseBlock() throws ParserException, IOException, Lexer.LexerException {
+        return parseBlock(false);
+    }
+
+    private BlockNode parseBlock(boolean skipCatch)
+            throws ParserException, IOException, Lexer.LexerException {
         List<ASTNode> nodes = new ArrayList<>();
+        List<CatchNode> catches = new ArrayList<>();
 
         while (!blockEnds()) {
             nodes.add(parseNext());
         }
 
-        return new BlockNode(nodes);
+        if (!skipCatch) {
+            while (t.type == TokenType.Catch) {
+                catches.add(parseCatch());
+            }
+        }
+
+        return new BlockNode(nodes, catches);
+    }
+
+    private CatchNode parseCatch() throws ParserException, IOException, Lexer.LexerException {
+        read(); // catch
+
+        String name = null, klass = "Error";
+
+        if (!newline) {
+            if (t.type == TokenType.Name && !isConstName(t.str)) {
+                name = read().str;
+
+                if (t.type == TokenType.Colon) {
+                    read(); // :
+
+                    if (t.type != TokenType.Name) parseError();
+                    klass = read().str;
+                }
+            } else if (t.type == TokenType.Name) {
+                klass = read().str;
+            }
+        }
+
+        BlockNode body = parseBlock(true);
+
+        return new CatchNode(klass, name, body);
     }
 
     private ASTNode maybeParseMethodCall(ASTNode target)
@@ -357,11 +405,16 @@ public class Parser {
     private boolean blockEnds() {
         return t.type == TokenType.End ||
                t.type == TokenType.Else ||
-               t.type == TokenType.Elsif;
+               t.type == TokenType.Elsif ||
+               t.type == TokenType.Catch;
     }
 
     private boolean isMethodName(Token t) {
         return t.type == TokenType.Name || t.type == TokenType.Class;
+    }
+
+    private boolean isConstName(String name) {
+        return Character.isUpperCase(name.codePointAt(0));
     }
 
     private Token read() throws IOException, Lexer.LexerException {
