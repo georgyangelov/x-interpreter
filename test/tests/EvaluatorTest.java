@@ -17,9 +17,9 @@ public class EvaluatorTest {
     @Test
     void testConstants() throws Exception {
         assertEquals("42", eval("42"));
-//        assertEquals("4.2", eval("4.2"));
+        assertEquals("4.2", eval("4.2"));
         assertEquals("-42", eval("-42"));
-//        assertEquals("-4.2", eval("-4.2"));
+        assertEquals("-4.2", eval("-4.2"));
         assertEquals("\"test\"", eval("\"test\""));
         assertEquals("true", eval("true"));
         assertEquals("false", eval("false"));
@@ -30,6 +30,9 @@ public class EvaluatorTest {
         assertEquals("5", eval("2 + 3"));
         assertEquals("3", eval("5 - 2"));
         assertEquals("15", eval("5 * 3"));
+
+        assertEquals("5.3", eval("4.3 + 1.0"));
+        assertEquals("5.3", eval("1.2 + 4.1"));
     }
 
     @Test
@@ -72,11 +75,11 @@ public class EvaluatorTest {
 
     @Test
     void testIf() throws Exception {
-        assertEquals("2", eval("if 1 \n 2 end"));
-        assertEquals("42", eval("if 0 \n 1 else 42 end"));
-        assertEquals("nil", eval("if 0 \n 1 end"));
-        assertEquals("2", eval("if 0 \n 1 elsif 1 \n 2 end"));
-        assertEquals("3", eval("if 0 \n 1 elsif 0 \n 2 else 3 end"));
+        assertEquals("2", eval("if true \n 2 end"));
+        assertEquals("42", eval("if false \n 1 else 42 end"));
+        assertEquals("nil", eval("if false \n 1 end"));
+        assertEquals("2", eval("if false \n 1 elsif true \n 2 end"));
+        assertEquals("3", eval("if false \n 1 elsif false \n 2 else 3 end"));
     }
 
     @Test
@@ -107,7 +110,7 @@ public class EvaluatorTest {
     @Test
     void testMethodDefinitionsWithArguments() throws Exception {
         assertEquals("42", eval("def call(a) a end call(42)"));
-        assertEquals("42", eval("def call(a)\n if a\n 1 else 42 end end call 0"));
+        assertEquals("42", eval("def call(a)\n if a\n 1 else 42 end end call false"));
     }
 
     @Test

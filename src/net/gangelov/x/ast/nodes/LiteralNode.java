@@ -4,7 +4,7 @@ import net.gangelov.x.ast.ASTNode;
 import net.gangelov.x.ast.AbstractVisitor;
 
 public class LiteralNode extends ASTNode {
-    public enum Type { Int, String, Bool, Nil }
+    public enum Type { Int, Float, String, Bool, Nil }
 
     public final Type type;
     public String str;

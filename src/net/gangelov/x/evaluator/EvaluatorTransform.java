@@ -42,6 +42,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 return runtime.from(Integer.parseInt(node.str));
             case String:
                 return runtime.from(node.str);
+            case Float:
+                return runtime.from(Double.parseDouble(node.str));
         }
 
         return null;

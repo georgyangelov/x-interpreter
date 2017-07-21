@@ -86,8 +86,10 @@ public class Parser {
             ASTNode expression = parsePrimary();
 
             if (
-                    expression instanceof LiteralNode &&
-                    ((LiteralNode) expression).type == LiteralNode.Type.Int
+                    expression instanceof LiteralNode && (
+                        ((LiteralNode) expression).type == LiteralNode.Type.Int ||
+                        ((LiteralNode) expression).type == LiteralNode.Type.Float
+                    )
             ) {
                 LiteralNode number = (LiteralNode)expression;
                 number.str = "-" + number.str;
@@ -111,7 +113,12 @@ public class Parser {
         switch (t.type) {
             case Nil:           return new LiteralNode(LiteralNode.Type.Nil, read().str);
             case Bool:          return new LiteralNode(LiteralNode.Type.Bool, read().str);
-            case Number:        return new LiteralNode(LiteralNode.Type.Int, read().str);
+            case Number:
+                if (t.str.contains(".")) {
+                    return new LiteralNode(LiteralNode.Type.Float, read().str);
+                } else {
+                    return new LiteralNode(LiteralNode.Type.Int, read().str);
+                }
             case String:        return new LiteralNode(LiteralNode.Type.String, read().str);
             case Name:          return new NameNode(read().str);
             case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());

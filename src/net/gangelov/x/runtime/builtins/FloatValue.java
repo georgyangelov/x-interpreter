@@ -1,14 +1,13 @@
 package net.gangelov.x.runtime.builtins;
 
-import net.gangelov.x.ast.nodes.LiteralNode;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 
-public class IntValue extends Value {
-    public final int value;
+public class FloatValue extends Value {
+    public final double value;
     private final Class klass;
 
-    public IntValue(Class klass, int value) {
+    public FloatValue(Class klass, double value) {
         this.klass = klass;
         this.value = value;
     }
@@ -20,7 +19,7 @@ public class IntValue extends Value {
 
     @Override
     public String inspect() {
-        return Integer.toString(value);
+        return Double.toString(value);
     }
 
     @Override

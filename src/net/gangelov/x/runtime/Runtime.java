@@ -18,6 +18,7 @@ public class Runtime {
     public final ClassClass ClassClass;
     public final Class
             IntClass,
+            FloatClass,
             StringClass,
             ErrorClass,
             GlobalClass,
@@ -35,6 +36,7 @@ public class Runtime {
         BoolClass = new BoolClass(ClassClass, ObjectClass);
 
         IntClass = new IntClass(ClassClass, ObjectClass);
+        FloatClass = new FloatClass(ClassClass, ObjectClass);
         StringClass = new StringClass(ClassClass, ObjectClass);
         ErrorClass = new ErrorClass(ClassClass, ObjectClass);
 
@@ -58,6 +60,9 @@ public class Runtime {
 
     public BoolValue from(boolean value) {
         return value ? TRUE : FALSE;
+    }
+    public FloatValue from(double value) {
+        return new FloatValue(FloatClass, value);
     }
 
     // TODO: Intern
