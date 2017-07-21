@@ -31,8 +31,8 @@ class LexerTest {
         assertEquals(
             "(OpenParen '(') (CloseParen ')') (OpenBracket '[') (CloseBracket ']') (Comma ',') " +
             "(Dot '.') (Colon ':') (Number '12345') (String 'test') (Newline '\n') " +
-            "(Name 'doend') (EOF 'EOF')",
-            lex("()[],.:12345\"test\"\ndoend")
+            "(Name 'doend') (Pipe '|') (EOF 'EOF')",
+            lex("()[],.:12345\"test\"\ndoend|")
         );
     }
 

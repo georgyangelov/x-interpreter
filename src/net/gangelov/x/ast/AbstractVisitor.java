@@ -14,4 +14,5 @@ public abstract class AbstractVisitor<T, C> {
     abstract public T visit(MethodArgumentNode node, C context);
     abstract public T visit(ClassDefinitionNode node, C context);
     abstract public T visit(CatchNode node, C context);
+    abstract public T visit(LambdaNode node, C context);
 }

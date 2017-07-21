@@ -184,4 +184,24 @@ public class ASTInspector extends AbstractVisitor<Void, Void> {
 
         return null;
     }
+
+    @Override
+    public Void visit(LambdaNode node, Void context) {
+        str.append("(lambda [");
+
+        for (int i = 0; i < node.arguments.size(); i++) {
+            if (i > 0) {
+                str.append(" ");
+            }
+
+            node.arguments.get(i).visit(this, context);
+        }
+        str.append("] ");
+
+        node.body.visit(this, context);
+
+        str.append(")");
+
+        return null;
+    }
 }

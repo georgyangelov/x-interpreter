@@ -22,9 +22,4 @@ public class IntValue extends Value {
     public String inspect() {
         return Integer.toString(value);
     }
-
-    @Override
-    public boolean asBoolean() {
-        return true;
-    }
 }

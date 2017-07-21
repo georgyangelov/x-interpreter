@@ -49,6 +49,8 @@ public class Visitor extends AbstractVisitor<Void, Void> {
             n.visit(this, context);
         }
 
+        node.body.visit(this, context);
+
         return null;
     }
 
@@ -71,6 +73,17 @@ public class Visitor extends AbstractVisitor<Void, Void> {
         for (ASTNode n : node.body.nodes) {
             n.visit(this, context);
         }
+
+        return null;
+    }
+
+    @Override
+    public Void visit(LambdaNode node, Void context) {
+        for (ASTNode n : node.arguments) {
+            n.visit(this, context);
+        }
+
+        node.body.visit(this, context);
 
         return null;
     }

@@ -274,6 +274,15 @@ public class ParserTest {
                 parse("begin a catch ex:A\n b\n catch ex2\n c end"));
     }
 
+    @Test
+    void testLambdas() throws Exception {
+        assertEquals("(lambda [] { a b })",
+                parse("do a\n b\n end"));
+
+        assertEquals("(lambda [(argument a) (argument b)] { a b })",
+                parse("do |a, b| a\n b\n end"));
+    }
+
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {
         List<ASTNode> nodes = ParserSupport.parseAll(source);
 

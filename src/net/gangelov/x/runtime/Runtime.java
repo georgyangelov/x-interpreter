@@ -25,6 +25,7 @@ public class Runtime {
             ObjectClass,
             NilClass,
             BoolClass,
+            LambdaClass,
             ASTClass;
 
     public Runtime() {
@@ -39,6 +40,8 @@ public class Runtime {
         FloatClass = new FloatClass(ClassClass, ObjectClass);
         StringClass = new StringClass(ClassClass, ObjectClass);
         ErrorClass = new ErrorClass(ClassClass, ObjectClass);
+
+        LambdaClass = new LambdaClass(ClassClass, ObjectClass);
 
         ASTClass = new ASTClass(ClassClass, ObjectClass);
 
@@ -55,6 +58,7 @@ public class Runtime {
         defineClass(IntClass);
         defineClass(StringClass);
         defineClass(GlobalClass);
+        defineClass(LambdaClass);
         defineClass(ASTClass);
     }
 

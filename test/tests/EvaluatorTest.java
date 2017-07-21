@@ -457,6 +457,14 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testLambdas() throws Exception {
+        assertEquals("42", eval("do 42 end.call"));
+        assertEquals("42", eval("do |a| a + 41 end.call(1)"));
+        assertEquals("42", eval("add_one = do |a| a + 1 end\n add_one.call(41)"));
+        assertEquals("42", eval("add = do |a, b| a + b end\n add.call(40, 2)"));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

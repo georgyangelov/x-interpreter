@@ -17,6 +17,8 @@ public enum TokenType {
     Dot, // .
     Colon, // :
 
+    Pipe, // |
+
     UnaryOperator,
     BinaryOperator,
 

@@ -127,6 +127,7 @@ public class Parser {
             case Def:           return parseDef();
             case Class:         return parseClass();
             case Begin:         return parseStandaloneBlock();
+            case Do:            return parseMultilineLambda();
 
             case OpenParen:
                 read(); // (
@@ -140,6 +141,29 @@ public class Parser {
         parseError();
         
         return null;
+    }
+
+    private LambdaNode parseMultilineLambda() throws IOException, Lexer.LexerException, ParserException {
+        read(); // do
+
+        List<MethodArgumentNode> arguments;
+        if (t.type == TokenType.Pipe) {
+            read(); // (
+
+            arguments = parseMethodArguments();
+
+            if (t.type != TokenType.Pipe) parseError();
+            read(); // )
+        } else {
+            arguments = new ArrayList<>();
+        }
+
+        BlockNode block = parseBlock();
+
+        if (t.type != TokenType.End) parseError();
+        read(); // end
+
+        return new LambdaNode(arguments, block);
     }
 
     private BlockNode parseStandaloneBlock() throws IOException, Lexer.LexerException, ParserException {
@@ -181,7 +205,17 @@ public class Parser {
         if (t.type != TokenType.Name) parseError();
         String name = read().str;
 
-        List<MethodArgumentNode> arguments = parseMethodArguments();
+        List<MethodArgumentNode> arguments;
+        if (t.type == TokenType.OpenParen) {
+            read(); // (
+
+            arguments = parseMethodArguments();
+
+            if (t.type != TokenType.CloseParen) parseError();
+            read(); // )
+        } else {
+            arguments = new ArrayList<>();
+        }
 
         String returnType = null;
         if (t.type == TokenType.Colon) {
@@ -203,12 +237,6 @@ public class Parser {
             throws IOException, Lexer.LexerException, ParserException {
         List<MethodArgumentNode> arguments = new ArrayList<>();
 
-        if (t.type != TokenType.OpenParen) {
-            return arguments;
-        }
-
-        read(); // (
-
         while (true) {
             arguments.add(parseMethodArgument());
 
@@ -218,9 +246,6 @@ public class Parser {
 
             read(); // ,
         }
-
-        if (t.type != TokenType.CloseParen) parseError();
-        read(); // )
 
         return arguments;
     }

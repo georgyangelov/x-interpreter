@@ -53,6 +53,7 @@ public class Lexer {
             case ',':  next(); return t.set(TokenType.Comma,        ",");
             case '.':  next(); return t.set(TokenType.Dot,          ".");
             case ':':  next(); return t.set(TokenType.Colon,        ":");
+            case '|':  next(); return t.set(TokenType.Pipe,         "|");
         }
 
         if (c == '!') {
