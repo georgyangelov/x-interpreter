@@ -126,7 +126,7 @@ public class Parser {
             case While:         return parseWhile();
             case Def:           return parseDef();
             case Class:         return parseClass();
-            case Do:            return parseStandaloneBlock();
+            case Begin:         return parseStandaloneBlock();
 
             case OpenParen:
                 read(); // (

@@ -184,7 +184,8 @@ public class ParserTest {
 
         assertEquals("(method self a b c) d", parse("method a, \n\n b,\n c\n d"));
         assertEquals("(method self a b c) d", parse("method(a, \n\n b,\n c\n) d"));
-        assertEquals("(method self a b (c self (d self (e self f))))", parse("method a, \n\n b,\n c d e f"));
+        assertEquals("(method self a b (c self (d self (e self f))))",
+                parse("method a, \n\n b,\n c d e f"));
     }
 
     @Test
@@ -211,7 +212,8 @@ public class ParserTest {
     void testSimpleMethodDefinitions() throws Exception {
         assertEquals("(def method [] { a })", parse("def method\na end"));
         assertEquals("(def method:Int [] { a b })", parse("def method:Int\na \n b end"));
-        assertEquals("(def method:Int [] { (= a b) (+ a b) })", parse("def method:Int\n a = b\n a + b end"));
+        assertEquals("(def method:Int [] { (= a b) (+ a b) })",
+                parse("def method:Int\n a = b\n a + b end"));
     }
 
     @Test
@@ -254,22 +256,22 @@ public class ParserTest {
 
     @Test
     void testStandaloneBlocks() throws Exception {
-        assertEquals("{ a b }", parse("do a\n b end"));
+        assertEquals("{ a b }", parse("begin a\n b end"));
     }
 
     @Test
     void testCatches() throws Exception {
         assertEquals("{ a b (catch Error { b }) }",
-                parse("do a\n b catch Error\n b end"));
+                parse("begin a\n b catch Error\n b end"));
 
         assertEquals("{ a (catch A { b }) (catch Error { c }) }",
-                parse("do a catch A\n b\n catch Error\n c end"));
+                parse("begin a catch A\n b\n catch Error\n c end"));
 
         assertEquals("{ a (catch A { b }) (catch Error { c }) }",
-                parse("do a catch A\n b\n catch\n c end"));
+                parse("begin a catch A\n b\n catch\n c end"));
 
         assertEquals("{ a (catch ex:A { b }) (catch ex2:Error { c }) }",
-                parse("do a catch ex:A\n b\n catch ex2\n c end"));
+                parse("begin a catch ex:A\n b\n catch ex2\n c end"));
     }
 
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {

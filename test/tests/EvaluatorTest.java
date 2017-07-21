@@ -284,15 +284,15 @@ public class EvaluatorTest {
         });
 
         assertThrows(Evaluator.RuntimeError.class, () -> {
-            eval("do raise Error.new\n catch UnknownErrorType end");
+            eval("begin raise Error.new\n catch UnknownErrorType end");
         });
 
-        assertEquals("nil", eval("do catch\n end"));
-        assertEquals("42", eval("do 42 catch Error\n catch e\n catch e:Error\n catch\n end"));
-        assertEquals("42", eval("do 42 catch\n end"));
+        assertEquals("nil", eval("begin catch\n end"));
+        assertEquals("42", eval("begin 42 catch Error\n catch e\n catch e:Error\n catch\n end"));
+        assertEquals("42", eval("begin 42 catch\n end"));
 
-        assertEquals("42", eval("do raise Error.new\n catch\n 42 end"));
-        assertEquals("\"err\"", eval("do raise Error.new(\"err\")\n catch ex\n ex.message end"));
+        assertEquals("42", eval("begin raise Error.new\n catch\n 42 end"));
+        assertEquals("\"err\"", eval("begin raise Error.new(\"err\")\n catch ex\n ex.message end"));
 
         assertEquals("\"Silo jammed\"", eval(
                 "class LaunchError < Error end\n" +
@@ -301,7 +301,7 @@ public class EvaluatorTest {
                 "  raise LaunchError.new(\"Silo jammed\")\n" +
                 "end\n" +
 
-                "do\n" +
+                "begin\n" +
                 "  nuke_city \"Sofia\"\n" +
                 "  this_is_not_a_valid_method\n" +
                 "catch error\n" +
@@ -319,7 +319,7 @@ public class EvaluatorTest {
                 "  raise LaunchError.new(\"Silo jammed\")\n" +
                 "end\n" +
 
-                "do\n" +
+                "begin\n" +
                 "  nuke_city \"Sofia\"\n" +
                 "  this_is_not_a_valid_method\n" +
                 "catch AbortError\n" +
@@ -337,7 +337,7 @@ public class EvaluatorTest {
                 "  raise LaunchError.new(\"Silo jammed\")\n" +
                 "end\n" +
 
-                "do\n" +
+                "begin\n" +
                 "  nuke_city \"Sofia\"\n" +
                 "  this_is_not_a_valid_method\n" +
                 "catch AbortError\n" +
@@ -356,7 +356,7 @@ public class EvaluatorTest {
                     "  raise LaunchError.new(\"Silo jammed\")\n" +
                     "end\n" +
 
-                    "do\n" +
+                    "begin\n" +
                     "  nuke_city \"Sofia\"\n" +
                     "  this_is_not_a_valid_method\n" +
                     "catch AbortError\n" +
@@ -406,7 +406,7 @@ public class EvaluatorTest {
                 "  end\n" +
                 "end\n" +
 
-                "do\n" +
+                "begin\n" +
                 "  A.new.crash\n" +
                 "catch\n" +
                 "  42\n" +

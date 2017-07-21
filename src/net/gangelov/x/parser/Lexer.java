@@ -160,6 +160,9 @@ public class Lexer {
                 case "catch":
                     t.type = TokenType.Catch;
                     break;
+                case "begin":
+                    t.type = TokenType.Begin;
+                    break;
                 default:
                     t.type = TokenType.Name;
                     break;

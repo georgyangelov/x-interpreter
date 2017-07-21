@@ -30,10 +30,11 @@ public enum TokenType {
     If,
     Else,
     Elsif,
-    Do,
     While,
     Def,
     End,
     Class,
-    Catch
+    Begin,
+    Catch,
+    Do
 }
