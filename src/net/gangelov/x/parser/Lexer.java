@@ -16,13 +16,13 @@ public class Lexer {
     }
 
     private String fileName;
-    private BufferedReader in;
+    private InputStreamReader in;
     private int c = -2, line = 1, column = 0;
     private Stack<Integer> putBackChars = new Stack<>();
 
     public Lexer(String fileName, InputStream in) {
         this.fileName = fileName;
-        this.in = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        this.in = new InputStreamReader(in, StandardCharsets.UTF_8);
     }
 
     public String getFileName() {

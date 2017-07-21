@@ -28,6 +28,12 @@ public class BoolClass extends Class {
 
             return runtime.from(a != b);
         }));
+
+        defineMethod(new Method("to_s", (runtime, args) -> {
+            boolean self = getBool(args.get(0));
+
+            return runtime.from(self ? "true" : "false");
+        }));
     }
 
     private boolean getBool(Value value) {

@@ -7,10 +7,7 @@ import net.gangelov.x.parser.TokenType;
 import org.junit.jupiter.api.*;
 import tests.support.ParserSupport;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -72,6 +72,19 @@ public class IntClass extends Class {
 
             return runtime.from(a >= b);
         }));
+
+        defineMethod(new Method("mod", (runtime, args) -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            return runtime.from(a % b);
+        }));
+
+        defineMethod(new Method("to_s", (runtime, args) -> {
+            int self = getInt(args.get(0));
+
+            return runtime.from("" + self);
+        }));
     }
 
     private int getInt(Value value) {

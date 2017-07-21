@@ -5,7 +5,6 @@ import net.gangelov.x.typeresolver.TypeGraphBuilder;
 import net.gangelov.x.typeresolver.Resolver;
 import net.gangelov.x.typeresolver.TypeError;
 import net.gangelov.x.types.TypeEnvironment;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import tests.support.ParserSupport;
 

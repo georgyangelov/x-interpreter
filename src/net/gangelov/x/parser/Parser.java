@@ -9,12 +9,16 @@ import java.util.List;
 
 public class Parser {
     public class ParserException extends Exception {
+        public final boolean isIncomplete;
+
         ParserException(String fileName, Token token) {
             super(
                     "Unknown token '" +
                     token.type.name() +
                     "' at " + fileName + ":" + token.line + ":" + token.column
             );
+
+            this.isIncomplete = token.type == TokenType.EOF;
         }
     }
 

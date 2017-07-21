@@ -4,10 +4,11 @@ import net.gangelov.x.evaluator.XErrorException;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
+import net.gangelov.x.runtime.builtins.StringValue;
 
 public class GlobalClass extends Class {
-    public GlobalClass(ClassClass klass, Class objectClass) {
-        super("Global", klass, objectClass);
+    public GlobalClass(ClassClass klass) {
+        super("Global", klass, null);
 
         defineMethod(new Method("the_answer", (runtime, args) -> runtime.from(42)));
 
@@ -21,6 +22,19 @@ public class GlobalClass extends Class {
 //            ));
 
             throw new XErrorException(value);
+        }));
+
+        defineMethod(new Method("puts", (runtime, args) -> {
+            Value value = args.get(1);
+            Value strValue = value.getXClass().getMethod("to_s").call(runtime, value);
+
+            if (strValue instanceof StringValue) {
+                System.out.println(((StringValue) strValue).value);
+            } else {
+                System.out.println(strValue.inspect());
+            }
+
+            return runtime.NIL;
         }));
     }
 }

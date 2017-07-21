@@ -11,7 +11,8 @@ public class Runtime {
     public final Map<String, Class> classes = new HashMap<>();
 
     public static final ClassClass CLASS = new ClassClass();
-    public static final ObjectClass OBJECT = new ObjectClass(CLASS);
+    public static final GlobalClass GLOBAL_CLASS = new GlobalClass(CLASS);
+    public static final ObjectClass OBJECT = new ObjectClass(CLASS, GLOBAL_CLASS);
     public static final ASTClass AST_CLASS = new ASTClass(CLASS, OBJECT);
 
     public final NilValue NIL;
@@ -19,7 +20,7 @@ public class Runtime {
     public final BoolValue FALSE;
     public final GlobalValue GLOBAL;
 
-    public final Class IntClass, StringClass, GlobalClass, ErrorClass;
+    public final Class IntClass, StringClass, ErrorClass;
 
     public Runtime() {
         Class Nil = new NilClass(CLASS, OBJECT);
@@ -27,13 +28,12 @@ public class Runtime {
 
         IntClass = new IntClass(CLASS, OBJECT);
         StringClass = new StringClass(CLASS, OBJECT);
-        GlobalClass = new GlobalClass(CLASS, OBJECT);
         ErrorClass = new ErrorClass(CLASS, OBJECT);
 
         NIL = new NilValue(Nil);
         TRUE = new BoolValue(Bool, true);
         FALSE = new BoolValue(Bool, false);
-        GLOBAL = new GlobalValue(GlobalClass);
+        GLOBAL = new GlobalValue(GLOBAL_CLASS);
 
         defineClass(CLASS);
         defineClass(OBJECT);
@@ -42,7 +42,7 @@ public class Runtime {
         defineClass(ErrorClass);
         defineClass(IntClass);
         defineClass(StringClass);
-        defineClass(GlobalClass);
+        defineClass(GLOBAL_CLASS);
         defineClass(AST_CLASS);
     }
 

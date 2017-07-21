@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import tests.support.ParserSupport;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -226,7 +225,8 @@ public class EvaluatorTest {
     @Test
     void testClassInheritance() throws Exception {
         assertEquals("Object", eval("class A end\n A.superclass"));
-        assertEquals("nil", eval("Object.superclass"));
+        assertEquals("Global", eval("Object.superclass"));
+        assertEquals("nil", eval("Global.superclass"));
 
         assertEquals("A", eval(
                 "class A\n" +
@@ -343,8 +343,6 @@ public class EvaluatorTest {
                 "end"
         ));
 
-
-
         assertThrows(Evaluator.RuntimeError.class, () -> {
             eval(
                     "class LaunchError < Error end\n" +
@@ -395,9 +393,26 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testGlobalMethodsInInstanceContext() throws Exception {
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def crash\n" +
+                "    raise Error.new\n" +
+                "  end\n" +
+                "end\n" +
+
+                "do\n" +
+                "  A.new.crash\n" +
+                "catch\n" +
+                "  42\n" +
+                "end"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
-        List<Value> results = new Evaluator(nodes).evaluate();
+        List<Value> results = new Evaluator().evaluate(nodes);
 
         return results.stream()
                 .reduce((first, second) -> second)

@@ -18,25 +18,21 @@ public class Evaluator {
         }
     }
 
-    private List<ASTNode> nodes;
-
     private Runtime runtime = new Runtime();
     private EvaluatorTransform transformer = new EvaluatorTransform(runtime);
     private EvaluatorContext context = new EvaluatorContext();
 
-    public Evaluator(List<ASTNode> nodes) {
-        this.nodes = nodes;
-
+    public Evaluator() {
         defineBuiltins();
     }
 
     private void defineBuiltins() {
-        context.defineLocal("Self", runtime.GlobalClass);
+        context.defineLocal("Self", Runtime.GLOBAL_CLASS);
         context.defineLocal("self", runtime.GLOBAL);
         context.defineLocal("global", runtime.GLOBAL);
     }
 
-    public List<Value> evaluate() {
+    public List<Value> evaluate(List<ASTNode> nodes) {
         return nodes.stream()
                 .map(node -> node.visit(transformer, context))
                 .collect(Collectors.toList());
