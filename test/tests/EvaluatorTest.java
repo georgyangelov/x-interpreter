@@ -463,6 +463,11 @@ public class EvaluatorTest {
         assertEquals("42", eval("do |a| a + 41 end.call(1)"));
         assertEquals("42", eval("add_one = do |a| a + 1 end\n add_one.call(41)"));
         assertEquals("42", eval("add = do |a, b| a + b end\n add.call(40, 2)"));
+
+        assertEquals("42", eval("{ 42 }.call"));
+        assertEquals("42", eval("{ |a| a + 41 }.call(1)"));
+        assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one.call(41)"));
+        assertEquals("42", eval("add = { |a, b| a + b }\n add.call(40, 2)"));
     }
 
     private String eval(String program) throws Exception {

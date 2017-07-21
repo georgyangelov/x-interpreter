@@ -127,6 +127,8 @@ public class Parser {
             case Def:           return parseDef();
             case Class:         return parseClass();
             case Begin:         return parseStandaloneBlock();
+
+            case OpenBrace:
             case Do:            return parseMultilineLambda();
 
             case OpenParen:
@@ -144,7 +146,10 @@ public class Parser {
     }
 
     private LambdaNode parseMultilineLambda() throws IOException, Lexer.LexerException, ParserException {
-        read(); // do
+        boolean isMultiline = false;
+
+        if (t.type == TokenType.Do) isMultiline = true;
+        read(); // do or {
 
         List<MethodArgumentNode> arguments;
         if (t.type == TokenType.Pipe) {
@@ -160,14 +165,15 @@ public class Parser {
 
         BlockNode block = parseBlock();
 
-        if (t.type != TokenType.End) parseError();
-        read(); // end
+        if (isMultiline && t.type != TokenType.End) parseError();
+        if (!isMultiline && t.type != TokenType.CloseBrace) parseError();
+        read(); // end or }
 
         return new LambdaNode(arguments, block);
     }
 
     private BlockNode parseStandaloneBlock() throws IOException, Lexer.LexerException, ParserException {
-        read(); // do
+        read(); // begin
 
         BlockNode block = parseBlock();
 
@@ -442,7 +448,8 @@ public class Parser {
         return t.type == TokenType.End ||
                t.type == TokenType.Else ||
                t.type == TokenType.Elsif ||
-               t.type == TokenType.Catch;
+               t.type == TokenType.Catch ||
+               t.type == TokenType.CloseBrace;
     }
 
     private boolean isMethodName(Token t) {

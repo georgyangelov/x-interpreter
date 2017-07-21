@@ -281,6 +281,12 @@ public class ParserTest {
 
         assertEquals("(lambda [(argument a) (argument b)] { a b })",
                 parse("do |a, b| a\n b\n end"));
+
+        assertEquals("(lambda [] { a b })",
+                parse("{ a\n b\n }"));
+
+        assertEquals("(lambda [(argument a) (argument b)] { a b })",
+                parse("{ |a, b| a\n b\n }"));
     }
 
     private String parse(String source) throws Parser.ParserException, IOException, Lexer.LexerException {
