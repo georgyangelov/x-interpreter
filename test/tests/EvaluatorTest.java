@@ -6,6 +6,7 @@ import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.parser.Parser;
 import net.gangelov.x.runtime.Value;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import tests.support.ParserSupport;
 
 import java.util.List;
@@ -443,6 +444,14 @@ public class EvaluatorTest {
 
                 "B.new.test"
         ));
+
+        assertError("Cannot call super outside of a method", () -> {
+            eval("super + 1");
+        });
+
+        assertError("No method test on class Object", () -> {
+            eval("class A\n def test\n super end end\n A.new.test");
+        });
     }
 
     private String eval(String program) throws Exception {
@@ -453,5 +462,11 @@ public class EvaluatorTest {
                 .reduce((first, second) -> second)
                 .map(Value::inspect)
                 .get();
+    }
+
+    private void assertError(String message, Executable executable) {
+        Throwable error = assertThrows(Evaluator.RuntimeError.class, executable);
+
+        assertEquals(message, error.getMessage());
     }
 }

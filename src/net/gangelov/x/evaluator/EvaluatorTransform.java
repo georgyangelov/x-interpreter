@@ -30,6 +30,9 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(LiteralNode node, EvaluatorContext context) {
+        // TODO: Move these to the runtime
+        node.xClass = runtime.ASTClass;
+
         switch (node.type) {
             case Nil:
                 return runtime.NIL;
@@ -46,6 +49,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(NameNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         Value value;
 
         if (node.name.startsWith("@")) {
@@ -74,6 +79,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(AssignmentNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         Value value = node.value.visit(this, context);
 
         if (node.name.startsWith("@")) {
@@ -87,6 +94,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(MethodCallNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         List<Value> arguments = node.arguments.stream()
                 .map(argument -> argument.visit(this, context))
                 .collect(Collectors.toList());
@@ -95,15 +104,15 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         String methodName = node.name;
 
         if (methodName.equals("super")) {
+            if (context.getCurrentMethodName() == null) {
+                throw new Evaluator.RuntimeError("Cannot call super outside of a method");
+            }
+
             Class superclass = klass.getSuperClass();
             if (superclass == null) {
                 throw new Evaluator.RuntimeError(
                         "Cannot call super because " + klass.name + " does not have a superclass"
                 );
-            }
-
-            if (context.getCurrentMethodName() == null) {
-                throw new Evaluator.RuntimeError("Cannot call super outside of a method");
             }
 
             klass = superclass;
@@ -121,6 +130,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(BranchNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         Value condition = node.condition.visit(this, context);
 
         if (condition.asBoolean()) {
@@ -132,6 +143,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(BlockNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         // TODO: Set another context? What about the if blocks and defining variables there?
 
         try {
@@ -167,6 +180,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     }
 
     private boolean canCatchError(CatchNode node, Value error) {
+        node.xClass = runtime.ASTClass;
+
         Class expectedClass = runtime.getClass(node.klass);
         if (expectedClass == null) {
             // TODO: Test
@@ -178,6 +193,8 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
     @Override
     public Value visit(WhileNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         Value lastValue = runtime.NIL;
 
         while (node.condition.visit(this, context).asBoolean()) {
@@ -188,13 +205,15 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     }
 
     @Override
-    public Value visit(MethodDefinitionNode methodDefinitionNode, EvaluatorContext context) {
-        Method method = new Method(methodDefinitionNode.name, (runtime, args) -> {
-            List<MethodArgumentNode> formalArgs = methodDefinitionNode.arguments;
+    public Value visit(MethodDefinitionNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
+        Method method = new Method(node.name, (runtime, args) -> {
+            List<MethodArgumentNode> formalArgs = node.arguments;
 
             // TODO: Should this be a scope gate?
             EvaluatorContext callContext = context.scope();
-            callContext.setCurrentMethodName(methodDefinitionNode.name);
+            callContext.setCurrentMethodName(node.name);
 
             callContext.defineLocal("self", args.get(0));
 
@@ -204,23 +223,25 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 callContext.defineLocal(formalArgs.get(i).name, args.get(i + 1));
             }
 
-            return methodDefinitionNode.body.visit(this, callContext);
+            return node.body.visit(this, callContext);
         });
 
         // TODO: Validate this is a class, not some other value
         Class selfClass = (Class)context.getLocal("Self");
         selfClass.defineMethod(method);
 
-        return runtime.from(methodDefinitionNode.name);
+        return runtime.from(node.name);
     }
 
     @Override
-    public Value visit(MethodArgumentNode methodDefinitionNode, EvaluatorContext context) {
+    public Value visit(MethodArgumentNode node, EvaluatorContext context) {
         throw new RuntimeException("This should not be called (visit MethodArgumentNode)");
     }
 
     @Override
     public Value visit(ClassDefinitionNode node, EvaluatorContext context) {
+        node.xClass = runtime.ASTClass;
+
         if (runtime.getClass(node.name) != null) {
             throw new Evaluator.RuntimeError("Cannot redefine class " + node.name);
         }
@@ -233,7 +254,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         // TODO: This should be a scope gate, make a new context not descending from this one
         EvaluatorContext classContext = context.scope();
 
-        Class klass = new Class(node.name, Runtime.CLASS, superclass);
+        Class klass = new Class(node.name, runtime.ClassClass, superclass);
         runtime.defineClass(klass);
 
         classContext.defineLocal("Self", klass);

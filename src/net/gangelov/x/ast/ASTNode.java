@@ -6,11 +6,13 @@ import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 
 public abstract class ASTNode extends Value {
+    public Class xClass;
+
     abstract public <T, C> T visit(AbstractVisitor<T, C> visitor, C context);
 
     @Override
     public Class getXClass() {
-        return Runtime.AST_CLASS;
+        return xClass;
     }
 
     public String inspect() {

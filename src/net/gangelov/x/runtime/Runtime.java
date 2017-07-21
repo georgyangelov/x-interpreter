@@ -10,40 +10,50 @@ import java.util.Map;
 public class Runtime {
     public final Map<String, Class> classes = new HashMap<>();
 
-    public static final ClassClass CLASS = new ClassClass();
-    public static final GlobalClass GLOBAL_CLASS = new GlobalClass(CLASS);
-    public static final ObjectClass OBJECT = new ObjectClass(CLASS, GLOBAL_CLASS);
-    public static final ASTClass AST_CLASS = new ASTClass(CLASS, OBJECT);
-
     public final NilValue NIL;
     public final BoolValue TRUE;
     public final BoolValue FALSE;
     public final GlobalValue GLOBAL;
 
-    public final Class IntClass, StringClass, ErrorClass;
+    public final ClassClass ClassClass;
+    public final Class
+            IntClass,
+            StringClass,
+            ErrorClass,
+            GlobalClass,
+            ObjectClass,
+            NilClass,
+            BoolClass,
+            ASTClass;
 
     public Runtime() {
-        Class Nil = new NilClass(CLASS, OBJECT);
-        Class Bool = new BoolClass(CLASS, OBJECT);
+        ClassClass = new ClassClass();
+        GlobalClass = new GlobalClass(ClassClass);
+        ObjectClass = new ObjectClass(ClassClass, GlobalClass);
 
-        IntClass = new IntClass(CLASS, OBJECT);
-        StringClass = new StringClass(CLASS, OBJECT);
-        ErrorClass = new ErrorClass(CLASS, OBJECT);
+        NilClass = new NilClass(ClassClass, ObjectClass);
+        BoolClass = new BoolClass(ClassClass, ObjectClass);
 
-        NIL = new NilValue(Nil);
-        TRUE = new BoolValue(Bool, true);
-        FALSE = new BoolValue(Bool, false);
-        GLOBAL = new GlobalValue(GLOBAL_CLASS);
+        IntClass = new IntClass(ClassClass, ObjectClass);
+        StringClass = new StringClass(ClassClass, ObjectClass);
+        ErrorClass = new ErrorClass(ClassClass, ObjectClass);
 
-        defineClass(CLASS);
-        defineClass(OBJECT);
-        defineClass(Nil);
-        defineClass(Bool);
+        ASTClass = new ASTClass(ClassClass, ObjectClass);
+
+        NIL = new NilValue(NilClass);
+        TRUE = new BoolValue(BoolClass, true);
+        FALSE = new BoolValue(BoolClass, false);
+        GLOBAL = new GlobalValue(GlobalClass);
+
+        defineClass(ClassClass);
+        defineClass(ObjectClass);
+        defineClass(NilClass);
+        defineClass(BoolClass);
         defineClass(ErrorClass);
         defineClass(IntClass);
         defineClass(StringClass);
-        defineClass(GLOBAL_CLASS);
-        defineClass(AST_CLASS);
+        defineClass(GlobalClass);
+        defineClass(ASTClass);
     }
 
     public BoolValue from(boolean value) {
