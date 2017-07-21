@@ -482,6 +482,14 @@ public class EvaluatorTest {
 
                 "A.new.name_lambda.call"
         ));
+
+        assertEquals("42", eval(
+                "x = 666\n" +
+                "get_x = { x }\n" +
+                "x = 42\n" +
+
+                "get_x.call"
+        ));
     }
 
     private String eval(String program) throws Exception {
