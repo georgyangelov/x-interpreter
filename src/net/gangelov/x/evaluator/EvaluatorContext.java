@@ -10,6 +10,7 @@ public class EvaluatorContext {
     private final EvaluatorContext parent;
 
     private final Map<String, Value> locals = new HashMap<>();
+    private String currentMethodName;
 
     public EvaluatorContext() {
         parent = null;
@@ -21,6 +22,22 @@ public class EvaluatorContext {
 
     public EvaluatorContext scope() {
         return new EvaluatorContext(this);
+    }
+
+    public void setCurrentMethodName(String name) {
+        this.currentMethodName = name;
+    }
+
+    public String getCurrentMethodName() {
+        if (currentMethodName != null) {
+            return currentMethodName;
+        }
+
+        if (parent != null) {
+            return parent.getCurrentMethodName();
+        }
+
+        return null;
     }
 
     public void defineLocal(String name, Value value) {

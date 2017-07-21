@@ -410,6 +410,41 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testSuperCall() throws Exception {
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def test\n" +
+                "    41\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A\n" +
+                "  def test\n" +
+                "    super + 1\n" +
+                "  end\n" +
+                "end\n" +
+
+                "B.new.test"
+        ));
+
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def test(num)\n" +
+                "    num + 1\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A\n" +
+                "  def test\n" +
+                "    super(40) + 1\n" +
+                "  end\n" +
+                "end\n" +
+
+                "B.new.test"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

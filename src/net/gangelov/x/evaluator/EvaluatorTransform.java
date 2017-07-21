@@ -92,11 +92,28 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 .collect(Collectors.toList());
 
         Class klass = arguments.get(0).getXClass();
+        String methodName = node.name;
+
+        if (methodName.equals("super")) {
+            Class superclass = klass.getSuperClass();
+            if (superclass == null) {
+                throw new Evaluator.RuntimeError(
+                        "Cannot call super because " + klass.name + " does not have a superclass"
+                );
+            }
+
+            if (context.getCurrentMethodName() == null) {
+                throw new Evaluator.RuntimeError("Cannot call super outside of a method");
+            }
+
+            klass = superclass;
+            methodName = context.getCurrentMethodName();
+        }
 
         // TODO: Check method arity
-        Method method = klass.getMethod(node.name);
+        Method method = klass.getMethod(methodName);
         if (method == null) {
-            throw new Evaluator.RuntimeError("No method " + node.name + " on class " + klass.name);
+            throw new Evaluator.RuntimeError("No method " + methodName + " on class " + klass.name);
         }
 
         return method.call(runtime, arguments);
@@ -177,6 +194,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
             // TODO: Should this be a scope gate?
             EvaluatorContext callContext = context.scope();
+            callContext.setCurrentMethodName(methodDefinitionNode.name);
 
             callContext.defineLocal("self", args.get(0));
 
