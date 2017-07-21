@@ -468,6 +468,20 @@ public class EvaluatorTest {
         assertEquals("42", eval("{ |a| a + 41 }.call(1)"));
         assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one.call(41)"));
         assertEquals("42", eval("add = { |a, b| a + b }\n add.call(40, 2)"));
+
+        assertEquals("\"Ivan\"", eval(
+                "class A\n" +
+                "  def initialize\n" +
+                "    @name = \"Ivan\"\n" +
+                "  end\n" +
+
+                "  def name_lambda\n" +
+                "    { @name }\n" +
+                "  end\n" +
+                "end\n" +
+
+                "A.new.name_lambda.call"
+        ));
     }
 
     private String eval(String program) throws Exception {
