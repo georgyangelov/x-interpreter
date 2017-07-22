@@ -584,9 +584,68 @@ public class EvaluatorTest {
 
     @Test
     void testInheritanceFromBuiltInClasses() throws Exception {
-//        assertError("Cannot inherit from built-in classes", () -> eval(
-//                "class MyArray < Array end"
-//        ));
+        assertError("Cannot inherit from built-in class Array", () -> {
+            eval("class My < Array end");
+        });
+
+        assertError("Cannot inherit from built-in class AST", () -> {
+            eval("class My < AST end");
+        });
+
+        assertError("Cannot inherit from built-in class Bool", () -> {
+            eval("class My < Bool end");
+        });
+
+        assertError("Cannot inherit from built-in class Float", () -> {
+            eval("class My < Float end");
+        });
+
+        assertError("Cannot inherit from built-in class Int", () -> {
+            eval("class My < Int end");
+        });
+
+        assertError("Cannot inherit from built-in class Lambda", () -> {
+            eval("class My < Lambda end");
+        });
+
+        assertError("Cannot inherit from built-in class Nil", () -> {
+            eval("class My < Nil end");
+        });
+
+        assertError("Cannot inherit from built-in class String", () -> {
+            eval("class My < String end");
+        });
+    }
+
+    @Test
+    void testCannotUseNewOnBuiltinClasses() throws Exception {
+        assertError("Cannot instantiate built-in class AST", () -> {
+            eval("AST.new");
+        });
+
+        assertError("Cannot instantiate built-in class Bool", () -> {
+            eval("Bool.new");
+        });
+
+        assertError("Cannot instantiate built-in class Float", () -> {
+            eval("Float.new");
+        });
+
+        assertError("Cannot instantiate built-in class Int", () -> {
+            eval("Int.new");
+        });
+
+        assertError("Cannot instantiate built-in class Lambda", () -> {
+            eval("Lambda.new");
+        });
+
+        assertError("Cannot instantiate built-in class Nil", () -> {
+            eval("Nil.new");
+        });
+
+        assertError("Cannot instantiate built-in class String", () -> {
+            eval("String.new");
+        });
     }
 
     private String eval(String program) throws Exception {

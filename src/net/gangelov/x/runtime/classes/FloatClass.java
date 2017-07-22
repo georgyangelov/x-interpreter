@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
@@ -10,6 +11,10 @@ import net.gangelov.x.runtime.builtins.IntValue;
 public class FloatClass extends Class {
     public FloatClass(Runtime r) {
         super("Float", r, r.ObjectClass);
+
+        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
+            throw new Evaluator.RuntimeError("Cannot instantiate built-in class " + name);
+        }));
 
         defineMethod(new Method("+", 1, 0, (runtime, args) -> {
             double a = unwrap(args.get(0));
@@ -94,6 +99,10 @@ public class FloatClass extends Class {
 
             return runtime.wrap("" + self);
         }));
+    }
+
+    public boolean canBeInherited() {
+        return false;
     }
 
     private double unwrap(Value value) {

@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
@@ -9,6 +10,10 @@ import net.gangelov.x.runtime.builtins.BoolValue;
 public class BoolClass extends Class {
     public BoolClass(Runtime r) {
         super("Bool", r, r.ObjectClass);
+
+        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
+            throw new Evaluator.RuntimeError("Cannot instantiate built-in class " + name);
+        }));
 
         defineMethod(new Method("!", 0, 0, (runtime, args) -> {
             boolean a = unwrap(args.get(0));
@@ -41,6 +46,10 @@ public class BoolClass extends Class {
 
             return runtime.wrap(self ? "true" : "false");
         }));
+    }
+
+    public boolean canBeInherited() {
+        return false;
     }
 
     private boolean unwrap(Value value) {

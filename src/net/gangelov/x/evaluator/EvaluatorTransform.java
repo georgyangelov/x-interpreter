@@ -287,6 +287,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         // TODO: This should be a scope gate, make a new context not descending from this one
         EvaluatorContext classContext = context.scope();
 
+        if (!superclass.canBeInherited()) {
+            throw new Evaluator.RuntimeError("Cannot inherit from built-in class " + superclass.name);
+        }
+
         Class klass = new Class(node.name, runtime, superclass);
         runtime.defineClass(klass);
 

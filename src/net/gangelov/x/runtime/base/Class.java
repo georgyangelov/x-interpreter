@@ -25,6 +25,10 @@ public class Class extends Value {
         this.superClass = superClass;
     }
 
+    public boolean canBeInherited() {
+        return true;
+    }
+
     public Class getStaticClass() {
         if (staticClass == null) {
             Class parentStaticClass = null;

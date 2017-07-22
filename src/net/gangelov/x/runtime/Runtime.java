@@ -61,6 +61,7 @@ public class Runtime {
         defineClass(BoolClass);
         defineClass(ErrorClass);
         defineClass(IntClass);
+        defineClass(FloatClass);
         defineClass(StringClass);
         defineClass(GlobalClass);
         defineClass(LambdaClass);

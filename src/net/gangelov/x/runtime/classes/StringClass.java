@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
@@ -10,6 +11,10 @@ import net.gangelov.x.runtime.builtins.StringValue;
 public class StringClass extends Class {
     public StringClass(Runtime r) {
         super("String", r, r.ObjectClass);
+
+        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
+            throw new Evaluator.RuntimeError("Cannot instantiate built-in class " + name);
+        }));
 
         defineMethod(new Method("length", 0, 0, (runtime, args) -> {
             String self = unwrap(args.get(0));
@@ -45,6 +50,10 @@ public class StringClass extends Class {
         }));
 
         defineStaticMethod(new Method("hello", 0, 0, (runtime, args) -> runtime.wrap("Hello world!")));
+    }
+
+    public boolean canBeInherited() {
+        return false;
     }
 
     private String unwrap(Value value) {

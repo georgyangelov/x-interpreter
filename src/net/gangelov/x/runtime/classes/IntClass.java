@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
@@ -10,6 +11,10 @@ import net.gangelov.x.runtime.builtins.IntValue;
 public class IntClass extends Class {
     public IntClass(Runtime r) {
         super("Int", r, r.ObjectClass);
+
+        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
+            throw new Evaluator.RuntimeError("Cannot instantiate built-in class " + name);
+        }));
 
         defineMethod(new Method("+", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
@@ -94,6 +99,10 @@ public class IntClass extends Class {
 
             return runtime.wrap("" + self);
         }));
+    }
+
+    public boolean canBeInherited() {
+        return false;
     }
 
     private int getInt(Value value) {

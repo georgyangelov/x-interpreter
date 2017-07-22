@@ -61,6 +61,10 @@ public class ArrayClass extends Class {
         }));
     }
 
+    public boolean canBeInherited() {
+        return false;
+    }
+
     private List<Value> unwrap(Value value) {
         return ((ArrayValue)value).list;
     }
