@@ -37,26 +37,22 @@ public class ClassClass extends Class {
         defineMethod(new Method("new", 0, 1000, (runtime, args) -> {
             Class klass = (Class)args.get(0);
 
-            // TODO: Move this to a separate per-class new method
-            if (klass.is(runtime.ArrayClass)) {
-                return runtime.from(new ArrayList<>());
-            } else {
-                ObjectValue instance = runtime.createObject(klass);
-                Method initializer = instance.getMethod("initialize");
+            ObjectValue instance = runtime.createObject(klass);
+            Method initializer = instance.getMethod("initialize");
 
-                if (initializer != null) {
-                    List<Value> initializeArgs = new ArrayList<>();
-                    initializeArgs.addAll(args);
-                    initializeArgs.set(0, instance);
+            if (initializer != null) {
+                List<Value> initializeArgs = new ArrayList<>();
+                initializeArgs.addAll(args);
+                initializeArgs.set(0, instance);
 
-                    initializer.call(runtime, initializeArgs);
-                }
-
-                return instance;
+                initializer.call(runtime, initializeArgs);
             }
+
+            return instance;
         }));
 
-        defineStaticMethod(new Method("name", 0, 0, (runtime, args) ->
+        // TODO: Test
+        defineMethod(new Method("name", 0, 0, (runtime, args) ->
                 runtime.from(((Class)args.get(0)).name)
         ));
     }

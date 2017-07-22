@@ -8,11 +8,16 @@ import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.ArrayValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayClass extends Class {
     public ArrayClass(Runtime r) {
         super("Array", r, r.ObjectClass);
+
+        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
+            return runtime.from(new ArrayList<>());
+        }));
 
         defineMethod(new Method("size", 0, 0, (runtime, args) -> {
             List<Value> self = unwrap(args.get(0));
