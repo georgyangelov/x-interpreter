@@ -98,7 +98,7 @@ public class Runtime {
     }
 
     public ObjectValue createError(String message) {
-        return (ObjectValue)ClassClass.getMethod("new").call(this, ErrorClass, from(message));
+        return (ObjectValue)ErrorClass.getMethod("new").call(this, ErrorClass, from(message));
     }
 
     public void defineClass(Class klass) {

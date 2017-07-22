@@ -42,7 +42,7 @@ public class ClassClass extends Class {
                 return runtime.from(new ArrayList<>());
             } else {
                 ObjectValue instance = runtime.createObject(klass);
-                Method initializer = instance.getXClass().getMethod("initialize");
+                Method initializer = instance.getMethod("initialize");
 
                 if (initializer != null) {
                     List<Value> initializeArgs = new ArrayList<>();

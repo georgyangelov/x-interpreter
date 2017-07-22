@@ -102,32 +102,40 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
                 .map(argument -> argument.visit(this, context))
                 .collect(Collectors.toList());
 
-        Class klass = arguments.get(0).getXClass();
-        String methodName = node.name;
+        Value self = arguments.get(0);
 
-        if (methodName.equals("super")) {
-            if (context.getCurrentMethodName() == null) {
+        if (node.name.equals("super")) {
+            String methodName = context.getCurrentMethodName();
+
+            if (methodName == null) {
                 throw new Evaluator.RuntimeError("Cannot call super outside of a method");
             }
 
-            Class superclass = klass.getSuperClass();
+            Class superclass = self.getXClass().getSuperClass();
             if (superclass == null) {
                 throw new Evaluator.RuntimeError(
-                        "Cannot call super because " + klass.name + " does not have a superclass"
+                        "Cannot call super because " + self.getXClass().name + " does not have a superclass"
                 );
             }
 
-            klass = superclass;
-            methodName = context.getCurrentMethodName();
-        }
+            Method method = superclass.getInstanceMethod(methodName);
+            if (method == null) {
+                throw new Evaluator.RuntimeError(
+                        "No method " + methodName + " on class " + superclass.name
+                );
+            }
 
-        // TODO: Check method arity
-        Method method = klass.getMethod(methodName);
-        if (method == null) {
-            throw new Evaluator.RuntimeError("No method " + methodName + " on class " + klass.name);
-        }
+            return method.call(runtime, arguments);
+        } else {
+            Method method = self.getMethod(node.name);
+            if (method == null) {
+                throw new Evaluator.RuntimeError(
+                        "No method " + node.name + " on class " + self.getXClass().name
+                );
+            }
 
-        return method.call(runtime, arguments);
+            return method.call(runtime, arguments);
+        }
     }
 
     @Override

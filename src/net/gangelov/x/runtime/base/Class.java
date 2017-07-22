@@ -26,9 +26,14 @@ public class Class extends Value {
     }
 
     public Class getStaticClass() {
-        if (this.staticClass == null) {
-            // TODO: Change this null to `superClass.getStaticClass()` but test beforehand
-            this.staticClass = new Class(name + ":static", runtime, null);
+        if (staticClass == null) {
+            Class parentStaticClass = null;
+
+            if (superClass != null) {
+                parentStaticClass = superClass.getStaticClass();
+            }
+
+            this.staticClass = new Class(name + ":static", runtime, parentStaticClass);
         }
 
         return this.staticClass;
@@ -42,18 +47,18 @@ public class Class extends Value {
         this.methods.put(method.name, method);
     }
 
-    public Method getMethod(String name) {
+    public Method getInstanceMethod(String name) {
         Method method = this.methods.get(name);
 
         if (method == null && getSuperClass() != null) {
-            return getSuperClass().getMethod(name);
+            return getSuperClass().getInstanceMethod(name);
         }
 
         return method;
     }
 
     public void defineStaticMethod(Method method) {
-        this.getStaticClass().defineMethod(method);
+        getStaticClass().defineMethod(method);
     }
 
     public Method getStaticMethod(String name) {
@@ -61,7 +66,18 @@ public class Class extends Value {
             return null;
         }
 
-        return this.staticClass.getMethod(name);
+        return this.staticClass.getInstanceMethod(name);
+    }
+
+    @Override
+    public Method getMethod(String name) {
+        Method method = getStaticMethod(name);
+
+        if (method == null) {
+            method = getXClass().getInstanceMethod(name);
+        }
+
+        return method;
     }
 
     public boolean is(Class klass) {

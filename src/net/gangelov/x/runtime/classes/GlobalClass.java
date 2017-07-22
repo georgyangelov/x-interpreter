@@ -28,7 +28,7 @@ public class GlobalClass extends Class {
         // TODO: Make varargs
         defineMethod(new Method("puts", 1, 0, (runtime, args) -> {
             Value value = args.get(1);
-            Value strValue = value.getXClass().getMethod("to_s").call(runtime, value);
+            Value strValue = value.getMethod("to_s").call(runtime, value);
 
             if (strValue instanceof StringValue) {
                 System.out.println(((StringValue) strValue).value);
