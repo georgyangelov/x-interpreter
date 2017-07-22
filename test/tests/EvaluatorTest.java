@@ -661,12 +661,12 @@ public class EvaluatorTest {
     void testBindLambda() throws Exception {
         assertEquals("42", eval(
                 "class A\n" +
-                "  def answer\n" +
-                "    42\n" +
+                "  def answer(a)\n" +
+                "    a + 1\n" +
                 "  end\n" +
                 "end\n" +
 
-                "{ answer }.bind(A.new).call"
+                "{ |x| answer(x) }.bind(A.new).call(41)"
         ));
     }
 

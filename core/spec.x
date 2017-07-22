@@ -82,8 +82,7 @@ class XSpecGroup
 
     @groups.push group
 
-    # TODO: Use bind
-    block.call group
+    block.bind(self).call
   end
 
   def run(results)
@@ -103,7 +102,7 @@ class XSpecExample
   end
 
   def run(results)
-    @block.call
+    @block.bind(XSpecAssertions.new).call
 
     results.example_succeeded(self)
   catch error
@@ -117,10 +116,10 @@ end
 class AssertionError < XSpecError
 end
 
-# TODO: Scope using bind
-
-def expect(value, message)
-  if !value
-    raise AssertionError.new("Assertion failed: ".concat(message))
+class XSpecAssertions
+  def expect(value, message)
+    if !value
+      raise AssertionError.new("Assertion failed: ".concat(message))
+    end
   end
 end
