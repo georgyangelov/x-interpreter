@@ -533,6 +533,55 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testArrays() throws Exception {
+        assertEquals("0", eval("Array.new.size"));
+        assertEquals("1", eval(
+                "a = Array.new\n" +
+                "a.push true\n" +
+
+                "a.size"
+        ));
+
+        assertEquals("42", eval(
+                "a = Array.new\n" +
+                "a.push 1\n" +
+                "a.push 2\n" +
+                "a.push 42\n" +
+
+                "a.get 2"
+        ));
+
+        assertEquals("\"hello\"", eval(
+                "a = Array.new\n" +
+                "a.push 42\n" +
+                "a.push \"hello\"\n" +
+
+                "a.get 1"
+        ));
+
+        assertEquals("[1, 2, \"three\"]", eval(
+                "a = Array.new\n" +
+                "a.push 1\n" +
+                "a.push 2\n" +
+                "a.push \"three\"\n" +
+
+                "a"
+        ));
+
+        assertEquals("[1, [2, 3]]", eval(
+                "a = Array.new\n" +
+                "a.push 2\n" +
+                "a.push 3\n" +
+
+                "b = Array.new\n" +
+                "b.push 1\n" +
+                "b.push a\n" +
+
+                "b"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

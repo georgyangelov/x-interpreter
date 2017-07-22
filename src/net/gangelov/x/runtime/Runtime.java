@@ -6,6 +6,7 @@ import net.gangelov.x.runtime.builtins.*;
 import net.gangelov.x.runtime.classes.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Runtime {
@@ -27,6 +28,7 @@ public class Runtime {
             NilClass,
             BoolClass,
             LambdaClass,
+            ArrayClass,
             ASTClass;
 
     public Runtime() {
@@ -43,6 +45,7 @@ public class Runtime {
         ErrorClass = new ErrorClass(ClassClass, ObjectClass);
 
         LambdaClass = new LambdaClass(ClassClass, ObjectClass);
+        ArrayClass = new ArrayClass(ClassClass, ObjectClass);
 
         ASTClass = new ASTClass(ClassClass, ObjectClass);
 
@@ -60,6 +63,7 @@ public class Runtime {
         defineClass(StringClass);
         defineClass(GlobalClass);
         defineClass(LambdaClass);
+        defineClass(ArrayClass);
         defineClass(ASTClass);
     }
 
@@ -78,6 +82,10 @@ public class Runtime {
     // TODO: Intern
     public StringValue from(String value) {
         return new StringValue(StringClass, value);
+    }
+
+    public ArrayValue from(List<Value> list) {
+        return new ArrayValue(ArrayClass, list);
     }
 
     public ObjectValue createObject(Class klass) {

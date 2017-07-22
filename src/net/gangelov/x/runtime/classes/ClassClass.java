@@ -35,18 +35,25 @@ public class ClassClass extends Class {
 
         // TODO: The 1000 optional args here are a workaround for varargs
         defineMethod(new Method("new", 0, 1000, (runtime, args) -> {
-            ObjectValue instance = runtime.createObject((Class)args.get(0));
-            Method initializer = instance.getXClass().getMethod("initialize");
+            Class klass = (Class)args.get(0);
 
-            if (initializer != null) {
-                List<Value> initializeArgs = new ArrayList<>();
-                initializeArgs.addAll(args);
-                initializeArgs.set(0, instance);
+            // TODO: Move this to a separate per-class new method
+            if (klass.is(runtime.ArrayClass)) {
+                return runtime.from(new ArrayList<>());
+            } else {
+                ObjectValue instance = runtime.createObject(klass);
+                Method initializer = instance.getXClass().getMethod("initialize");
 
-                initializer.call(runtime, initializeArgs);
+                if (initializer != null) {
+                    List<Value> initializeArgs = new ArrayList<>();
+                    initializeArgs.addAll(args);
+                    initializeArgs.set(0, instance);
+
+                    initializer.call(runtime, initializeArgs);
+                }
+
+                return instance;
             }
-
-            return instance;
         }));
 
         defineStaticMethod(new Method("name", 0, 0, (runtime, args) ->
