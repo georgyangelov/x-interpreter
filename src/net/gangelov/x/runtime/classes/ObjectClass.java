@@ -1,11 +1,12 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 
 public class ObjectClass extends Class {
-    public ObjectClass(Class classClass, Class globalClass) {
-        super("Object", classClass, globalClass);
+    public ObjectClass(Runtime r) {
+        super("Object", r, r.GlobalClass);
 
         defineBuiltinMethods();
     }

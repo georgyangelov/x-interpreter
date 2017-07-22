@@ -1,6 +1,7 @@
 package net.gangelov.x.runtime.base;
 
 import com.sun.istack.internal.Nullable;
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.builtins.ObjectValue;
 import net.gangelov.x.runtime.builtins.StringValue;
@@ -14,19 +15,20 @@ public class Class extends Value {
     public final String name;
     private Map<String, Method> methods = new HashMap<>();
 
-    private final Class superClass;
-    protected Class classClass, staticClass;
+    protected final Class superClass;
+    protected final Runtime runtime;
+    protected Class staticClass;
 
-    public Class(String name, @Nullable Class classClass, @Nullable Class superClass) {
+    public Class(String name, Runtime runtime, Class superClass) {
         this.name = name;
-        this.classClass = classClass;
+        this.runtime = runtime;
         this.superClass = superClass;
     }
 
     public Class getStaticClass() {
         if (this.staticClass == null) {
             // TODO: Change this null to `superClass.getStaticClass()` but test beforehand
-            this.staticClass = new Class(name + ":static", classClass, null);
+            this.staticClass = new Class(name + ":static", runtime, null);
         }
 
         return this.staticClass;
@@ -43,8 +45,8 @@ public class Class extends Value {
     public Method getMethod(String name) {
         Method method = this.methods.get(name);
 
-        if (method == null && superClass != null) {
-            return this.superClass.getMethod(name);
+        if (method == null && getSuperClass() != null) {
+            return getSuperClass().getMethod(name);
         }
 
         return method;
@@ -63,12 +65,12 @@ public class Class extends Value {
     }
 
     public boolean is(Class klass) {
-        return this == klass || this.superClass != null && superClass.is(klass);
+        return this == klass || getSuperClass() != null && getSuperClass().is(klass);
     }
 
     @Override
     public Class getXClass() {
-        return classClass;
+        return runtime.ClassClass;
     }
 
     @Override

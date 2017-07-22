@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -9,10 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassClass extends Class {
-    public ClassClass() {
+    public ClassClass(Runtime r) {
         // TODO: Inherit from Object?
-        super("Class", null, null);
-        this.classClass = this;
+        super("Class", r, null);
 
         defineBuiltinMethods();
     }

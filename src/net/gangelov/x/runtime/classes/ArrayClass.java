@@ -1,6 +1,7 @@
 package net.gangelov.x.runtime.classes;
 
 import net.gangelov.x.evaluator.Evaluator;
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -10,8 +11,8 @@ import net.gangelov.x.runtime.builtins.IntValue;
 import java.util.List;
 
 public class ArrayClass extends Class {
-    public ArrayClass(Class classClass, Class superClass) {
-        super("Array", classClass, superClass);
+    public ArrayClass(Runtime r) {
+        super("Array", r, r.ObjectClass);
 
         defineMethod(new Method("size", 0, 0, (runtime, args) -> {
             List<Value> self = unwrap(args.get(0));

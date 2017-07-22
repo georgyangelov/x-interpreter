@@ -1,13 +1,14 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.ObjectValue;
 
 public class ErrorClass extends Class {
-    public ErrorClass(Class classClass, Class superClass) {
-        super("Error", classClass, superClass);
+    public ErrorClass(Runtime r) {
+        super("Error", r, r.ObjectClass);
 
         defineMethod(new Method("initialize", 0, 1, (runtime, args) -> {
             ObjectValue self = (ObjectValue)args.get(0);

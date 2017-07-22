@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -7,8 +8,8 @@ import net.gangelov.x.runtime.builtins.BoolValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 
 public class IntClass extends Class {
-    public IntClass(ClassClass klass, Class objectClass) {
-        super("Int", klass, objectClass);
+    public IntClass(Runtime r) {
+        super("Int", r, r.ObjectClass);
 
         defineMethod(new Method("+", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));

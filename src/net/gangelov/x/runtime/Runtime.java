@@ -32,22 +32,23 @@ public class Runtime {
             ASTClass;
 
     public Runtime() {
-        ClassClass = new ClassClass();
-        GlobalClass = new GlobalClass(ClassClass);
-        ObjectClass = new ObjectClass(ClassClass, GlobalClass);
+        // The order in which these are set is important!
+        ClassClass = new ClassClass(this);
+        GlobalClass = new GlobalClass(this);
+        ObjectClass = new ObjectClass(this);
 
-        NilClass = new NilClass(ClassClass, ObjectClass);
-        BoolClass = new BoolClass(ClassClass, ObjectClass);
+        NilClass = new NilClass(this);
+        BoolClass = new BoolClass(this);
 
-        IntClass = new IntClass(ClassClass, ObjectClass);
-        FloatClass = new FloatClass(ClassClass, ObjectClass);
-        StringClass = new StringClass(ClassClass, ObjectClass);
-        ErrorClass = new ErrorClass(ClassClass, ObjectClass);
+        IntClass = new IntClass(this);
+        FloatClass = new FloatClass(this);
+        StringClass = new StringClass(this);
+        ErrorClass = new ErrorClass(this);
 
-        LambdaClass = new LambdaClass(ClassClass, ObjectClass);
-        ArrayClass = new ArrayClass(ClassClass, ObjectClass);
+        LambdaClass = new LambdaClass(this);
+        ArrayClass = new ArrayClass(this);
 
-        ASTClass = new ASTClass(ClassClass, ObjectClass);
+        ASTClass = new ASTClass(this);
 
         NIL = new NilValue(NilClass);
         TRUE = new BoolValue(BoolClass, true);

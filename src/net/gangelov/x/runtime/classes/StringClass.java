@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -7,8 +8,8 @@ import net.gangelov.x.runtime.builtins.IntValue;
 import net.gangelov.x.runtime.builtins.StringValue;
 
 public class StringClass extends Class {
-    public StringClass(ClassClass klass, Class objectClass) {
-        super("String", klass, objectClass);
+    public StringClass(Runtime r) {
+        super("String", r, r.ObjectClass);
 
         defineMethod(new Method("length", 0, 0, (runtime, args) -> {
             String self = getString(args.get(0));

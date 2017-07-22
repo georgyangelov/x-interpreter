@@ -1,13 +1,14 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.BoolValue;
 
 public class BoolClass extends Class {
-    public BoolClass(ClassClass klass, Class objectClass) {
-        super("Bool", klass, objectClass);
+    public BoolClass(Runtime r) {
+        super("Bool", r, r.ObjectClass);
 
         defineMethod(new Method("!", 0, 0, (runtime, args) -> {
             boolean a = getBool(args.get(0));

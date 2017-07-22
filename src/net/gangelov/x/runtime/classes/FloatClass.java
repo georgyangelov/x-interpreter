@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
@@ -7,8 +8,8 @@ import net.gangelov.x.runtime.builtins.FloatValue;
 import net.gangelov.x.runtime.builtins.IntValue;
 
 public class FloatClass extends Class {
-    public FloatClass(ClassClass klass, Class objectClass) {
-        super("Float", klass, objectClass);
+    public FloatClass(Runtime r) {
+        super("Float", r, r.ObjectClass);
 
         defineMethod(new Method("+", 1, 0, (runtime, args) -> {
             double a = getFloat(args.get(0));

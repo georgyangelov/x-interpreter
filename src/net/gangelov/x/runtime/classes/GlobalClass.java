@@ -1,14 +1,15 @@
 package net.gangelov.x.runtime.classes;
 
 import net.gangelov.x.evaluator.XErrorException;
+import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.StringValue;
 
 public class GlobalClass extends Class {
-    public GlobalClass(ClassClass klass) {
-        super("Global", klass, null);
+    public GlobalClass(Runtime r) {
+        super("Global", r, null);
 
         defineMethod(new Method("the_answer", 0, 0, (runtime, args) -> runtime.from(42)));
 
