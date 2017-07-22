@@ -30,10 +30,10 @@ class XSpec
     @root.run(@results)
 
     puts ""
-    puts @results.success_count.to_s
-         .concat(" succeeded, ")
-         .concat(@results.fail_count.to_s)
-         .concat(" failed")
+    puts "".concat(
+      @results.success_count.to_s, " succeeded, ",
+      @results.fail_count.to_s, " failed"
+    )
   end
 end
 

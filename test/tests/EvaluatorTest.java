@@ -64,9 +64,10 @@ public class EvaluatorTest {
     }
 
     @Test
-    void testSimpleStringMethods() throws Exception {
+    void testStringMethods() throws Exception {
         assertEquals("5", eval("\"Hello\".length"));
         assertEquals("\"Hello world!\"", eval("\"Hello \".concat \"world!\""));
+        assertEquals("\"Hello world!\"", eval("\"Hello \".concat \"world\", \"!\""));
     }
 
     @Test

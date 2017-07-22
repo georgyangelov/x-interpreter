@@ -23,11 +23,15 @@ public class StringClass extends Class {
         }));
 
         // TODO: Make varargs
-        defineMethod(new Method("concat", 1, 0, (runtime, args) -> {
+        defineMethod(new Method("concat", 1, 1000, (runtime, args) -> {
             String self = unwrap(args.get(0));
-            String other = unwrap(args.get(1));
+            StringBuilder str = new StringBuilder();
 
-            return runtime.wrap(self + other);
+            args.forEach(arg -> {
+                str.append(unwrap(arg));
+            });
+
+            return runtime.wrap(str.toString());
         }));
 
         defineMethod(new Method("to_i", 0, 0, (runtime, args) -> {
