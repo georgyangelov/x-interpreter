@@ -1,5 +1,6 @@
 package net.gangelov.x.cli;
 
+import net.gangelov.x.evaluator.Evaluator;
 import org.apache.commons.cli.*;
 
 import java.io.*;
@@ -27,15 +28,19 @@ public class CLI {
 
         if (cmd.hasOption("help")) {
             formatter.printHelp("x", options);
-        } else if (cmd.hasOption("interactive")) {
-            new REPL().run();
         } else {
-            if (cmd.getArgList().size() > 0) {
-                String file = cmd.getArgList().get(0);
+            Evaluator evaluator = new Evaluator();
 
-                new Eval(new FileInputStream(file)).run();
-            } else {
-                new Eval(System.in).run();
+            if (cmd.getArgList().size() > 0) {
+                for (String fileName : cmd.getArgList()) {
+                    new Eval(evaluator, fileName, new FileInputStream(fileName)).run();
+                }
+            } else if (!cmd.hasOption("interactive")) {
+                new Eval(evaluator, "STDIN", System.in).run();
+            }
+
+            if (cmd.hasOption("interactive")) {
+                new REPL(evaluator).run();
             }
         }
     }

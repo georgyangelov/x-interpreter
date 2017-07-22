@@ -21,15 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Eval {
-    private final Evaluator evaluator = new Evaluator();
+    private final String sourceFileName;
+    private final Evaluator evaluator;
     private final InputStream in;
 
-    public Eval(InputStream in) {
+    public Eval(Evaluator evaluator, String sourceFileName, InputStream in) {
+        this.evaluator = evaluator;
+        this.sourceFileName = sourceFileName;
         this.in = in;
     }
 
     public void run() throws IOException {
-        Lexer lexer = new Lexer("REPL", in);
+        Lexer lexer = new Lexer(sourceFileName, in);
         Parser parser = new Parser(lexer);
 
         try {

@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class REPL {
-    private final Evaluator evaluator = new Evaluator();
+    private final Evaluator evaluator;
+
+    public REPL(Evaluator evaluator) {
+        this.evaluator = evaluator;
+    }
 
     public void run() throws IOException {
         Terminal terminal = TerminalBuilder.terminal();
