@@ -37,6 +37,13 @@ class LexerTest {
     }
 
     @Test
+    void testSingleQuoteStrings() throws IOException, Lexer.LexerException {
+        assertEquals("(String 'test') (EOF 'EOF')", lex("'test'"));
+        assertEquals("(String 'te\\ns\\t') (EOF 'EOF')", lex("'te\\ns\\t'"));
+        assertEquals("(String 'te'st\\') (EOF 'EOF')", lex("'te\\'st\\\\'"));
+    }
+
+    @Test
     void testNumbers() throws IOException, Lexer.LexerException {
         assertEquals("(Number '1234') (EOF 'EOF')", lex("1234"));
         assertEquals("(Number '1234.5678') (EOF 'EOF')", lex("1234.5678"));

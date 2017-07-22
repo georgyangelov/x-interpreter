@@ -83,6 +83,35 @@ public class Lexer {
             return t.set(TokenType.Number, readNumber());
         }
 
+        if (c == '\'') {
+            StringBuilder str = new StringBuilder();
+            boolean inEscapeSequence = false;
+            next(); // '
+
+            while (inEscapeSequence || c != '\'') {
+                if (inEscapeSequence) {
+                    inEscapeSequence = false;
+
+                    if (c != '\'' && c != '\\') {
+                        str.append('\\');
+                    }
+
+                    str.appendCodePoint(next());
+                } else if (c == '\\') {
+                    inEscapeSequence = true;
+                    next();
+                } else {
+                    str.appendCodePoint(next());
+                }
+            }
+
+            next(); // '
+
+            t.str = str.toString();
+            t.type = TokenType.String;
+            return t;
+        }
+
         if (c == '"') {
             StringBuilder str = new StringBuilder();
             boolean inEscapeSequence = false;

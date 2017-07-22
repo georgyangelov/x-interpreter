@@ -18,7 +18,7 @@ class XSpec
   end
 
   def initialize
-    @root = XSpecGroup.new("XSpec")
+    @root = XSpecGroup.new('XSpec')
     @results = XSpecResults.new
   end
 
@@ -29,10 +29,10 @@ class XSpec
   def run
     @root.run(@results)
 
-    puts ""
-    puts "".concat(
-      @results.success_count.to_s, " succeeded, ",
-      @results.fail_count.to_s, " failed"
+    puts ''
+    puts ''.concat(
+      @results.success_count.to_s, ' succeeded, ',
+      @results.fail_count.to_s,    ' failed'
     )
   end
 end
@@ -54,14 +54,14 @@ class XSpecResults
   def example_failed(example, error)
     @failed.push example
 
-    puts "✖ It ".concat(example.name)
-    puts "     ".concat(error.message)
+    puts '✖ It '.concat(example.name)
+    puts '     '.concat(error.message)
   end
 
   def example_succeeded(example)
     @succeeded.push example
 
-    puts "✔ It ".concat(example.name)
+    puts '✔ It '.concat(example.name)
   end
 end
 
@@ -119,7 +119,7 @@ end
 class XSpecAssertions
   def expect(value, message)
     if !value
-      raise AssertionError.new("Assertion failed: ".concat(message))
+      raise AssertionError.new('Assertion failed: '.concat(message))
     end
   end
 end
