@@ -75,7 +75,7 @@ class XSpecGroup
 
     @groups.push group
 
-    block.bind(self, Class.new).call
+    block.bind(self).call
   end
 
   def run(results)
@@ -95,7 +95,10 @@ class XSpecExample
   end
 
   def run(results)
-    @block.bind(XSpecAssertions.new).call
+    context_class = Class.new 'Anonymous', XSpecAssertions
+    context = context_class.new
+
+    @block.bind(context, context_class).call
 
     results.example_succeeded(self)
   catch error
@@ -113,6 +116,18 @@ class XSpecAssertions
   def expect(value, message)
     if !value
       raise AssertionError.new('Assertion failed: '.concat(message))
+    end
+  end
+
+  def expect_eq(a, b)
+    if a != b
+      raise AssertionError.new('Expected '.concat(a.inspect, ' == ', b.inspect))
+    end
+  end
+
+  def expect_between(a, x, b)
+    if !(a < x and x < b)
+      raise AssertionError.new('Expected '.concat(a.inspect, ' < ', x.inspect, ' < ', b.inspect))
     end
   end
 end

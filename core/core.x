@@ -2,6 +2,26 @@ def extend(klass, block)
   block.bind(klass, klass).call
 end
 
+extend Int, do
+  def abs
+    if self < 0
+      0 - self
+    else
+      self
+    end
+  end
+end
+
+extend Float, do
+  def abs
+    if self < 0.0
+      0.0 - self
+    else
+      self
+    end
+  end
+end
+
 extend Array, do
   def each(block)
     i = 0

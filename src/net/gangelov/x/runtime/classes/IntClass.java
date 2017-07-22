@@ -51,6 +51,13 @@ public class IntClass extends Class {
             return runtime.wrap(a == b);
         }));
 
+        defineMethod(new Method("!=", 1, 0, (runtime, args) -> {
+            int a = getInt(args.get(0));
+            int b = getInt(args.get(1));
+
+            return runtime.wrap(a != b);
+        }));
+
         defineMethod(new Method(">", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
