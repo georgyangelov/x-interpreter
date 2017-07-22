@@ -670,6 +670,43 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testStaticMethods() throws Exception {
+        assertEquals("42", eval(
+                "class A\n" +
+                "  static do\n" +
+                "    def answer\n 42 end\n" +
+                "  end\n" +
+                "end\n" +
+
+                "A.answer"
+        ));
+
+        assertEquals("42", eval(
+                "class A\n" +
+                "  static do\n" +
+                "    def answer\n 42 end\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A end\n" +
+
+                "B.answer"
+        ));
+
+        assertEquals("42", eval(
+                "class A\n" +
+                "  static do\n" +
+                "    def answer\n 42 end\n" +
+                "  end\n" +
+                "end\n" +
+
+                "class B < A\n" +
+                "  answer\n" +
+                "end"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

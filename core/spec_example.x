@@ -1,6 +1,4 @@
-spec = XSpec.new
-
-spec.describe 'Test', do
+XSpec.describe 'Test', do
   it 'breaks due to assertion error', do
     expect 1 == 2, '1 == 2'
   end
@@ -13,5 +11,3 @@ spec.describe 'Test', do
     raise Error.new 'This is the exception message'
   end
 end
-
-spec.run

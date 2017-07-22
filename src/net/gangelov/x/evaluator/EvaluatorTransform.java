@@ -258,6 +258,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
             EvaluatorContext callContext = context.scope();
             callContext.defineLocal("self", lambda.self);
+            callContext.defineLocal("Self", lambda.Self);
 
             // TODO: Check types
             for (int i = 0; i < formalArgs.size(); i++) {
@@ -265,7 +266,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             }
 
             return node.body.visit(this, callContext);
-        }), context.getLocal("self"));
+        }), context.getLocal("self"), context.getLocal("Self"));
     }
 
     @Override

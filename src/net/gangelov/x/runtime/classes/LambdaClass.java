@@ -29,7 +29,8 @@ public class LambdaClass extends Class {
             LambdaValue self = (LambdaValue)args.get(0);
             Value newSelf = args.get(1);
 
-            return new LambdaValue(runtime.LambdaClass, self.method, newSelf);
+            // TODO: What should the Self be here?
+            return new LambdaValue(runtime.LambdaClass, self.method, newSelf, self.Self);
         }));
     }
 

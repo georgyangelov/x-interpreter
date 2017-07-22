@@ -1,9 +1,11 @@
 package net.gangelov.x.runtime.classes;
 
+import net.gangelov.x.evaluator.Evaluator;
 import net.gangelov.x.runtime.Runtime;
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
+import net.gangelov.x.runtime.builtins.LambdaValue;
 import net.gangelov.x.runtime.builtins.ObjectValue;
 
 import java.util.ArrayList;
@@ -49,6 +51,24 @@ public class ClassClass extends Class {
             }
 
             return instance;
+        }));
+
+        defineMethod(new Method("static", 1, 0, (runtime, args) -> {
+            Class klass = (Class)args.get(0);
+            Value maybeBlock = args.get(1);
+
+            if (!(maybeBlock instanceof LambdaValue)) {
+                throw new Evaluator.RuntimeError("The `static` method must be passed a lambda");
+            }
+
+            LambdaValue boundBlock = new LambdaValue(
+                    runtime.LambdaClass,
+                    ((LambdaValue)maybeBlock).method,
+                    klass,
+                    klass.getStaticClass()
+            );
+
+            return boundBlock.getMethod("call").call(runtime, boundBlock);
         }));
 
         // TODO: Test

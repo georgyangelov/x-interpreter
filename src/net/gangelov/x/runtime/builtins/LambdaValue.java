@@ -10,14 +10,15 @@ import java.util.List;
 public class LambdaValue extends Value {
     private final Class klass;
     public final Method method;
-    public final Value self;
+    public final Value self, Self;
 
-    public LambdaValue(Class klass, Method method, Value self) {
+    public LambdaValue(Class klass, Method method, Value self, Value Self) {
         super();
 
         this.klass = klass;
         this.method = method;
         this.self = self;
+        this.Self = Self;
     }
 
     @Override

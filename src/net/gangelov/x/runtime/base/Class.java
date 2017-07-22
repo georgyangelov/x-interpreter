@@ -66,11 +66,7 @@ public class Class extends Value {
     }
 
     public Method getStaticMethod(String name) {
-        if (this.staticClass == null) {
-            return null;
-        }
-
-        return this.staticClass.getInstanceMethod(name);
+        return getStaticClass().getInstanceMethod(name);
     }
 
     @Override

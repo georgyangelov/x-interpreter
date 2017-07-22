@@ -13,6 +13,15 @@ def each(array, block)
 end
 
 class XSpec
+  static do
+    def describe(name, block)
+      spec = XSpec.new
+      spec.describe name, block
+      spec.run
+      spec
+    end
+  end
+
   def results
     @results
   end
