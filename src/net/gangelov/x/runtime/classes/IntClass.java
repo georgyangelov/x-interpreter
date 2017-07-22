@@ -80,6 +80,12 @@ public class IntClass extends Class {
             return runtime.from(a % b);
         }));
 
+        defineMethod(new Method("to_f", (runtime, args) -> {
+            int self = getInt(args.get(0));
+
+            return runtime.from((double)self);
+        }));
+
         defineMethod(new Method("to_s", (runtime, args) -> {
             int self = getInt(args.get(0));
 

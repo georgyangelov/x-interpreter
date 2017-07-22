@@ -80,6 +80,8 @@ public class FloatClass extends Class {
             return runtime.from(a % b);
         }));
 
+        defineMethod(new Method("to_f", (runtime, args) -> args.get(0)));
+
         defineMethod(new Method("to_s", (runtime, args) -> {
             double self = getFloat(args.get(0));
 

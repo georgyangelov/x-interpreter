@@ -33,6 +33,10 @@ public class EvaluatorTest {
 
         assertEquals("5.3", eval("4.3 + 1.0"));
         assertEquals("5.3", eval("1.2 + 4.1"));
+
+        assertEquals("5.0", eval("1.to_f + 4.to_f"));
+        assertEquals("5.3", eval("1.3 + 4.to_f"));
+        assertEquals("5.3", eval("1.2 + 4.1.to_f"));
     }
 
     @Test
