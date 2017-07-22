@@ -16,7 +16,7 @@ public class Class extends Value {
     private Map<String, Method> methods = new HashMap<>();
 
     protected final Class superClass;
-    protected final Runtime runtime;
+    public final Runtime runtime;
     protected Class staticClass;
 
     public Class(String name, Runtime runtime, Class superClass) {
@@ -87,10 +87,5 @@ public class Class extends Value {
     @Override
     public Class getXClass() {
         return runtime.ClassClass;
-    }
-
-    @Override
-    public String inspect() {
-        return name;
     }
 }

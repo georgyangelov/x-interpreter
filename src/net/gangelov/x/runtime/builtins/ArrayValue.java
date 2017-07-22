@@ -21,13 +21,4 @@ public class ArrayValue extends Value {
     public Class getXClass() {
         return klass;
     }
-
-    @Override
-    public String inspect() {
-        String values = list.stream()
-                .map(Value::inspect)
-                .collect(Collectors.joining(", "));
-
-        return "[" + values + "]";
-    }
 }

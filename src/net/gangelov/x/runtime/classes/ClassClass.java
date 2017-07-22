@@ -53,7 +53,11 @@ public class ClassClass extends Class {
 
         // TODO: Test
         defineMethod(new Method("name", 0, 0, (runtime, args) ->
-                runtime.from(((Class)args.get(0)).name)
+                runtime.wrap(((Class)args.get(0)).name)
         ));
+
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
+            return runtime.wrap(((Class)args.get(0)).name);
+        }));
     }
 }

@@ -37,13 +37,13 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             case Nil:
                 return runtime.NIL;
             case Bool:
-                return runtime.from(node.str.equals("true"));
+                return runtime.wrap(node.str.equals("true"));
             case Int:
-                return runtime.from(Integer.parseInt(node.str));
+                return runtime.wrap(Integer.parseInt(node.str));
             case String:
-                return runtime.from(node.str);
+                return runtime.wrap(node.str);
             case Float:
-                return runtime.from(Double.parseDouble(node.str));
+                return runtime.wrap(Double.parseDouble(node.str));
         }
 
         return null;
@@ -241,7 +241,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         Class selfClass = (Class)context.getLocal("Self");
         selfClass.defineMethod(method);
 
-        return runtime.from(node.name);
+        return runtime.wrap(node.name);
     }
 
     @Override

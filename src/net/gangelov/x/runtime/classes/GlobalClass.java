@@ -11,7 +11,7 @@ public class GlobalClass extends Class {
     public GlobalClass(Runtime r) {
         super("Global", r, null);
 
-        defineMethod(new Method("the_answer", 0, 0, (runtime, args) -> runtime.from(42)));
+        defineMethod(new Method("the_answer", 0, 0, (runtime, args) -> runtime.wrap(42)));
 
         defineMethod(new Method("raise", 1, 0, (runtime, args) -> {
             Value value = args.get(1);
@@ -37,6 +37,10 @@ public class GlobalClass extends Class {
             }
 
             return runtime.NIL;
+        }));
+
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
+            return runtime.wrap("GLOBAL");
         }));
     }
 }

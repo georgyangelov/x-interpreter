@@ -68,25 +68,29 @@ public class Runtime {
         defineClass(ASTClass);
     }
 
-    public BoolValue from(boolean value) {
+    public BoolValue wrap(boolean value) {
         return value ? TRUE : FALSE;
     }
-    public FloatValue from(double value) {
+    public FloatValue wrap(double value) {
         return new FloatValue(FloatClass, value);
     }
 
     // TODO: Intern
-    public IntValue from(int value) {
+    public IntValue wrap(int value) {
         return new IntValue(IntClass, value);
     }
 
     // TODO: Intern
-    public StringValue from(String value) {
+    public StringValue wrap(String value) {
         return new StringValue(StringClass, value);
     }
 
-    public ArrayValue from(List<Value> list) {
+    public ArrayValue wrap(List<Value> list) {
         return new ArrayValue(ArrayClass, list);
+    }
+
+    public String unwrap(StringValue value) {
+        return value.value;
     }
 
     public ObjectValue createObject(Class klass) {
@@ -98,7 +102,7 @@ public class Runtime {
     }
 
     public ObjectValue createError(String message) {
-        return (ObjectValue)ErrorClass.getMethod("new").call(this, ErrorClass, from(message));
+        return (ObjectValue)ErrorClass.getMethod("new").call(this, ErrorClass, wrap(message));
     }
 
     public void defineClass(Class klass) {

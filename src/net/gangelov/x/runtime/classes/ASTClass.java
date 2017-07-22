@@ -16,7 +16,7 @@ public class ASTClass extends Class {
         defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
             ASTNode self = (ASTNode)args.get(0);
 
-            return runtime.from(self.inspect());
+            return runtime.wrap(self.inspect());
         }));
     }
 }

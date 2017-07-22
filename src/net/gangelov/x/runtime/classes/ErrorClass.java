@@ -17,7 +17,7 @@ public class ErrorClass extends Class {
             if (args.size() == 2) {
                 message = args.get(1);
             } else {
-                message = runtime.from("Unknown error " + self.getXClass().name);
+                message = runtime.wrap("Unknown error " + self.getXClass().name);
             }
 
             self.setInstanceVariable("message", message);

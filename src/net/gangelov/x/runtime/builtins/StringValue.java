@@ -17,8 +17,8 @@ public class StringValue extends Value {
         return klass;
     }
 
-    @Override
-    public String inspect() {
-        return "\"" + value + "\"";
-    }
+//    @Override
+//    public String inspect() {
+//        return "\"" + value + "\"";
+//    }
 }

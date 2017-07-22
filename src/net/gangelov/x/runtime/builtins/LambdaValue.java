@@ -23,8 +23,8 @@ public class LambdaValue extends Value {
         return klass;
     }
 
-    @Override
-    public String inspect() {
-        return "#<Lambda>";
-    }
+//    @Override
+//    public String inspect() {
+//        return "#<Lambda>";
+//    }
 }

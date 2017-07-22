@@ -17,10 +17,10 @@ public class NilValue extends Value {
         return klass;
     }
 
-    @Override
-    public String inspect() {
-        return "nil";
-    }
+//    @Override
+//    public String inspect() {
+//        return "nil";
+//    }
 
     @Override
     public boolean asBoolean() {

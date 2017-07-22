@@ -10,19 +10,20 @@ import net.gangelov.x.runtime.builtins.IntValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArrayClass extends Class {
     public ArrayClass(Runtime r) {
         super("Array", r, r.ObjectClass);
 
         defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
-            return runtime.from(new ArrayList<>());
+            return runtime.wrap(new ArrayList<>());
         }));
 
         defineMethod(new Method("size", 0, 0, (runtime, args) -> {
             List<Value> self = unwrap(args.get(0));
 
-            return runtime.from(self.size());
+            return runtime.wrap(self.size());
         }));
 
         defineMethod(new Method("push", 1, 0, (runtime, args) -> {
@@ -49,6 +50,14 @@ public class ArrayClass extends Class {
             self.set(index, value);
 
             return value;
+        }));
+
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
+            String values = unwrap(args.get(0)).stream()
+                    .map(Value::inspect)
+                    .collect(Collectors.joining(", "));
+
+            return runtime.wrap("[" + values + "]");
         }));
     }
 

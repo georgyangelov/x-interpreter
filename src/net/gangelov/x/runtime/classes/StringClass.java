@@ -12,37 +12,42 @@ public class StringClass extends Class {
         super("String", r, r.ObjectClass);
 
         defineMethod(new Method("length", 0, 0, (runtime, args) -> {
-            String self = getString(args.get(0));
+            String self = unwrap(args.get(0));
 
-            return runtime.from(self.length());
+            return runtime.wrap(self.length());
         }));
 
         // TODO: Make varargs
         defineMethod(new Method("concat", 1, 0, (runtime, args) -> {
-            String self = getString(args.get(0));
-            String other = getString(args.get(1));
+            String self = unwrap(args.get(0));
+            String other = unwrap(args.get(1));
 
-            return runtime.from(self + other);
+            return runtime.wrap(self + other);
         }));
 
         defineMethod(new Method("to_i", 0, 0, (runtime, args) -> {
-            String self = getString(args.get(0));
+            String self = unwrap(args.get(0));
 
-            return runtime.from(Integer.parseInt(self));
+            return runtime.wrap(Integer.parseInt(self));
         }));
 
         defineMethod(new Method("to_f", 0, 0, (runtime, args) -> {
-            String self = getString(args.get(0));
+            String self = unwrap(args.get(0));
 
-            return runtime.from(Double.parseDouble(self));
+            return runtime.wrap(Double.parseDouble(self));
         }));
 
         defineMethod(new Method("to_s", 0, 0, (runtime, args) -> args.get(0)));
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
+            String self = unwrap(args.get(0));
 
-        defineStaticMethod(new Method("hello", 0, 0, (runtime, args) -> runtime.from("Hello world!")));
+            return runtime.wrap("\"" + self + "\"");
+        }));
+
+        defineStaticMethod(new Method("hello", 0, 0, (runtime, args) -> runtime.wrap("Hello world!")));
     }
 
-    private String getString(Value value) {
+    private String unwrap(Value value) {
         return ((StringValue)value).value;
     }
 }

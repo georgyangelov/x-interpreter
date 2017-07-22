@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class ObjectValue extends Value {
     private final Class klass;
-    private final Map<String, Value> instanceVariables = new HashMap<>();
+    public final Map<String, Value> instanceVariables = new HashMap<>();
 
     public ObjectValue(Class klass) {
         super();
@@ -28,17 +28,5 @@ public class ObjectValue extends Value {
     @Override
     public Class getXClass() {
         return klass;
-    }
-
-    @Override
-    public String inspect() {
-        return "#<" + klass.name + " " + inspectInstanceVariables() + ">";
-    }
-
-    private String inspectInstanceVariables() {
-        // TODO: This WILL break if there are circular references
-        return this.instanceVariables.entrySet().stream()
-                .map(entry -> "@" + entry.getKey() + "=" + entry.getValue().inspect())
-                .collect(Collectors.joining(", "));
     }
 }

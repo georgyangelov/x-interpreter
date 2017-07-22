@@ -18,11 +18,6 @@ public class BoolValue extends Value {
     }
 
     @Override
-    public String inspect() {
-        return value ? "true" : "false";
-    }
-
-    @Override
     public boolean asBoolean() {
         return value;
     }

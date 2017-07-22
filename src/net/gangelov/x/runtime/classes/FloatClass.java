@@ -12,91 +12,91 @@ public class FloatClass extends Class {
         super("Float", r, r.ObjectClass);
 
         defineMethod(new Method("+", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a + b);
+            return runtime.wrap(a + b);
         }));
 
         defineMethod(new Method("-", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a - b);
+            return runtime.wrap(a - b);
         }));
 
         defineMethod(new Method("*", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a * b);
+            return runtime.wrap(a * b);
         }));
 
         defineMethod(new Method("/", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a / b);
+            return runtime.wrap(a / b);
         }));
 
         defineMethod(new Method("==", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a == b);
+            return runtime.wrap(a == b);
         }));
 
         defineMethod(new Method(">", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a > b);
+            return runtime.wrap(a > b);
         }));
 
         defineMethod(new Method("<", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a < b);
+            return runtime.wrap(a < b);
         }));
 
         defineMethod(new Method("<=", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a <= b);
+            return runtime.wrap(a <= b);
         }));
 
         defineMethod(new Method(">=", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a >= b);
+            return runtime.wrap(a >= b);
         }));
 
         defineMethod(new Method("mod", 1, 0, (runtime, args) -> {
-            double a = getFloat(args.get(0));
-            double b = getFloat(args.get(1));
+            double a = unwrap(args.get(0));
+            double b = unwrap(args.get(1));
 
-            return runtime.from(a % b);
+            return runtime.wrap(a % b);
         }));
 
         defineMethod(new Method("to_f", 0, 0, (runtime, args) -> args.get(0)));
 
         defineMethod(new Method("to_i", 0, 0, (runtime, args) -> {
-            double self = getFloat(args.get(0));
+            double self = unwrap(args.get(0));
 
-            return runtime.from((int)self);
+            return runtime.wrap((int)self);
         }));
 
-        defineMethod(new Method("to_s", 0, 0, (runtime, args) -> {
-            double self = getFloat(args.get(0));
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
+            double self = unwrap(args.get(0));
 
-            return runtime.from("" + self);
+            return runtime.wrap("" + self);
         }));
     }
 
-    private double getFloat(Value value) {
+    private double unwrap(Value value) {
         return ((FloatValue)value).value;
     }
 }

@@ -17,8 +17,8 @@ public class GlobalValue extends Value {
         return klass;
     }
 
-    @Override
-    public String inspect() {
-        return "global";
-    }
+//    @Override
+//    public String inspect() {
+//        return "global";
+//    }
 }

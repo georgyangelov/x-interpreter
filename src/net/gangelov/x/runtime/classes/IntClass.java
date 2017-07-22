@@ -15,84 +15,84 @@ public class IntClass extends Class {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a + b);
+            return runtime.wrap(a + b);
         }));
 
         defineMethod(new Method("-", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a - b);
+            return runtime.wrap(a - b);
         }));
 
         defineMethod(new Method("*", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a * b);
+            return runtime.wrap(a * b);
         }));
 
         defineMethod(new Method("/", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a / b);
+            return runtime.wrap(a / b);
         }));
 
         defineMethod(new Method("==", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a == b);
+            return runtime.wrap(a == b);
         }));
 
         defineMethod(new Method(">", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a > b);
+            return runtime.wrap(a > b);
         }));
 
         defineMethod(new Method("<", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a < b);
+            return runtime.wrap(a < b);
         }));
 
         defineMethod(new Method("<=", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a <= b);
+            return runtime.wrap(a <= b);
         }));
 
         defineMethod(new Method(">=", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a >= b);
+            return runtime.wrap(a >= b);
         }));
 
         defineMethod(new Method("mod", 1, 0, (runtime, args) -> {
             int a = getInt(args.get(0));
             int b = getInt(args.get(1));
 
-            return runtime.from(a % b);
+            return runtime.wrap(a % b);
         }));
 
         defineMethod(new Method("to_f", 0, 0, (runtime, args) -> {
             int self = getInt(args.get(0));
 
-            return runtime.from((double)self);
+            return runtime.wrap((double)self);
         }));
 
         defineMethod(new Method("to_i", 0, 0, (runtime, args) -> args.get(0)));
 
-        defineMethod(new Method("to_s", 0, 0, (runtime, args) -> {
+        defineMethod(new Method("inspect", 0, 0, (runtime, args) -> {
             int self = getInt(args.get(0));
 
-            return runtime.from("" + self);
+            return runtime.wrap("" + self);
         }));
     }
 

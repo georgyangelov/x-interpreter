@@ -582,6 +582,13 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testInheritanceFromBuiltInClasses() throws Exception {
+//        assertError("Cannot inherit from built-in classes", () -> eval(
+//                "class MyArray < Array end"
+//        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);
