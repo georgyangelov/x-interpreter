@@ -19,11 +19,11 @@ public class ClassClass extends Class {
 
     private void defineBuiltinMethods() {
         // TODO: Inherit from Object and this will come naturally
-        defineMethod(new Method("class", (runtime, args) ->
+        defineMethod(new Method("class", 0, 0, (runtime, args) ->
                 args.get(0).getXClass()
         ));
 
-        defineMethod(new Method("superclass", (runtime, args) -> {
+        defineMethod(new Method("superclass", 0, 0, (runtime, args) -> {
             Class klass = ((Class)args.get(0)).getSuperClass();
 
             if (klass == null) {
@@ -33,7 +33,8 @@ public class ClassClass extends Class {
             return klass;
         }));
 
-        defineMethod(new Method("new", (runtime, args) -> {
+        // TODO: The 1000 optional args here are a workaround for varargs
+        defineMethod(new Method("new", 0, 1000, (runtime, args) -> {
             ObjectValue instance = runtime.createObject((Class)args.get(0));
             Method initializer = instance.getXClass().getMethod("initialize");
 
@@ -48,7 +49,7 @@ public class ClassClass extends Class {
             return instance;
         }));
 
-        defineStaticMethod(new Method("name", (runtime, args) ->
+        defineStaticMethod(new Method("name", 0, 0, (runtime, args) ->
                 runtime.from(((Class)args.get(0)).name)
         ));
     }

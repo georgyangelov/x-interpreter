@@ -210,7 +210,9 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(MethodDefinitionNode node, EvaluatorContext context) {
         node.xClass = runtime.ASTClass;
 
-        Method method = new Method(node.name, (runtime, args) -> {
+        int requiredArgs = node.arguments.size();
+
+        Method method = new Method(node.name, requiredArgs, 0, (runtime, args) -> {
             List<MethodArgumentNode> formalArgs = node.arguments;
 
             // TODO: Should this be a scope gate?
@@ -219,7 +221,6 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
             callContext.defineLocal("self", args.get(0));
 
-            // TODO: Check arity
             // TODO: Check types
             for (int i = 0; i < formalArgs.size(); i++) {
                 callContext.defineLocal(formalArgs.get(i).name, args.get(i + 1));
@@ -239,20 +240,22 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(LambdaNode node, EvaluatorContext context) {
         node.xClass = runtime.ASTClass;
 
+        int requiredArgs = node.arguments.size();
+
         // TODO: Move all object construction to Runtime
-        return new LambdaValue(runtime.LambdaClass, (runtime, args) -> {
+        return new LambdaValue(runtime.LambdaClass, new Method("<lambda>", requiredArgs, 0,
+                (runtime, args) -> {
             List<MethodArgumentNode> formalArgs = node.arguments;
 
             EvaluatorContext callContext = context.scope();
 
-            // TODO: Check arity
             // TODO: Check types
             for (int i = 0; i < formalArgs.size(); i++) {
                 callContext.defineLocal(formalArgs.get(i).name, args.get(i + 1));
             }
 
             return node.body.visit(this, callContext);
-        });
+        }));
     }
 
     @Override

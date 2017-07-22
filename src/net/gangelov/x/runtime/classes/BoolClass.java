@@ -9,27 +9,27 @@ public class BoolClass extends Class {
     public BoolClass(ClassClass klass, Class objectClass) {
         super("Bool", klass, objectClass);
 
-        defineMethod(new Method("!", (runtime, args) -> {
+        defineMethod(new Method("!", 0, 0, (runtime, args) -> {
             boolean a = getBool(args.get(0));
 
             return runtime.from(!a);
         }));
 
-        defineMethod(new Method("==", (runtime, args) -> {
+        defineMethod(new Method("==", 1, 0, (runtime, args) -> {
             boolean a = getBool(args.get(0));
             boolean b = getBool(args.get(1));
 
             return runtime.from(a == b);
         }));
 
-        defineMethod(new Method("!=", (runtime, args) -> {
+        defineMethod(new Method("!=", 1, 0, (runtime, args) -> {
             boolean a = getBool(args.get(0));
             boolean b = getBool(args.get(1));
 
             return runtime.from(a != b);
         }));
 
-        defineMethod(new Method("to_s", (runtime, args) -> {
+        defineMethod(new Method("to_s", 0, 0, (runtime, args) -> {
             boolean self = getBool(args.get(0));
 
             return runtime.from(self ? "true" : "false");

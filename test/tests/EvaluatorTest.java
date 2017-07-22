@@ -506,6 +506,33 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testArgumentCountChecks() throws Exception {
+        assertError("Invalid number of arguments for method test. Expected 3, got 4", () -> {
+            eval("def test(a, b, c) end\n test 1, 2, 3, 4");
+        });
+
+        assertError("Invalid number of arguments for method test. Expected 3, got 2", () -> {
+            eval("def test(a, b, c) end\n test 1, 2");
+        });
+
+        assertError("Invalid number of arguments for method test. Expected 3, got 0", () -> {
+            eval("def test(a, b, c) end\n test");
+        });
+
+        assertError("Invalid number of arguments for method test. Expected 0, got 1", () -> {
+            eval("def test\n end\n test 1");
+        });
+
+        assertError("Invalid number of arguments for method initialize. Expected 0..1, got 2", () -> {
+            eval("Error.new 1, 2");
+        });
+
+        assertError("Invalid number of arguments for method <lambda>. Expected 1, got 2", () -> {
+            eval("{ |a| a + a }.call 1, 2");
+        });
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

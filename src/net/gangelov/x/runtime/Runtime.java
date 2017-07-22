@@ -1,5 +1,6 @@
 package net.gangelov.x.runtime;
 
+import net.gangelov.x.evaluator.XErrorException;
 import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.builtins.*;
 import net.gangelov.x.runtime.classes.*;
@@ -81,6 +82,14 @@ public class Runtime {
 
     public ObjectValue createObject(Class klass) {
         return new ObjectValue(klass);
+    }
+
+    public void raise(String message) {
+        throw new XErrorException(createError(message));
+    }
+
+    public ObjectValue createError(String message) {
+        return (ObjectValue)ClassClass.getMethod("new").call(this, ErrorClass, from(message));
     }
 
     public void defineClass(Class klass) {

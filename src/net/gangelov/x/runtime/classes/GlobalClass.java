@@ -10,9 +10,9 @@ public class GlobalClass extends Class {
     public GlobalClass(ClassClass klass) {
         super("Global", klass, null);
 
-        defineMethod(new Method("the_answer", (runtime, args) -> runtime.from(42)));
+        defineMethod(new Method("the_answer", 0, 0, (runtime, args) -> runtime.from(42)));
 
-        defineMethod(new Method("raise", (runtime, args) -> {
+        defineMethod(new Method("raise", 1, 0, (runtime, args) -> {
             Value value = args.get(1);
 
             // TODO: Prevent throwing things other than instances of Error
@@ -24,7 +24,8 @@ public class GlobalClass extends Class {
             throw new XErrorException(value);
         }));
 
-        defineMethod(new Method("puts", (runtime, args) -> {
+        // TODO: Make varargs
+        defineMethod(new Method("puts", 1, 0, (runtime, args) -> {
             Value value = args.get(1);
             Value strValue = value.getXClass().getMethod("to_s").call(runtime, value);
 

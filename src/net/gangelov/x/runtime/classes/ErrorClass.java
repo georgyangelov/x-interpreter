@@ -9,7 +9,7 @@ public class ErrorClass extends Class {
     public ErrorClass(Class classClass, Class superClass) {
         super("Error", classClass, superClass);
 
-        defineMethod(new Method("initialize", (runtime, args) -> {
+        defineMethod(new Method("initialize", 0, 1, (runtime, args) -> {
             ObjectValue self = (ObjectValue)args.get(0);
             Value message;
 
@@ -24,7 +24,7 @@ public class ErrorClass extends Class {
             return self;
         }));
 
-        defineMethod(new Method("message", (runtime, args) ->
+        defineMethod(new Method("message", 0, 0, (runtime, args) ->
                 ((ObjectValue)args.get(0)).getInstanceVariable("message")
         ));
     }
