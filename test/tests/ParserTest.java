@@ -292,6 +292,11 @@ public class ParserTest {
                 parse("{ a\n }.call 42"));
     }
 
+    @Test
+    void testArrayLiterals() throws Exception {
+        assertEquals("(new Array a b c d)", parse("[a, b\n,\n c,\n d]"));
+    }
+
 //    @Test
 //    void testPipes() throws Exception {
 //        assertEquals("(finish self (start self))",

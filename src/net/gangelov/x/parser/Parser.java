@@ -127,6 +127,7 @@ public class Parser {
             case Def:           return parseDef();
             case Class:         return parseClass();
             case Begin:         return parseStandaloneBlock();
+            case OpenBracket:   return parseArrayLiteral();
 
             case OpenBrace:
             case Do:            return parseMultilineLambda();
@@ -384,6 +385,27 @@ public class Parser {
         return target;
     }
 
+    private ASTNode parseArrayLiteral() throws IOException, Lexer.LexerException, ParserException {
+        read(); // [
+
+        List<ASTNode> elements = new ArrayList<>();
+
+        while (true) {
+            elements.add(parseNext());
+
+            if (t.type != TokenType.Comma) {
+                break;
+            }
+
+            read(); // ,
+        }
+
+        if (t.type != TokenType.CloseBracket) parseError();
+        read(); // ]
+
+        return new MethodCallNode("new", new NameNode("Array"), elements);
+    }
+
     private List<ASTNode> parseArguments() throws ParserException, IOException, Lexer.LexerException {
         List<ASTNode> arguments = new ArrayList<>();
         boolean withParens = false;
@@ -441,6 +463,7 @@ public class Parser {
                t.type == TokenType.Comma ||
                t.type == TokenType.CloseParen ||
                t.type == TokenType.Dot ||
+               t.type == TokenType.CloseBracket ||
                blockEnds();
     }
 

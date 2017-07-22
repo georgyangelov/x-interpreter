@@ -17,11 +17,6 @@ public class FloatValue extends Value {
         return klass;
     }
 
-//    @Override
-//    public String inspect() {
-//        return Double.toString(value);
-//    }
-
     @Override
     public boolean asBoolean() {
         return true;

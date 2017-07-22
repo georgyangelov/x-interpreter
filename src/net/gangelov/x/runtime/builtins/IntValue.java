@@ -17,9 +17,4 @@ public class IntValue extends Value {
     public Class getXClass() {
         return klass;
     }
-
-//    @Override
-//    public String inspect() {
-//        return Integer.toString(value);
-//    }
 }

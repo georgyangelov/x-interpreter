@@ -22,9 +22,4 @@ public class LambdaValue extends Value {
     public Class getXClass() {
         return klass;
     }
-
-//    @Override
-//    public String inspect() {
-//        return "#<Lambda>";
-//    }
 }

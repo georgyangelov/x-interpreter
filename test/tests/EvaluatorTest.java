@@ -580,6 +580,14 @@ public class EvaluatorTest {
 
                 "b"
         ));
+
+        assertEquals("[1, 2, 3]", eval("Array.new 1, 2, 3"));
+    }
+
+    @Test
+    void testArrayLiterals() throws Exception {
+        assertEquals("[1, 2, 3]", eval("[1, 2, 3]"));
+        assertEquals("5", eval("1 + [1, 2, 3, 5].size"));
     }
 
     @Test

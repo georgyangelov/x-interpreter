@@ -16,8 +16,12 @@ public class ArrayClass extends Class {
     public ArrayClass(Runtime r) {
         super("Array", r, r.ObjectClass);
 
-        defineStaticMethod(new Method("new", 0, 0, (runtime, args) -> {
-            return runtime.wrap(new ArrayList<>());
+        // TODO: Make real varargs
+        defineStaticMethod(new Method("new", 0, 1000, (runtime, args) -> {
+            List<Value> elements = new ArrayList<>();
+            elements.addAll(args.subList(1, args.size()));
+
+            return runtime.wrap(elements);
         }));
 
         defineMethod(new Method("size", 0, 0, (runtime, args) -> {

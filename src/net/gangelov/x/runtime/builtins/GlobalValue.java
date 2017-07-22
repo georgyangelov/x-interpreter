@@ -16,9 +16,4 @@ public class GlobalValue extends Value {
     public Class getXClass() {
         return klass;
     }
-
-//    @Override
-//    public String inspect() {
-//        return "global";
-//    }
 }
