@@ -32,7 +32,7 @@ class XSpec
     puts ""
     puts @results.success_count.to_s
          .concat(" succeeded, ")
-         .concat(@results.success_count.to_s)
+         .concat(@results.fail_count.to_s)
          .concat(" failed")
   end
 end
@@ -106,7 +106,7 @@ class XSpecExample
     @block.call
 
     results.example_succeeded(self)
-  catch error:AssertionError
+  catch error
     results.example_failed(self, error)
   end
 end
