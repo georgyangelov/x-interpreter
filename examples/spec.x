@@ -1,5 +1,5 @@
 XSpec.describe 'Test', do
-  it 'breaks due to assertion error', do
+  it 'breaks due to an assertion error', do
     expect 1 == 2, '1 == 2'
   end
 

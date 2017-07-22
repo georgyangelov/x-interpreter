@@ -1,17 +1,3 @@
-# TODO: Create builtin method and use it
-def each(array, block)
-  i = 0
-  length = array.size
-
-  while i < length
-    block.call array.get(i)
-
-    i = i + 1
-  end
-
-  length
-end
-
 class XSpec
   static do
     def describe(name, block)
@@ -93,8 +79,8 @@ class XSpecGroup
   end
 
   def run(results)
-    each @examples, { |example| example.run(results) }
-    each @groups,   { |group|   group.run(results)   }
+    @examples.each { |example| example.run(results) }
+    @groups.each   { |group|   group.run(results)   }
   end
 end
 
