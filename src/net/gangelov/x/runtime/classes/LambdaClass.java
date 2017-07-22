@@ -25,6 +25,13 @@ public class LambdaClass extends Class {
             return self.method.call(runtime, args);
         }));
 
+        // TODO: Make actual varargs
+        defineMethod(new Method("[]", 0, 1000, (runtime, args) -> {
+            LambdaValue self = (LambdaValue)args.get(0);
+
+            return self.method.call(runtime, args);
+        }));
+
         defineMethod(new Method("bind", 1, 1, (runtime, args) -> {
             LambdaValue self = (LambdaValue)args.get(0);
 

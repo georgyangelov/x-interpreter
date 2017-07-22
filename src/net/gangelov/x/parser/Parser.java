@@ -375,6 +375,31 @@ public class Parser {
             return new MethodCallNode(name.str, target, arguments);
         }
 
+        // target[...]
+        if (!newline && t.type == TokenType.OpenBracket) {
+            // TODO: DRY and simplify!
+            read(); // [
+
+            List<ASTNode> arguments = new ArrayList<>();
+
+            if (t.type != TokenType.CloseBracket) {
+                while (true) {
+                    arguments.add(parseNext());
+
+                    if (t.type != TokenType.Comma) {
+                        break;
+                    }
+
+                    read(); // ,
+                }
+            }
+
+            if (t.type != TokenType.CloseBracket) parseError();
+            read(); // ]
+
+            return new MethodCallNode("[]", target, arguments);
+        }
+
         // target a
         if (target instanceof NameNode && !currentExpressionMayEnd()) {
             List<ASTNode> arguments = parseArguments();

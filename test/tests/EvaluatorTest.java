@@ -484,6 +484,11 @@ public class EvaluatorTest {
         assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one.call(41)"));
         assertEquals("42", eval("add = { |a, b| a + b }\n add.call(40, 2)"));
 
+        assertEquals("42", eval("{ 42 }[]"));
+        assertEquals("42", eval("{ |a| a + 41 }[1]"));
+        assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one[41]"));
+        assertEquals("42", eval("add = { |a, b| a + b }\n add[40, 2]"));
+
         assertEquals("\"Ivan\"", eval(
                 "class A\n" +
                 "  def initialize\n" +
@@ -558,7 +563,7 @@ public class EvaluatorTest {
                 "a.push 42\n" +
                 "a.push \"hello\"\n" +
 
-                "a.get 1"
+                "a[1]"
         ));
 
         assertEquals("[1, 2, \"three\"]", eval(

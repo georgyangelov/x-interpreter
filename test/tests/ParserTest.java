@@ -147,15 +147,8 @@ public class ParserTest {
         assertEquals("(method self)", parse("method()"));
         assertEquals("(method target)", parse("target.method"));
         assertEquals("(method target)", parse("target.method()"));
-    }
 
-    @Test
-    void testMethodChaining() throws Exception {
-        assertEquals("(c (b a))", parse("a.b.c"));
-        assertEquals("(d (c (b a)) e)", parse("a.b.c.d e"));
-        assertEquals("(c (b a 1))", parse("a.b(1).c"));
-        assertEquals("(c (b a 1) 2 3)", parse("a.b(1).c 2, 3"));
-        assertEquals("(c (b a 1) (d 2) (d self 3 4))", parse("a.b(1).c 2.d, d(3, 4)"));
+        assertEquals("([] a)", parse("a[]"));
     }
 
     @Test
@@ -175,6 +168,17 @@ public class ParserTest {
 
         assertEquals("(method target a b c)", parse("target.method(a, b, c)"));
         assertEquals("(method target a b c)", parse("target.method a, b, c"));
+
+        assertEquals("([] a b c)", parse("a[b, c]"));
+    }
+
+    @Test
+    void testMethodChaining() throws Exception {
+        assertEquals("(c (b a))", parse("a.b.c"));
+        assertEquals("(d (c (b a)) e)", parse("a.b.c.d e"));
+        assertEquals("(c (b a 1))", parse("a.b(1).c"));
+        assertEquals("(c (b a 1) 2 3)", parse("a.b(1).c 2, 3"));
+        assertEquals("(c (b a 1) (d 2) (d self 3 4))", parse("a.b(1).c 2.d, d(3, 4)"));
     }
 
     @Test

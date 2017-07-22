@@ -28,7 +28,7 @@ extend Array, do
     length = size
 
     while i < length
-      block.call get(i)
+      block.call self[i]
 
       i = i + 1
     end
@@ -39,7 +39,7 @@ extend Array, do
   def map(block)
     result = Array.new
 
-    each { |element| result.push(block.call(element)) }
+    each { |element| result.push(block[element]) }
 
     result
   end
@@ -48,7 +48,7 @@ extend Array, do
     result = Array.new
 
     each do |element|
-      if block.call(element)
+      if block[element]
         result.push element
       end
     end

@@ -45,6 +45,13 @@ public class ArrayClass extends Class {
             return self.get(index);
         }));
 
+        defineMethod(new Method("[]", 1, 0, (runtime, args) -> {
+            List<Value> self = unwrap(args.get(0));
+            int index = unwrapIndex(args.get(1));
+
+            return self.get(index);
+        }));
+
         // TODO: Test these methods separately
         defineMethod(new Method("set", 2, 0, (runtime, args) -> {
             List<Value> self = unwrap(args.get(0));
