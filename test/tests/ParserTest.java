@@ -79,6 +79,8 @@ public class ParserTest {
         assertEquals("(* (* (* 1 2) 3) 4)", parse("1 * 2 * 3 * 4"));
         assertEquals("(- (- (- 1 2) 3) 4)", parse("1 - 2 - 3 - 4"));
         assertEquals("(/ (/ (/ 1 2) 3) 4)", parse("1 / 2 / 3 / 4"));
+
+        assertEquals("(or (or 1 (and 2 3)) 4)", parse("1 or 2 and 3 or 4"));
     }
 
     @Test

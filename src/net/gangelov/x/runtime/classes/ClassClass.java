@@ -7,6 +7,7 @@ import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.LambdaValue;
 import net.gangelov.x.runtime.builtins.ObjectValue;
+import net.gangelov.x.runtime.builtins.StringValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,35 @@ public class ClassClass extends Class {
             }
 
             return instance;
+        }));
+
+        defineStaticMethod(new Method("new", 0, 2, (runtime, args) -> {
+            String name = "Anonymous";
+            Class superClass = runtime.ObjectClass;
+
+            // TODO: Test
+            if (args.size() > 1) {
+                name = ((StringValue)args.get(1)).value;
+            }
+
+            // TODO: Test
+            if (args.size() > 2) {
+                superClass = (Class)args.get(2);
+            }
+
+            // TODO: Test
+            if (!superClass.canBeInherited()) {
+                throw new Evaluator.RuntimeError("Cannot inherit from built-in class " + superClass.name);
+            }
+
+            Class newClass = new Class(name, runtime, superClass);
+
+            // TODO: Test
+            if (!name.equals("Anonymous")) {
+                runtime.defineClass(newClass);
+            }
+
+            return newClass;
         }));
 
         defineMethod(new Method("static", 1, 0, (runtime, args) -> {

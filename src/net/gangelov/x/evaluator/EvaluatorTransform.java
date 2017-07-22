@@ -98,6 +98,24 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(MethodCallNode node, EvaluatorContext context) {
         node.xClass = runtime.ASTClass;
 
+        if (node.name.equals("and")) {
+            Value first = node.arguments.get(0).visit(this, context);
+
+            if (!first.asBoolean()) {
+                return first;
+            }
+
+            return node.arguments.get(1).visit(this, context);
+        } else if (node.name.equals("or")) {
+            Value first = node.arguments.get(0).visit(this, context);
+
+            if (first.asBoolean()) {
+                return first;
+            }
+
+            return node.arguments.get(1).visit(this, context);
+        }
+
         List<Value> arguments = node.arguments.stream()
                 .map(argument -> argument.visit(this, context))
                 .collect(Collectors.toList());

@@ -735,6 +735,32 @@ public class EvaluatorTest {
         ));
     }
 
+    @Test
+    void testAnonymousClasses() throws Exception {
+        assertEquals("42", eval(
+                "a = Class.new\n" +
+                "{ def answer\n 42 end }.bind(a, a).call\n" +
+
+                "a.new.answer"
+        ));
+    }
+
+    @Test
+    void testBooleanOperators() throws Exception {
+        assertEquals("false", eval("true and false"));
+        assertEquals("true", eval("false and true or true"));
+        assertEquals("true", eval("true or false and false"));
+
+        assertEquals("true", eval("true or 1234"));
+        assertEquals("42", eval("42 or false"));
+        assertEquals("1234", eval("false or 1234"));
+
+        assertEquals("false", eval("false and 1234"));
+        assertEquals("nil", eval("42 and nil"));
+        assertEquals("true", eval("42 and true"));
+        assertEquals("1234", eval("true and 1234"));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

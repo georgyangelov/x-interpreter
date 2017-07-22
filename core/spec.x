@@ -47,14 +47,14 @@ class XSpecResults
   def example_failed(example, error)
     @failed.push example
 
-    puts '✖ It ', example.name
-    puts '     ', error.message
+    puts '✖ ', example.name
+    puts '  ', error.message
   end
 
   def example_succeeded(example)
     @succeeded.push example
 
-    puts '✔ It ', example.name
+    puts '✔ ', example.name
   end
 end
 
@@ -75,7 +75,7 @@ class XSpecGroup
 
     @groups.push group
 
-    block.bind(self).call
+    block.bind(self, Class.new).call
   end
 
   def run(results)
