@@ -657,6 +657,19 @@ public class EvaluatorTest {
         });
     }
 
+    @Test
+    void testBindLambda() throws Exception {
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def answer\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "{ answer }.bind(A.new).call"
+        ));
+    }
+
     private String eval(String program) throws Exception {
         List<ASTNode> nodes = ParserSupport.parseAll(program);
         List<Value> results = new Evaluator().evaluate(nodes);

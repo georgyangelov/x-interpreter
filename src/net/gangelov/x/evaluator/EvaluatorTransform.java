@@ -254,8 +254,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         return new LambdaValue(runtime.LambdaClass, new Method("<lambda>", requiredArgs, 0,
                 (runtime, args) -> {
             List<MethodArgumentNode> formalArgs = node.arguments;
+            LambdaValue lambda = (LambdaValue)args.get(0);
 
             EvaluatorContext callContext = context.scope();
+            callContext.defineLocal("self", lambda.self);
 
             // TODO: Check types
             for (int i = 0; i < formalArgs.size(); i++) {
@@ -263,7 +265,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             }
 
             return node.body.visit(this, callContext);
-        }));
+        }), context.getLocal("self"));
     }
 
     @Override
