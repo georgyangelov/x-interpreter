@@ -23,6 +23,18 @@ public class StringClass extends Class {
             return runtime.from(self + other);
         }));
 
+        defineMethod(new Method("to_i", (runtime, args) -> {
+            String self = getString(args.get(0));
+
+            return runtime.from(Integer.parseInt(self));
+        }));
+
+        defineMethod(new Method("to_f", (runtime, args) -> {
+            String self = getString(args.get(0));
+
+            return runtime.from(Double.parseDouble(self));
+        }));
+
         defineMethod(new Method("to_s", (runtime, args) -> args.get(0)));
 
         defineStaticMethod(new Method("hello", (runtime, args) -> runtime.from("Hello world!")));

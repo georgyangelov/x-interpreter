@@ -37,6 +37,16 @@ public class EvaluatorTest {
         assertEquals("5.0", eval("1.to_f + 4.to_f"));
         assertEquals("5.3", eval("1.3 + 4.to_f"));
         assertEquals("5.3", eval("1.2 + 4.1.to_f"));
+
+        assertEquals("1", eval("1.1.to_i"));
+        assertEquals("1", eval("1.5.to_i"));
+        assertEquals("1", eval("1.9.to_i"));
+    }
+
+    @Test
+    void testStringToNumberConversions() throws Exception {
+        assertEquals("42", eval("\"42\".to_i"));
+        assertEquals("42.2", eval("\"42.2\".to_f"));
     }
 
     @Test
