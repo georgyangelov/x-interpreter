@@ -25,12 +25,17 @@ public class LambdaClass extends Class {
             return self.method.call(runtime, args);
         }));
 
-        defineMethod(new Method("bind", 1, 0, (runtime, args) -> {
+        defineMethod(new Method("bind", 1, 1, (runtime, args) -> {
             LambdaValue self = (LambdaValue)args.get(0);
-            Value newSelf = args.get(1);
 
-            // TODO: What should the Self be here?
-            return new LambdaValue(runtime.LambdaClass, self.method, newSelf, self.Self);
+            Value newSelf = args.get(1);
+            Value newSelfClass = self.Self;
+
+            if (args.size() > 2) {
+                newSelfClass = args.get(2);
+            }
+
+            return new LambdaValue(runtime.LambdaClass, self.method, newSelf, newSelfClass);
         }));
     }
 

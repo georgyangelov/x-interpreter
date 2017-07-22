@@ -668,6 +668,34 @@ public class EvaluatorTest {
 
                 "{ |x| answer(x) }.bind(A.new).call(41)"
         ));
+
+        assertEquals("44", eval(
+                "class A\n" +
+                "  def answer(a)\n" +
+                "    a + 1\n" +
+                "  end\n" +
+                "end\n" +
+
+                "do |x|\n" +
+                "  a = answer(x)\n" +
+
+                "  def answer(a)\n" +
+                "    2\n" +
+                "  end\n" +
+
+                "  a + answer(x)\n" +
+                "end.bind(A.new, A).call(41)"
+        ));
+
+        assertEquals("42", eval(
+                "class A\n" +
+                "  def answer(a)\n" +
+                "    a + 1\n" +
+                "  end\n" +
+                "end\n" +
+
+                "{ |x| answer(x) }.bind(A.new).call(41)"
+        ));
     }
 
     @Test

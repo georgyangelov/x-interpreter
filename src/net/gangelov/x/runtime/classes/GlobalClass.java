@@ -7,6 +7,8 @@ import net.gangelov.x.runtime.base.Class;
 import net.gangelov.x.runtime.base.Method;
 import net.gangelov.x.runtime.builtins.StringValue;
 
+import java.util.stream.Collectors;
+
 public class GlobalClass extends Class {
     public GlobalClass(Runtime r) {
         super("Global", r, null);
@@ -26,15 +28,22 @@ public class GlobalClass extends Class {
         }));
 
         // TODO: Make varargs
-        defineMethod(new Method("puts", 1, 0, (runtime, args) -> {
-            Value value = args.get(1);
-            Value strValue = value.getMethod("to_s").call(runtime, value);
+        defineMethod(new Method("puts", 1, 1000, (runtime, args) -> {
+            String output = args.stream()
+                    .skip(1)
+                    .map(value -> {
+                        return value.getMethod("to_s").call(runtime, value);
+                    })
+                    .map(value -> {
+                        if (value instanceof StringValue) {
+                            return ((StringValue) value).value;
+                        } else {
+                            return value.inspect();
+                        }
+                    })
+                    .collect(Collectors.joining(""));
 
-            if (strValue instanceof StringValue) {
-                System.out.println(((StringValue) strValue).value);
-            } else {
-                System.out.println(strValue.inspect());
-            }
+            System.out.println(output);
 
             return runtime.NIL;
         }));

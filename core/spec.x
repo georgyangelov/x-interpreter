@@ -39,10 +39,8 @@ class XSpec
     @root.run(@results)
 
     puts ''
-    puts ''.concat(
-      @results.success_count.to_s, ' succeeded, ',
-      @results.fail_count.to_s,    ' failed'
-    )
+    puts @results.success_count.to_s, ' succeeded, ',
+         @results.fail_count.to_s,    ' failed'
   end
 end
 
@@ -63,14 +61,14 @@ class XSpecResults
   def example_failed(example, error)
     @failed.push example
 
-    puts '✖ It '.concat(example.name)
-    puts '     '.concat(error.message)
+    puts '✖ It ', example.name
+    puts '     ', error.message
   end
 
   def example_succeeded(example)
     @succeeded.push example
 
-    puts '✔ It '.concat(example.name)
+    puts '✔ It ', example.name
   end
 end
 
