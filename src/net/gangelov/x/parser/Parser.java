@@ -74,7 +74,7 @@ public class Parser {
 
                 left = new AssignmentNode(((NameNode)left).name, right);
             } else {
-                left = new MethodCallNode(op.str, left, right);
+                left = new MethodCallNode(op.str, false, left, right);
             }
         }
     }
@@ -96,7 +96,7 @@ public class Parser {
 
                 return number;
             } else {
-                return new MethodCallNode("-", expression);
+                return new MethodCallNode("-", false, expression);
             }
         }
 
@@ -104,7 +104,7 @@ public class Parser {
 
         do {
             target = maybeParseMethodCall(target);
-        } while (t.type == TokenType.Dot);
+        } while (t.type == TokenType.Dot || (!newline && t.type == TokenType.OpenParen));
 
         return target;
     }
@@ -121,7 +121,7 @@ public class Parser {
                 }
             case String:        return new LiteralNode(LiteralNode.Type.String, read().str);
             case Name:          return new NameNode(read().str);
-            case UnaryOperator: return new MethodCallNode(read().str, parsePrimary());
+            case UnaryOperator: return new MethodCallNode(read().str, false, parsePrimary());
             case If:            return parseIf();
             case While:         return parseWhile();
             case Def:           return parseDef();
@@ -372,39 +372,48 @@ public class Parser {
 
             List<ASTNode> arguments = parseArguments();
 
-            return new MethodCallNode(name.str, target, arguments);
+            return new MethodCallNode(name.str, false, target, arguments);
         }
 
-        // target[...]
+        // expression(...)
+        if (!newline && !(target instanceof NameNode) && t.type == TokenType.OpenParen) {
+            read(); // (
+
+            List<ASTNode> arguments = new ArrayList<>();
+
+            if (t.type != TokenType.CloseParen) {
+                arguments = parseNodeList();
+            }
+
+            if (t.type != TokenType.CloseParen) parseError();
+            read(); // )
+
+            return new MethodCallNode("call", false, target, arguments);
+        }
+
+        // TODO: DRY
+        // expression[...]
         if (!newline && t.type == TokenType.OpenBracket) {
-            // TODO: DRY and simplify!
             read(); // [
 
             List<ASTNode> arguments = new ArrayList<>();
 
             if (t.type != TokenType.CloseBracket) {
-                while (true) {
-                    arguments.add(parseNext());
-
-                    if (t.type != TokenType.Comma) {
-                        break;
-                    }
-
-                    read(); // ,
-                }
+                arguments = parseNodeList();
             }
 
             if (t.type != TokenType.CloseBracket) parseError();
             read(); // ]
 
-            return new MethodCallNode("[]", target, arguments);
+            return new MethodCallNode("[]", false, target, arguments);
         }
 
-        // target a
+        // name a
+        // name(a)
         if (target instanceof NameNode && !currentExpressionMayEnd()) {
             List<ASTNode> arguments = parseArguments();
 
-            return new MethodCallNode(((NameNode)target).name, new NameNode("self"), arguments);
+            return new MethodCallNode(((NameNode)target).name, true, new NameNode("self"), arguments);
         }
 
         return target;
@@ -413,10 +422,19 @@ public class Parser {
     private ASTNode parseArrayLiteral() throws IOException, Lexer.LexerException, ParserException {
         read(); // [
 
-        List<ASTNode> elements = new ArrayList<>();
+        List<ASTNode> elements = parseNodeList();
+
+        if (t.type != TokenType.CloseBracket) parseError();
+        read(); // ]
+
+        return new MethodCallNode("new", false, new NameNode("Array"), elements);
+    }
+
+    private List<ASTNode> parseNodeList() throws IOException, Lexer.LexerException, ParserException {
+        List<ASTNode> nodes = new ArrayList<>();
 
         while (true) {
-            elements.add(parseNext());
+            nodes.add(parseNext());
 
             if (t.type != TokenType.Comma) {
                 break;
@@ -425,10 +443,7 @@ public class Parser {
             read(); // ,
         }
 
-        if (t.type != TokenType.CloseBracket) parseError();
-        read(); // ]
-
-        return new MethodCallNode("new", new NameNode("Array"), elements);
+        return nodes;
     }
 
     private List<ASTNode> parseArguments() throws ParserException, IOException, Lexer.LexerException {
@@ -449,15 +464,7 @@ public class Parser {
             return arguments;
         }
 
-        while (true) {
-            arguments.add(parseNext());
-
-            if (t.type != TokenType.Comma) {
-                break;
-            }
-
-            read(); // ,
-        }
+        arguments = parseNodeList();
 
         if (withParens) {
             if (t.type != TokenType.CloseParen) parseError();

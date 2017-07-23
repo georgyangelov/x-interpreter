@@ -489,6 +489,12 @@ public class EvaluatorTest {
         assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one[41]"));
         assertEquals("42", eval("add = { |a, b| a + b }\n add[40, 2]"));
 
+        assertEquals("#<Lambda>", eval("{ 42 }"));
+        assertEquals("42", eval("{ 42 }()"));
+        assertEquals("42", eval("{ |a| a + 41 }(1)"));
+        assertEquals("42", eval("add_one = { |a| a + 1 }\n add_one(41)"));
+        assertEquals("42", eval("add = { |a, b| a + b }\n add(40, 2)"));
+
         assertEquals("\"Ivan\"", eval(
                 "class A\n" +
                 "  def initialize\n" +
@@ -764,6 +770,95 @@ public class EvaluatorTest {
         assertEquals("nil", eval("42 and nil"));
         assertEquals("true", eval("42 and true"));
         assertEquals("1234", eval("true and 1234"));
+    }
+
+    @Test
+    void testImplicitVariableCalls() throws Exception {
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def call\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "Answer.new()()"
+        ));
+
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def call\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "ans = Answer.new()\n" +
+                "ans()"
+        ));
+
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def call\n" +
+                "    42\n" +
+                "  end\n" +
+                "end\n" +
+
+                "ans = Answer.new\n" +
+                "ans()"
+        ));
+
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def call\n 42 end\n" +
+                "end\n" +
+
+                "def a\n 666 end\n" +
+
+                "a = Answer.new\n" +
+                "a()"
+        ));
+
+        assertEquals("#<Answer>", eval(
+                "class Answer\n" +
+                "  def call\n 42 end\n" +
+                "end\n" +
+
+                "def a\n 666 end\n" +
+
+                "a = Answer.new\n" +
+                "a"
+        ));
+
+        assertEquals("666", eval(
+                "class Answer\n" +
+                "  def call\n 42 end\n" +
+                "end\n" +
+
+                "def a\n 666 end\n" +
+
+                "a = Answer.new\n" +
+                "self.a"
+        ));
+
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def call(x)\n x + 41 end\n" +
+                "end\n" +
+
+                "def a\n 666 end\n" +
+
+                "a = Answer.new\n" +
+                "a 1"
+        ));
+
+        assertEquals("1", eval(
+                "class Answer\n" +
+                "  def call(x)\n" +
+                "    x + 41\n" +
+                "  end\n" +
+                "end\n" +
+
+                "Answer.new() 1"
+        ));
     }
 
     private String eval(String program) throws Exception {

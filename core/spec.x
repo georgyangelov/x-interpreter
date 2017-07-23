@@ -75,7 +75,7 @@ class XSpecGroup
 
     @groups.push group
 
-    block.bind(self).call
+    block.bind(self)()
   end
 
   def run(results)
@@ -98,7 +98,7 @@ class XSpecExample
     context_class = Class.new 'Anonymous', XSpecAssertions
     context = context_class.new
 
-    @block.bind(context, context_class).call
+    @block.bind(context, context_class)()
 
     results.example_succeeded(self)
   catch error

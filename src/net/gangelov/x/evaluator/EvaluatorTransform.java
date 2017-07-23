@@ -73,7 +73,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             }
 
             // Maybe this is a method call without arguments?
-            return new MethodCallNode(node.name, new NameNode("self")).visit(this, context);
+            return new MethodCallNode(node.name, false, new NameNode("self")).visit(this, context);
         }
 
         return value;
@@ -144,16 +144,38 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
             }
 
             return method.call(runtime, arguments);
-        } else {
-            Method method = self.getMethod(node.name);
-            if (method == null) {
-                throw new Evaluator.RuntimeError(
-                        "No method " + node.name + " on class " + self.getXClass().name
-                );
-            }
-
-            return method.call(runtime, arguments);
         }
+
+        Method method;
+
+        // TODO: Simplify!
+        // local_variable(args)
+        if (node.mayBeVariableCall) {
+            Value lambda = context.getLocal(node.name);
+
+            if (lambda != null) {
+                method = lambda.getMethod("call");
+
+                if (method != null) {
+                    self = context.getLocal(node.name);
+                    arguments.set(0, self);
+                } else {
+                    method = self.getMethod(node.name);
+                }
+            } else {
+                method = self.getMethod(node.name);
+            }
+        } else {
+            method = self.getMethod(node.name);
+        }
+
+        if (method == null) {
+            throw new Evaluator.RuntimeError(
+                    "No method " + node.name + " on class " + self.getXClass().name
+            );
+        }
+
+        return method.call(runtime, arguments);
     }
 
     @Override
