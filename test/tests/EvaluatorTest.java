@@ -859,6 +859,17 @@ public class EvaluatorTest {
 
                 "Answer.new() 1"
         ));
+
+        assertEquals("42", eval(
+                "class Answer\n" +
+                "  def answer\n" +
+                "    @give = { 42 }\n" +
+                "    @give()\n" +
+                "  end\n" +
+                "end\n" +
+
+                "Answer.new.answer"
+        ));
     }
 
     private String eval(String program) throws Exception {

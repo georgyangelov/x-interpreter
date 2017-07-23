@@ -2,6 +2,7 @@ package net.gangelov.x.evaluator;
 
 import net.gangelov.x.runtime.Value;
 import net.gangelov.x.runtime.base.Class;
+import net.gangelov.x.runtime.builtins.ObjectValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +46,23 @@ public class EvaluatorContext {
     }
 
     public void assignLocal(String name, Value value) {
+        if (name.startsWith("@")) {
+            getSelfInstance().setInstanceVariable(name, value);
+            return;
+        }
+
         if (!setIfDefined(name, value)) {
             locals.put(name, value);
         }
+    }
+
+    private ObjectValue getSelfInstance() {
+        Value self = getLocal("self");
+        if (!(self instanceof ObjectValue)) {
+            throw new Evaluator.RuntimeError("Cannot access instance variable on non-object");
+        }
+
+        return (ObjectValue)self;
     }
 
     private boolean setIfDefined(String name, Value value) {
@@ -60,6 +75,10 @@ public class EvaluatorContext {
     }
 
     public Value getLocal(String name) {
+        if (name.startsWith("@")) {
+            return getSelfInstance().getInstanceVariable(name);
+        }
+
         Value value = locals.get(name);
 
         if (value == null && parent != null) {

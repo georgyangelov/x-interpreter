@@ -9,7 +9,7 @@ end
 
 puts 0.upto(100000).stream
   .map({ |x|
-    # puts 'map ', x
+    puts 'map ', x
     x * x })
   .filter({ |x| x > 100 })
   .take(10)

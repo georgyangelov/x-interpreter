@@ -19,15 +19,6 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
         this.runtime = runtime;
     }
 
-    private ObjectValue getSelfInstance(EvaluatorContext context) {
-        Value self = context.getLocal("self");
-        if (!(self instanceof ObjectValue)) {
-            throw new Evaluator.RuntimeError("Cannot access instance variable on non-object");
-        }
-
-        return (ObjectValue)self;
-    }
-
     @Override
     public Value visit(LiteralNode node, EvaluatorContext context) {
         // TODO: Move these to the runtime
@@ -53,16 +44,10 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
     public Value visit(NameNode node, EvaluatorContext context) {
         node.xClass = runtime.ASTClass;
 
-        Value value;
+        Value value = context.getLocal(node.name);
 
-        if (node.name.startsWith("@")) {
-            value = getSelfInstance(context).getInstanceVariable(node.name);
-
-            if (value == null) {
-                throw new Evaluator.RuntimeError("Undefined instance variable " + node.name);
-            }
-        } else {
-            value = context.getLocal(node.name);
+        if (node.name.startsWith("@") && value == null) {
+            throw new Evaluator.RuntimeError("Undefined instance variable " + node.name);
         }
 
         if (value == null) {
@@ -85,11 +70,7 @@ public class EvaluatorTransform extends AbstractVisitor<Value, EvaluatorContext>
 
         Value value = node.value.visit(this, context);
 
-        if (node.name.startsWith("@")) {
-            getSelfInstance(context).setInstanceVariable(node.name, value);
-        } else {
-            context.assignLocal(node.name, value);
-        }
+        context.assignLocal(node.name, value);
 
         return value;
     }

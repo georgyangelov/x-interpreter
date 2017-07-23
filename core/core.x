@@ -143,7 +143,7 @@ class StreamMapper < Stream
   end
 
   def next
-    @next[@source]
+    @next(@source)
   end
 end
 
@@ -161,7 +161,7 @@ class ArraySource
       raise StopIteration.new
     end
 
-    element = @array[@i]
+    element = @array(@i)
 
     @i = @i + 1
 
