@@ -38,7 +38,7 @@ public class ObjectClass extends Class {
     private String inspectInstanceVariables(ObjectValue object) {
         // TODO: This WILL break if there are circular references
         return object.instanceVariables.entrySet().stream()
-                .map(entry -> "@" + entry.getKey() + "=" + entry.getValue().inspect())
+                .map(entry -> entry.getKey() + "=" + entry.getValue().inspect())
                 .collect(Collectors.joining(", "));
     }
 }
