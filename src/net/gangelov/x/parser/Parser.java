@@ -376,7 +376,7 @@ public class Parser {
         }
 
         // expression(...)
-        if (!newline && !(target instanceof NameNode) && t.type == TokenType.OpenParen) {
+        if (!t.hadWhitespace && !(target instanceof NameNode) && t.type == TokenType.OpenParen) {
             read(); // (
 
             List<ASTNode> arguments = new ArrayList<>();
@@ -393,7 +393,7 @@ public class Parser {
 
         // TODO: DRY
         // expression[...]
-        if (!newline && t.type == TokenType.OpenBracket) {
+        if (!t.hadWhitespace && t.type == TokenType.OpenBracket) {
             read(); // [
 
             List<ASTNode> arguments = new ArrayList<>();

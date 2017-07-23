@@ -149,6 +149,7 @@ public class ParserTest {
         assertEquals("(method target)", parse("target.method()"));
 
         assertEquals("([] a)", parse("a[]"));
+        assertEquals("(a self (new Array 1))", parse("a [1]"));
     }
 
     @Test
@@ -168,6 +169,8 @@ public class ParserTest {
 
         assertEquals("(method target a b c)", parse("target.method(a, b, c)"));
         assertEquals("(method target a b c)", parse("target.method a, b, c"));
+
+        assertEquals("(puts self (new Array 1 2 3))", parse("puts [1, 2, 3]"));
 
         assertEquals("([] a b c)", parse("a[b, c]"));
     }

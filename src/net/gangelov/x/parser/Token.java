@@ -1,6 +1,7 @@
 package net.gangelov.x.parser;
 
 public class Token {
+    public boolean hadWhitespace;
     public int line, column;
     public TokenType type;
     public String str = "";

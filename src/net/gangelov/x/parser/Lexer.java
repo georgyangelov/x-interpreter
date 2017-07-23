@@ -34,11 +34,12 @@ public class Lexer {
             next();
         }
 
+        boolean hadWhitespace = skipWhitespaceAndComments();
+
         Token t = new Token();
         t.line = line;
         t.column = column;
-
-        skipWhitespaceAndComments();
+        t.hadWhitespace = hadWhitespace;
 
         switch (c) {
             case -1: return t.set(TokenType.EOF, "EOF");
@@ -228,8 +229,9 @@ public class Lexer {
         return str.toString();
     }
 
-    private void skipWhitespaceAndComments() throws IOException {
+    private boolean skipWhitespaceAndComments() throws IOException {
         boolean inComment = false;
+        boolean hadWhitespace = false;
 
         while (true) {
             if (c == -1) {
@@ -251,7 +253,11 @@ public class Lexer {
                     break;
                 }
             }
+
+            hadWhitespace = true;
         }
+
+        return hadWhitespace;
     }
 
     private int next() throws IOException {
